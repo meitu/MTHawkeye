@@ -38,7 +38,7 @@ The main interface of the network transactions history contains three major part
 * The waterfall view of the currently selected request and its parallel requests.
 * History transaction record list.
 
-![Records main](./network-monitor-records-main.png) ![Records search](./network-monitor-records-search.png) ![Records filter](./network-monitor-records-filter-panel.png)
+<img src="./network-monitor-records-main.png" width=290><img src="./network-monitor-records-search.png" width=290><img src="./network-monitor-records-filter-panel.png" width=290>
 
 The search bar supports simple filter parameters.
 

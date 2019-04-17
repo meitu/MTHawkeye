@@ -18,7 +18,7 @@ The data recorded by `CPU Trace` contains following parts:
 - Average CPU usage during the high-load.
 - stack frame samples during the high-load.
 
-![CPU Trace Record Example](cputrace-record-example.png)
+<img src="./cputrace-record-example.png" width=350>
 
 ## 0x01 Storage
 
@@ -32,7 +32,7 @@ cpu-highload,575204521.78,{{basic-cpu-highload record}}
 
 `key` is the start time of the CPU high-load record, `{{basic-cpu-highload record}}` is a JSON string with three fields:
 
-```json
+```txt
 {
     "start": "575204521.78", // the start time of the record
     "lasting": "132.60",     // the duration of the record

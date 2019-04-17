@@ -3,7 +3,7 @@
 
 While MThawkeye running, the data collected by the plugins will be saved to the file in time, so that when the App crash or exist unexpected, the record data can be obtained for further analysis.
 
-Because of the need to reduce the impact of I/O operations on performance, it is best to have a unified high-performance storage component for plugins to handle storage transactions. MTHawkeye has streamlined [Tencent Mars' Xlog](https://github.com/Tencent/mars) components to the `MTAppenderFile` for high-performance storage, see [MTAppenderFile Readme](https://github.com/MTlab/MTAppenderFile#mtappenderfile)) for detail.
+Because of the need to reduce the impact of I/O operations on performance, it is best to have a unified high-performance storage component for plugins to handle storage transactions. MTHawkeye has streamlined [Tencent Mars' Xlog](https://github.com/Tencent/mars) components to the `MTAppenderFile` for high-performance storage, see [MTAppenderFile Readme](https://github.com/meitu/MTAppenderFile#mtappenderfile)) for detail.
 
 ## 0x00 MTHawkeye storage root directory
 
@@ -25,7 +25,7 @@ Attention for reading stored data:
 - Both files need to be read, first `*.mmap2`, then `*.mtlog`, and then put the content together.
 - When reading the `*.mmap2` file, only non-dirty data is needed. when the `\0\0\0` line is encountered, the complete content of `mmap` has been read, and the content after that is dirty data, which should be ignored.
 
-## 0x02 Built-in plugin data storage instructions
+## 0x02 Built-in plugin data storage instructions (Records file)
 
 Some of the data recorded by the built-in plugin is saved to `records.mmap2` `records.mtlog`, after merged the two files, the first line is
 
@@ -46,9 +46,9 @@ Currently, MTHawkeye's built-in plugins use the following collection when using 
 - `r-mem`, App memory footprint records, from phys_footprint, else same as `mem`.
 - `cpu`, App CPU usage records, key is the record time, value is the CPU usage of the App, in %.
 - `fps` `gl-fps`: collection record by built-in plugin `FPSTrace`, see [FPSTrace storage](./time-consuming/fps-tracer.md)。
-- `cpu-highload` `cpu-highload-stackframe`: collection record by built-in plugin `CPUTrace`, see [CPUTrace storage](./energy/cpu-trace.md#0x02-storage)。
-- `gl-mem`: collection record by built-in plugin `OpenGLTrace`, see [OpenGLTrace storage](./graphics/opengl-trace.md#storage)。
-- `app-launch` `view-ctrl` `custom-time-event` `call-trace`: collection record by built-in plugin `UITimeProfiler`, see [UITimeProfiler storage](./time-consuming/ui-time-profiler.md#0x03-storage)。
+- `cpu-highload` `cpu-highload-stackframe`: collection record by built-in plugin `CPUTrace`, see [CPUTrace storage](./energy/cpu-trace.md#0x01-storage).
+- `gl-mem`: collection record by built-in plugin `OpenGLTrace`, see [OpenGLTrace storage](./graphics/opengl-trace.md#storage).
+- `app-launch` `view-ctrl` `custom-time-event` `call-trace`: collection record by built-in plugin `UITimeProfiler`, see [UITimeProfiler storage](./time-consuming/ui-time-profiler.md#0x03-storage).
 - `anr`: collection record by built-in plugin `ANRTrace`, see [ANRTrace storage](./time-consuming/anr-tracer.md#0x02-storage)
 
 ## 0x03 MTHawkeyeStorage API Instruction

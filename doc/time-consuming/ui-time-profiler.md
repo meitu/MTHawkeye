@@ -102,7 +102,7 @@ After the plugin is connected to MTHawkeyeClient, the new time record will be st
 
 there is only one record for app launch time-consuming, the `collection` name is `app-launch`, `key` is "0", and `value` as JSON string with the following fields:
 
-```JSON
+```txt
 {
   "appLaunchTime" : 1533019689.050308,             // App launch time
   "firstObjcLoadStartTime": 1533019689.050308,     // MTHawkeye +load method been invoked
@@ -119,7 +119,7 @@ there is only one record for app launch time-consuming, the `collection` name is
 
 When a ViewController appeared, it will generate record. uses a `collection` name `view-ctrl`, key is the time ViewController didAppeared exit, and the value is JSON string with the following fields:
 
-```JSON
+```txt
 {
   "initExitTime" : 1533018427.0977719,           // VC -init exit, can be 0 (opened the same VC several times)
   "loadViewEnter" : 1533018427.1496551,          // VC -loadView entry, can be 0
@@ -138,7 +138,7 @@ When a ViewController appeared, it will generate record. uses a `collection` nam
 
 Custom event storage uses a `collection` named `custom-time-event`, key is the recording time point, and the value is JSON string with the following fields:
 
-```json
+```txt
 {
   "time": 1533018427.0977719,       // the time event record
   "event": "event name",            // event name，refer [[MTHTimeIntervalRecorder shared] recordCustomEvent:event extra:extra];
@@ -156,7 +156,7 @@ The plugin contains three built-in custom events:
 
 the `collection` name is `call-trace`. `key` is an incremental subscript starting from 0, each record corresponds to a method call time cost, `value` is a JSON string with the following fields:
 
-```json
+```txt
 {
   "class": "MTHawkeyeClient",  // the method's class name
   "method": "start",           // the method's name

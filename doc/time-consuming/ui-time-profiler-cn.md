@@ -101,7 +101,7 @@ App 生命周期记录点说明
 
 启动期间的几个时间节点信息会以名为 `app-launch` 的 `collection`， `key`为 "0"，`value` 为 json 字符串，json 各个字段说明如下：
 
-```json
+```txt
 {
   "appLaunchTime" : 1533019689.050308,             // App 启动的时间
   "firstObjcLoadStartTime": 1533019689.050308,     // MTHawkeye +load 被加载的时间点（做一定处理可以使 MTHawkeye load 第一个被加载）
@@ -118,7 +118,7 @@ App 生命周期记录点说明
 
 每个视图控制器打开后，会产生一条记录，`collection` 为 `view-ctrl`，key 为 VC didAppeared 结束的时间点，value 为 json 字符串，字段示例如下：
 
-```json
+```txt
 {
   "initExitTime" : 1533018427.0977719,           // VC 的 -init 方法 return 的时间，可能为 0（同个 VC 多次打开）
   "loadViewEnter" : 1533018427.1496551,          // VC 的 -loadView 方法被调用的时间（开始加载视图），可能为 0
@@ -137,7 +137,7 @@ App 生命周期记录点说明
 
 自定义事件存储时使用名为 `custom-time-event` 的 `collection`，key 为记录时间点，value 为 json 字符串，字段示例如下：
 
-```json
+```txt
 {
   "time": 1533018427.0977719,       // 事件记录的时间点
   "event": "event name",            // 事件的 event 名称，参考 [[MTHTimeIntervalRecorder shared] recordCustomEvent:event extra:extra];
@@ -155,7 +155,7 @@ App 生命周期记录点说明
 
 记录到的耗时超过指定阈值的主线程方法，`collection` 为 `call-trace`，`key` 为递增下标，从 0 开始，每一条记录对应一个方法调用耗时， `value` 为一个 json string，以下为示例
 
-```json
+```txt
 {
   "class": "MTHawkeyeClient",  // 调用的方法所在类类名
   "method": "start",           // 调用的方法方法名

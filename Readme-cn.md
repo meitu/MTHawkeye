@@ -1,6 +1,6 @@
 # Hawkeye
 
-[![Platform](https://img.shields.io/cocoapods/p/Log4G.svg?style=flat)](http://cocoapods.org/pods/MTHawkeye) [![License](https://img.shields.io/cocoapods/l/Log4G.svg?style=flat)](https://github.com/Meitu/MTHawkeye/blob/master/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Meitu/MTHawkeye/pulls) [![Version](https://img.shields.io/cocoapods/v/Log4G.svg?style=flat)](http://cocoapods.org/pods/MTHawkeye)
+[![Platform](https://img.shields.io/cocoapods/p/Log4G.svg?style=flat)](http://cocoapods.org/pods/MTHawkeye) [![License](https://img.shields.io/cocoapods/l/Log4G.svg?style=flat)](https://github.com/MTlab/MTHawkeye/blob/master/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/MTlab/MTHawkeye/pulls) [![Version](https://img.shields.io/cocoapods/v/Log4G.svg?style=flat)](http://cocoapods.org/pods/MTHawkeye)
 
 Hawkeye 是 iOS 下的调试优化辅助工具，旨在帮助 iOS 开发者提升开发效率、辅助优化性能体验。
 

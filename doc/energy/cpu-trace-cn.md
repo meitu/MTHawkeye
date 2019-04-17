@@ -19,7 +19,7 @@
 - 高负载期间的平均 CPU 使用率
 - 高负载期间取样的调用堆栈方法占比树
 
-![CPU Trace Record Example](cputrace-record-example.png)
+<img src="./cputrace-record-example.png" width=350>
 
 ## 0x01 实现说明
 
@@ -65,7 +65,7 @@ cpu-highload,575204521.78,{{basic-cpu-highload record}}
 
 其中 key 为 CPU 高耗记录的开始时间，{{basic-cpu-highload record}} 为 json 字典字符串，包含三个字段，示例说明如下：
 
-```json
+```txt
 {
     "start": "575204521.78", // CPU高负载开始时间
     "lasting": "132.60",     // CPU高负载的持续时间，单位秒

@@ -1,7 +1,7 @@
 
 # MTHawkeye Storage
 
-MTHawkeye 运行过程中，会将插件监测到的数据，实时保存到文件中，以便在 App 关闭或者异常退出时，下次打开依然可以获取到数据，做进一步的分析。因为实时处理，顾需要减少 I/O 操作对性能的影响，最好有一个统一的高性能存储组件来处理存储事务，MTHawkeye 将 Tencent Mars 的 Xlog 组件做了精简，改写成 `MTAppenderFile` 组件用于高性能存储件，具体的实现见 [MTAppenderFile Readme](https://github.com/MTlab/MTAppenderFile#mtappenderfile)。
+MTHawkeye 运行过程中，会将插件监测到的数据，实时保存到文件中，以便在 App 关闭或者异常退出时，下次打开依然可以获取到数据，做进一步的分析。因为实时处理，顾需要减少 I/O 操作对性能的影响，最好有一个统一的高性能存储组件来处理存储事务，MTHawkeye 将 Tencent Mars 的 Xlog 组件做了精简，改写成 `MTAppenderFile` 组件用于高性能存储件，具体的实现见 [MTAppenderFile Readme](https://github.com/meitu/MTAppenderFile#mtappenderfile)。
 
 ## 0x00 MTHawkeye 数据存放根目录
 
@@ -20,7 +20,7 @@ MTHawkeye 运行过程中，会将插件监测到的数据，实时保存到文�
 
 mmap2 文件在创建时通过 mmap 映射到内存，固定占用 150KB 内存。在写满 2/3 时，内部会将数据转储到 .mtlog 文件内，然后从头开始写入。转储完成时，考虑到性能原因，没有将整个 mmap2 文件清空，而是在每次写一行新数据时，将下一行数据填充为 `\0\0\0`。即在读取 mmap2 文件时，如果遇到包含三个空字符的行，就不能继续往下读了，后续的数据是脏数据。
 
-## 0x02 内置插件存储数据说明
+## 0x02 内置插件存储数据说明 (Records file)
 
 大多数内置插件记录的数据都放到 `records.mmap2` `records.mtlog` 下，records 的两个文件合并后，记录第一行内容为
 

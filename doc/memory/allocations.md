@@ -5,7 +5,7 @@
 
 ## 0x00 Background
 
-After publishing our App, we will found that it's difficult for us to handle the OOM cause we can't get the detail of the memory allocations. Tencent had post articles about OOM like [iOS 爆内存问题解决方案](https://juejin.im/post/5a58f1a76fb9a01cab283392), [iOS 微信内存监控](https://mp.weixin.qq.com/s?__biz=MzA3NjA3NTI5Mg==&mid=2656330237&idx=1&sn=30f0ef983229766db955f7f513ea2872&chksm=84c6198eb3b1909869b343e1ac2cfa46a64e8b7b72e47d7ee72282ea855ae124afce999bf16a&mpshare=1&scene=1&srcid=03012ZuanPME6WqDfHRsGgKC&rd2werd=1#wechat_redirect), and publish two open-source components, which is [Tencent - OOMDetector](https://github.com/Tencent/OOMDetector) and [WeChat - Matrix](https://github.com/Tencent/matrix).
+After publishing our App, we will found that it's difficult for us to handle the OOM cause we can't get the detail of the memory allocations. Tencent had post articles about OOM like [memory surge problem solution for iOS](https://juejin.im/post/5a58f1a76fb9a01cab283392), [memory monitoring for iOS in WeChat](https://mp.weixin.qq.com/s?__biz=MzA3NjA3NTI5Mg==&mid=2656330237&idx=1&sn=30f0ef983229766db955f7f513ea2872&chksm=84c6198eb3b1909869b343e1ac2cfa46a64e8b7b72e47d7ee72282ea855ae124afce999bf16a&mpshare=1&scene=1&srcid=03012ZuanPME6WqDfHRsGgKC&rd2werd=1#wechat_redirect), and publish two open-source components, which is [Tencent - OOMDetector](https://github.com/Tencent/OOMDetector) and [WeChat - Matrix](https://github.com/Tencent/matrix).
 
 Before we build our own `Allocations`, the `Matrix` is still private, and `OOMDetector` is less usable in a real projects, so we build our own `Allocations`.
 

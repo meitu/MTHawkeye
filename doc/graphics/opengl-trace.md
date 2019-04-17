@@ -2,7 +2,7 @@
 
 `OpengGLTrace` is used to track the memory usage of OpenGL resources, and to help find OpenGL API error calls and exception parameter passing.
 
-`OpenGL Trace` is base on [MTGLDebug](https://github.com/MTlab/MTGLDebug), which inject tracking logic into the OpenGL API through [fishhook](https://github.com/facebook/fishhook).
+`OpenGL Trace` is base on [MTGLDebug](https://github.com/meitu/MTGLDebug), which inject tracking logic into the OpenGL API through [fishhook](https://github.com/facebook/fishhook).
 
 ## Usage
 
@@ -36,8 +36,6 @@ You can select a time range, view resources created during that time and still n
 ![OpenGL Trace Living Objects 2](./opengl-trace-living-objects-2.png) ![OpenGL Trace Living Objects 3](./opengl-trace-living-objects-3.png)
 
 ### Trace OpenGL common error calls and parameter exception
-
-当开启 `OpenGL Trace` 和 `OpenGL Trace Analysis` 功能后会开始进行常见 OpenGL 调用逻辑和参数进行跟踪，目前包含以下侦测策略：
 
 When the `OpenGL Trace` and `Analysis` are both on, it'll trace the common OpenGL call logic and parameters usage. Include following strategies:
 

@@ -38,7 +38,7 @@
 * 当前选中请求及其并发请求的 waterfall 视图
 * 历史记录请求列表
 
-![Records main](./network-monitor-records-main.png) ![Records search](./network-monitor-records-search.png) ![Records filter](./network-monitor-records-filter-panel.png)
+<img src="./network-monitor-records-main.png" width=290><img src="./network-monitor-records-search.png" width=290><img src="./network-monitor-records-filter-panel.png" width=290>
 
 其中搜索栏支持简单的过滤参数
 
