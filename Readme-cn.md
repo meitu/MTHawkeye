@@ -20,7 +20,7 @@ Hawkeye 内置了一些常用的性能侦测相关插件，也引入并改进了
 
 Hawkeye 简单可分为上中下三层，除了最下面的`基础层`外，中间为`UI 基础层`，最上层的各个插件内部根据不同场景做了职责拆分，应用可根据自己的需要接入。整体结构如下：
 
-![Hawkeye Architecture](http://cf.meitu.com/confluence/download/attachments/95951230/hawkeye-arch.png?version=2&modificationDate=1552446231867&api=v2)
+![MTHawkeye overall structure](./doc/images/hawkeye-arch.png)
 
 ### 基础功能
 

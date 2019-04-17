@@ -22,7 +22,7 @@ The following are demo diagrams of some built-in plugins for `View time-consumin
 
 MTHawkeye can be divided into upper, middle and lower layers. In addition to the bottom `Base` layer, the middle is the `UI Skeleton` and `Desktop Adaptor`, the uppermost plug-ins are internally split according to different scenarios. You can optionally add these plugins to your own scenario. The overall structure is as follows:
 
-![MTHawkeye overall structure](http://cf.meitu.com/confluence/download/attachments/95951230/hawkeye-arch.png?version=2&modificationDate=1552446231867&api=v2)
+![MTHawkeye overall structure](./doc/images/hawkeye-arch.png)
 
 ### Base Feature
 
