@@ -1,0 +1,932 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="0c09d31f-fd56-422c-8e55-fc7fde0deb84" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTHMemoryDebugger.h" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIView+MTHMemoryDebugger.h" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTMemoryDebugger.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIView+MTMemoryDebugger.h" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTANRMonitor.h" afterPath="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHANRMonitor.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTANRMonitor.m" afterPath="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHANRMonitor.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTFPSMonitor.h" afterPath="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHFPSMonitor.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTFPSMonitor.m" afterPath="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHFPSMonitor.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHawkeyeBacktraceLogger.h" afterPath="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHBacktraceLogger.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHawkeyeBacktraceLogger.m" afterPath="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHBacktraceLogger.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHawkeyeWeakProxy.h" afterPath="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHWeakProxy.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHawkeyeWeakProxy.m" afterPath="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHWeakProxy.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTCPUMonitor/MTCPUMonitor.h" afterPath="$PROJECT_DIR$/../MTHawkeye/MTCPUMonitor/MTHCPUMonitor.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTCPUMonitor/MTCPUMonitor.m" afterPath="$PROJECT_DIR$/../MTHawkeye/MTCPUMonitor/MTHCPUMonitor.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTMemoryDebugger.h" afterPath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTHMemoryDebugger.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTMemoryDebugger.m" afterPath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTHMemoryDebugger.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTMemoryDebuggerObjectProxy.h" afterPath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTHMemoryDebuggerObjectProxy.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTMemoryDebuggerObjectProxy.m" afterPath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTHMemoryDebuggerObjectProxy.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTMemoryDebugger.m" afterPath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTHMemoryDebugger.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTMemoryDebuggerTrack.h" afterPath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTHMemoryDebuggerTrack.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTMemoryDebuggerTrack.m" afterPath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTHMemoryDebuggerTrack.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIDevice+MTMemoryDebugger.h" afterPath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIDevice+MTHMemoryDebugger.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIDevice+MTMemoryDebugger.m" afterPath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIDevice+MTHMemoryDebugger.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UINavigationController+MTMemoryDebugger.h" afterPath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UINavigationController+MTHMemoryDebugger.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UINavigationController+MTMemoryDebugger.m" afterPath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UINavigationController+MTHMemoryDebugger.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIView+MTMemoryDebugger.m" afterPath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIView+MTHMemoryDebugger.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIViewController+MTMemoryDebugger.h" afterPath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIViewController+MTHMemoryDebugger.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIViewController+MTMemoryDebugger.m" afterPath="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIViewController+MTHMemoryDebugger.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/ChartView/MTBEMLine.h" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/ChartView/MTHLine.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/ChartView/MTBEMLine.m" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/ChartView/MTHLine.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/ChartView/MTBEMSimpleLineGraphView.h" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/ChartView/MTHSimpleLineGraphView.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/ChartView/MTBEMSimpleLineGraphView.m" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/ChartView/MTHSimpleLineGraphView.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeANRBacktraceViewController.h" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHANRBacktraceViewController.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeANRBacktraceViewController.m" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHANRBacktraceViewController.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeANRDebuggerViewController.h" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHANRDebuggerViewController.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeANRDebuggerViewController.m" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHANRDebuggerViewController.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeGLMemoryDebuggerViewController.h" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHGLMemoryDebuggerViewController.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeGLMemoryDebuggerViewController.m" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHGLMemoryDebuggerViewController.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeLeakedObjectViewController.h" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMemoryAliveClassViewController.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeLeakedObjectViewController.m" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMemoryAliveClassViewController.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMainViewController.h" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMainViewController.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMainViewController.m" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMainViewController.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMemoryDebuggerViewController.h" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMemoryDebuggerViewController.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMemoryDebuggerViewController.m" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMemoryDebuggerViewController.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorCell.h" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorCell.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorCell.m" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorCell.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorChartView.h" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorChartView.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorChartView.m" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorChartView.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorView.h" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorView.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorView.m" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorView.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorViewController.h" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorViewController.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorViewController.m" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorViewController.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorViewModel.h" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorViewModel.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorViewModel.m" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorViewModel.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorWindow.h" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorWindow.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorWindow.m" afterPath="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorWindow.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../MTHawkeye.podspec" afterPath="$PROJECT_DIR$/../MTHawkeye.podspec" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../MTHawkeye/MTHawkeyeImpl.m" afterPath="$PROJECT_DIR$/../MTHawkeye/MTHawkeyeImpl.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MTHawkeyeDemo/AppDelegate.m" afterPath="$PROJECT_DIR$/MTHawkeyeDemo/AppDelegate.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MTHawkeyeDemo/LeakingPropertiesTestViewController.m" afterPath="$PROJECT_DIR$/MTHawkeyeDemo/LeakingPropertiesTestViewController.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MTHawkeyeDemo/MemoryAllocationTestViewController.m" afterPath="$PROJECT_DIR$/MTHawkeyeDemo/MemoryAllocationTestViewController.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Podfile.lock" afterPath="$PROJECT_DIR$/Podfile.lock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Readme.md" afterPath="$PROJECT_DIR$/../Readme.md" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="iphoneos_57b06a6bce07d2842c526e0b9609a1ebd4600a22" />
+  <component name="FavoritesManager">
+    <favorites_list name="MTHawkeye" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="MTHMemoryDebugger.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTHMemoryDebugger.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="551">
+              <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MTHMemoryDebuggerObjectProxy.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTHMemoryDebuggerObjectProxy.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="460">
+              <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MTHMemoryDebuggerObjectProxy.m" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTHMemoryDebuggerObjectProxy.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NSObject+MTHMemoryDebugger.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTHMemoryDebugger.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="340">
+              <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NSObject+MTHMemoryDebuggerTrack.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTHMemoryDebuggerTrack.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="280">
+              <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UIDevice+MTHMemoryDebugger.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIDevice+MTHMemoryDebugger.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UIDevice+MTHMemoryDebugger.m" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIDevice+MTHMemoryDebugger.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UINavigationController+MTHMemoryDebugger.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UINavigationController+MTHMemoryDebugger.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UIView+MTHMemoryDebugger.h" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIView+MTHMemoryDebugger.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NSObject+MTHMemoryDebugger.m" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTHMemoryDebugger.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="460">
+              <caret line="26" column="49" lean-forward="false" selection-start-line="26" selection-start-column="49" selection-end-line="26" selection-end-column="49" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>BEMLineAnimation</find>
+      <find>BEMLineGradientDirection</find>
+      <find>BEM</find>
+      <find>kMTMemoryDebuggerNotificationPing</find>
+      <find>kMTMemoryDebuggerNotificationPong</find>
+      <find>kMTMemoryDebuggerNotificationSingletonPong</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>MTHLineAnimation</replace>
+      <replace>MTHLineGradientDirection</replace>
+      <replace>MTH</replace>
+      <replace>kMTHMemoryDebuggerNotificationPing</replace>
+      <replace>kMTHMemoryDebuggerNotificationPong</replace>
+      <replace>kMTHMemoryDebuggerNotificationSingletonPong</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTFPSMonitor.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHFPSMonitor.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHFPSMonitor.m" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHawkeyeBacktraceLogger.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHBacktraceLogger.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHBacktraceLogger.m" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHawkeyeWeakProxy.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHWeakProxy.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTCPUMonitor/MTCPUMonitor.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTCPUMonitor/MTHCPUMonitor.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTCPUMonitor/MTHCPUMonitor.m" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeANRBacktraceViewController.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHANRBacktraceViewController.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeANRDebuggerViewController.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHANRDebuggerViewController.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHANRDebuggerViewController.m" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeGLMemoryDebuggerViewController.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHGLMemoryDebuggerViewController.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHGLMemoryDebuggerViewController.m" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeLeakedObjectViewController.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMemoryAliveClassViewController.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMemoryAliveClassViewController.m" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMainViewController.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMainViewController.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorCell.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorCell.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMemoryDebuggerViewController.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMemoryDebuggerViewController.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorChartView.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorChartView.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorView.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorView.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorViewController.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorViewController.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHawkeyeMonitorWindow.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorWindow.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/ChartView/MTBEMLine.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/ChartView/MTHSimpleLineGraphView.h" />
+        <option value="$PROJECT_DIR$/Pods/Headers/Private/MTHawkeye/MTBEMSimpleLineGraphView.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/ChartView/MTHLine.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/Monitor/ChartView/MTHLine.m" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTMemoryDebugger.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTHMemoryDebugger.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTMemoryDebuggerObjectProxy.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTHMemoryDebuggerObjectProxy.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTMemoryDebugger.m" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTMemoryDebugger.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTHMemoryDebuggerTrack.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIDevice+MTHMemoryDebugger.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UINavigationController+MTHMemoryDebugger.h" />
+        <option value="$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIView+MTHMemoryDebugger.h" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-25" />
+    <option name="y" value="185" />
+    <option name="width" value="1916" />
+    <option name="height" value="1057" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>C/C++</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Cidr.FilesView" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="MTHawkeyeDemo" type="1d218c8b:XcodeProjectNode" />
+            </path>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="MTHawkeyeDemo" type="1d218c8b:XcodeProjectNode" />
+              <item name="Podspec Metadata" type="fcab9f18:XcodeViewNode" />
+            </path>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="Pods" type="1d218c8b:XcodeProjectNode" />
+            </path>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="Pods" type="1d218c8b:XcodeProjectNode" />
+              <item name="Development Pods" type="fcab9f18:XcodeViewNode" />
+            </path>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="Pods" type="1d218c8b:XcodeProjectNode" />
+              <item name="Development Pods" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+            </path>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="Pods" type="1d218c8b:XcodeProjectNode" />
+              <item name="Development Pods" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+              <item name="MTANRMonitor" type="fcab9f18:XcodeViewNode" />
+            </path>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="Pods" type="1d218c8b:XcodeProjectNode" />
+              <item name="Development Pods" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+              <item name="MTANRMonitor" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+            </path>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="Pods" type="1d218c8b:XcodeProjectNode" />
+              <item name="Development Pods" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+              <item name="MTANRMonitor" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+              <item name="MTANRMonitor" type="fcab9f18:XcodeViewNode" />
+            </path>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="Pods" type="1d218c8b:XcodeProjectNode" />
+              <item name="Development Pods" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+              <item name="MTCPUMonitor" type="fcab9f18:XcodeViewNode" />
+            </path>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="Pods" type="1d218c8b:XcodeProjectNode" />
+              <item name="Development Pods" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+              <item name="MTCPUMonitor" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+            </path>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="Pods" type="1d218c8b:XcodeProjectNode" />
+              <item name="Development Pods" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+              <item name="MTCPUMonitor" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+              <item name="MTCPUMonitor" type="fcab9f18:XcodeViewNode" />
+            </path>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="Pods" type="1d218c8b:XcodeProjectNode" />
+              <item name="Development Pods" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeyeMonitor" type="fcab9f18:XcodeViewNode" />
+            </path>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="Pods" type="1d218c8b:XcodeProjectNode" />
+              <item name="Development Pods" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeyeMonitor" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+            </path>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="Pods" type="1d218c8b:XcodeProjectNode" />
+              <item name="Development Pods" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+              <item name="MTMemoryDebugger" type="fcab9f18:XcodeViewNode" />
+            </path>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="Pods" type="1d218c8b:XcodeProjectNode" />
+              <item name="Development Pods" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+              <item name="MTMemoryDebugger" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+            </path>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="Pods" type="1d218c8b:XcodeProjectNode" />
+              <item name="Development Pods" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+              <item name="MTMemoryDebugger" type="fcab9f18:XcodeViewNode" />
+              <item name="MTHawkeye" type="fcab9f18:XcodeViewNode" />
+              <item name="MTMemoryDebugger" type="fcab9f18:XcodeViewNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.MTHawkeyeDemo">
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="Application.MTHawkeyeDemo" />
+      <item index="1" class="java.lang.String" itemvalue="XCTest/Kiwi.MTHawkeyeTests" />
+    </list>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0c09d31f-fd56-422c-8e55-fc7fde0deb84" name="Default" comment="" />
+      <created>1502076184915</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1502076184915</updated>
+      <workItem from="1502076188318" duration="80000" />
+      <workItem from="1502076279524" duration="1123000" />
+      <workItem from="1502077441958" duration="286000" />
+      <workItem from="1502077775374" duration="34000" />
+      <workItem from="1502077860787" duration="2241000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="3764000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="4" y="23" width="1914" height="1055" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24764891" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960325" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTNetworkMonitor/MTHawkeyeWebViewController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTNetworkMonitor/MTHawkeyeUtility.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="22" column="13" lean-forward="false" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTNetworkMonitor/MTHNetworkWaterfallViewCell.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTNetworkMonitor/MTHNetworkWaterfallViewCell.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="10" column="34" lean-forward="false" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTNetworkMonitor/MTHNetworkWaterfallViewCellModel.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTNetworkMonitor/MTHNetworkWaterfallViewController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="10" column="30" lean-forward="false" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTNetworkMonitor/MTHNetworkHistoryViewCell.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="27" column="31" lean-forward="false" selection-start-line="27" selection-start-column="31" selection-end-line="27" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTNetworkMonitor/MTHNetworkHistoryViewController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="10" column="14" lean-forward="false" selection-start-line="10" selection-start-column="14" selection-end-line="10" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTNetworkMonitor/MTHNetworkMonitor.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="9" column="14" lean-forward="false" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTNetworkMonitor/MTHNetworkMonitorViewModel.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="58">
+          <caret line="19" column="2" lean-forward="false" selection-start-line="19" selection-start-column="2" selection-end-line="19" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTNetworkMonitor/NSData+MTHawkeyeNetwork.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTNetworkMonitor/NSData+MTHawkeyeNetwork.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/podfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHFPSMonitor.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="20">
+          <caret line="1" column="17" lean-forward="false" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHFPSMonitor.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="21" column="0" lean-forward="true" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHBacktraceLogger.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="20">
+          <caret line="1" column="22" lean-forward="false" selection-start-line="1" selection-start-column="22" selection-end-line="1" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHBacktraceLogger.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="560">
+          <caret line="28" column="0" lean-forward="true" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHANRMonitor.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="15" column="14" lean-forward="false" selection-start-line="15" selection-start-column="14" selection-end-line="15" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTANRMonitor/MTHWeakProxy.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="20" column="17" lean-forward="true" selection-start-line="20" selection-start-column="17" selection-end-line="20" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTCPUMonitor/MTHCPUMonitor.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="20">
+          <caret line="1" column="17" lean-forward="false" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTCPUMonitor/MTHCPUMonitor.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/MTHANRBacktraceViewController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="18" column="4" lean-forward="true" selection-start-line="18" selection-start-column="4" selection-end-line="18" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/MTHANRBacktraceViewController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="10" column="14" lean-forward="false" selection-start-line="10" selection-start-column="14" selection-end-line="10" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/MTHANRDebuggerViewController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="20">
+          <caret line="1" column="32" lean-forward="false" selection-start-line="1" selection-start-column="32" selection-end-line="1" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/MTHANRDebuggerViewController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/MTHGLMemoryDebuggerViewController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="11" column="19" lean-forward="false" selection-start-line="11" selection-start-column="19" selection-end-line="11" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/MTHGLMemoryDebuggerViewController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="600">
+          <caret line="33" column="18" lean-forward="true" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMemoryAliveClassViewController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMemoryAliveClassViewController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="13" column="29" lean-forward="true" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMainViewController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="9" column="33" lean-forward="true" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorCell.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="10" column="29" lean-forward="true" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMemoryDebuggerViewController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="11" column="14" lean-forward="false" selection-start-line="11" selection-start-column="14" selection-end-line="11" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorChartView.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="17" column="19" lean-forward="true" selection-start-line="17" selection-start-column="19" selection-end-line="17" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorChartView.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="22" column="45" lean-forward="true" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorView.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="640">
+          <caret line="33" column="0" lean-forward="true" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorViewController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="10" column="59" lean-forward="false" selection-start-line="10" selection-start-column="59" selection-end-line="10" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/MTHMonitorWindow.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="22" column="8" lean-forward="false" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pods/Headers/Private/MTHawkeye/MTBEMSimpleLineGraphView.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/ChartView/MTHLine.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="800">
+          <caret line="40" column="22" lean-forward="false" selection-start-line="40" selection-start-column="22" selection-end-line="40" selection-end-column="22" />
+          <folding>
+            <marker date="1502086915000" expanded="true" signature="216:269" ph="..." />
+            <marker date="1502086915000" expanded="true" signature="369:846" ph="{...}" />
+            <marker date="1502086915000" expanded="true" signature="982:1168" ph="{...}" />
+            <marker date="1502086915000" expanded="true" signature="1239:5978" ph="..." />
+            <marker date="1502086915000" expanded="true" signature="1929:2213" ph="/**...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/ChartView/MTHSimpleLineGraphView.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="21" column="21" lean-forward="false" selection-start-line="21" selection-start-column="21" selection-end-line="21" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/Monitor/ChartView/MTHLine.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="591">
+          <caret line="83" column="89" lean-forward="true" selection-start-line="83" selection-start-column="89" selection-end-line="83" selection-end-column="89" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTHMemoryDebugger.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="551">
+          <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTHMemoryDebuggerObjectProxy.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="460">
+          <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/MTHMemoryDebuggerObjectProxy.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTHMemoryDebugger.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="460">
+          <caret line="26" column="49" lean-forward="false" selection-start-line="26" selection-start-column="49" selection-end-line="26" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTHMemoryDebugger.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/NSObject+MTHMemoryDebuggerTrack.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIDevice+MTHMemoryDebugger.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIDevice+MTHMemoryDebugger.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UINavigationController+MTHMemoryDebugger.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../MTHawkeye/MTMemoryDebugger/UIView+MTHMemoryDebugger.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

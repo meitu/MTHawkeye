@@ -1,0 +1,35 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+platform :ios, "8.0"
+
+#inhibit_all_warnings!
+
+workspace 'MTHawkeye'
+
+def debug_tools
+    pod 'MTHawkeye', :path => '../', :configurations => 'Debug', :inhibit_warnings => true
+
+    # 由于目前 podspec 依赖项不支持环境配置，因此 Hawkeye 依赖的库也都需要显式配置为 Debug
+    pod 'MTGLDebug', :configurations => ['Debug'], :inhibit_warnings => true
+    pod 'FLEX', :configurations => ['Debug'], :inhibit_warnings => true
+    pod 'FBRetainCycleDetector', :configurations => ['Debug'], :inhibit_warnings => true
+    pod 'fishhook', :configurations => ['Debug'], :inhibit_warnings => true
+    pod 'CocoaLumberjack', :configurations => ['Debug'], :inhibit_warnings => true
+
+    pod 'MTAppenderFile', :configurations => ['Debug'], :inhibit_warnings => false
+end
+
+target 'MTHawkeyeDemo' do
+
+  project 'MTHawkeyeDemo'
+
+  debug_tools
+
+  pod 'AFNetworking', :inhibit_warnings => true
+
+  target 'MTHawkeyeDemoTests' do
+      pod 'AGAsyncTestHelper/Shorthand', :inhibit_warnings => true
+      pod 'GYHttpMock', :inhibit_warnings => true
+  end
+
+end

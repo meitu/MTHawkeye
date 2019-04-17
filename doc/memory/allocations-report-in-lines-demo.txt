@@ -1,0 +1,379 @@
+
+[hawkeye] DefaultMallocZone(Heap) report: 
+[hawkeye] report threshold: 500.00KB 
+
+[hawkeye] record_size: 503.73MB, allocates: 34403, categories: 222, stacks: 2131
+
++ size: 500.819MB, category: unknown_malloc, stack_id_count: 1122, record_count: 10822 
+> size: 300.000MB, count:6 
+0 libsystem_malloc.dylib  malloc
+1 MTHawkeyeDemo  -[MemoryAllocationTestViewController add50Clean:]
+2 MTHawkeyeDemo  main
+3 libdyld.dylib 0x181e9d000 0x181ea1598, org: 0x181ea159c
+
+> size: 150.000MB, count:3 
+0 libsystem_malloc.dylib  malloc
+1 MTHawkeyeDemo  -[MemoryAllocationTestViewController add50Dirty:]
+2 MTHawkeyeDemo  main
+3 libdyld.dylib 0x181e9d000 0x181ea1598, org: 0x181ea159c
+
+> size: 50.000MB, count:1 
+0 libsystem_malloc.dylib  malloc
+1 MTHawkeyeDemo  -[MemoryAllocationTestViewController add10v50:]
+2 MTHawkeyeDemo  main
+3 libdyld.dylib 0x181e9d000 0x181ea1598, org: 0x181ea159c
+
++ size: 576.976KB, category: __NSArrayM, stack_id_count: 119, record_count: 4148 
++ size: 449.200KB, category: CTFontDescriptor, stack_id_count: 3, record_count: 914 
++ size: 439.375KB, category: CFString (immutable), stack_id_count: 99, record_count: 4819 
++ size: 178.117KB, category: _CFXNotificationDarwinTokenRegistration, stack_id_count: 1, record_count: 2665 
++ size: 106.947KB, category: CFBasicHash (key-store), stack_id_count: 13, record_count: 932 
++ size: 102.304KB, category: FBSSceneImpl, stack_id_count: 1, record_count: 462 
++ size: 85.407KB, category: __NSDictionaryM, stack_id_count: 64, record_count: 1206 
++ size: 59.840KB, category: CGColor, stack_id_count: 14, record_count: 303 
++ size: 56.039KB, category: _CFXNotificationObjcObserverRegistration, stack_id_count: 20, record_count: 374 
++ size: 47.699KB, category: CFDateFormatter, stack_id_count: 2, record_count: 76 
++ size: 46.170KB, category: CFDictionary (mutable), stack_id_count: 14, record_count: 425 
++ size: 44.959KB, category: CGFont, stack_id_count: 2, record_count: 108 
++ size: 41.562KB, category: __NSDictionaryI, stack_id_count: 8, record_count: 331 
++ size: 39.343KB, category: CFData, stack_id_count: 1, record_count: 259 
++ size: 34.500KB, category: _UIAppearanceCustomizableClassInfo, stack_id_count: 3, record_count: 267 
++ size: 32.621KB, category: CFArray (mutable-variable), stack_id_count: 1, record_count: 9 
++ size: 30.000KB, category: UITableViewCell, stack_id_count: 3, record_count: 30 
++ size: 27.797KB, category: _CFXNotificationTokenRegistration, stack_id_count: 20, record_count: 227 
++ size: 26.750KB, category: UILongPressGestureRecognizer, stack_id_count: 4, record_count: 132 
++ size: 24.021KB, category: __NSTimeZone, stack_id_count: 1, record_count: 60 
++ size: 23.383KB, category: UISwipeGestureRecognizer, stack_id_count: 2, record_count: 115 
++ size: 23.070KB, category: CAFilter, stack_id_count: 1, record_count: 144 
++ size: 22.568KB, category: NSPathStore2, stack_id_count: 6, record_count: 247 
++ size: 21.820KB, category: CUIRenditionMetrics, stack_id_count: 2, record_count: 129 
++ size: 19.344KB, category: _CUIThemePixelRendition, stack_id_count: 1, record_count: 94 
++ size: 19.202KB, category: _NSInlineData, stack_id_count: 1, record_count: 134 
++ size: 18.531KB, category: CFCharacterSet, stack_id_count: 2, record_count: 56 
++ size: 15.306KB, category: __NSSingleObjectArrayI, stack_id_count: 8, record_count: 254 
++ size: 14.977KB, category: __NSSetM, stack_id_count: 20, record_count: 336 
++ size: 14.917KB, category: CFBasicHash (value-store), stack_id_count: 13, record_count: 93 
++ size: 13.438KB, category: CFSet (mutable), stack_id_count: 10, record_count: 215 
++ size: 12.797KB, category: CFNumberFormatter, stack_id_count: 2, record_count: 14 
++ size: 12.602KB, category: CALayer, stack_id_count: 50, record_count: 610 
++ size: 12.195KB, category: NSConcreteMapTable, stack_id_count: 5, record_count: 81 
++ size: 11.961KB, category: CALayerArray, stack_id_count: 59, record_count: 322 
++ size: 11.758KB, category: UITableViewLabel, stack_id_count: 4, record_count: 61 
++ size: 10.938KB, category: CFURL, stack_id_count: 1, record_count: 100 
++ size: 10.250KB, category: UILabel, stack_id_count: 8, record_count: 16 
++ size: 10.055KB, category: UIGestureRecognizerTarget, stack_id_count: 6, record_count: 72 
++ size: 9.625KB, category: UIButtonContent, stack_id_count: 11, record_count: 43 
++ size: 9.281KB, category: UITableView, stack_id_count: 4, record_count: 4 
++ size: 9.234KB, category: NSConcretePointerArray, stack_id_count: 1, record_count: 61 
++ size: 9.141KB, category: UITableViewCellContentView, stack_id_count: 1, record_count: 45 
++ size: 8.320KB, category: NSShadow, stack_id_count: 5, record_count: 46 
++ size: 8.195KB, category: NSKeyValueSlowMutableCollectionGetter, stack_id_count: 5, record_count: 110 
++ size: 7.945KB, category: _UIVisualEffectFilterView, stack_id_count: 1, record_count: 36 
++ size: 7.919KB, category: CGImageProvider, stack_id_count: 1, record_count: 43 
++ size: 6.180KB, category: __NSObserver, stack_id_count: 1, record_count: 21 
++ size: 6.039KB, category: CFBasicHash, stack_id_count: 3, record_count: 68 
++ size: 5.727KB, category: _UIFeedbackZoomEdgeBehavior, stack_id_count: 2, record_count: 43 
++ size: 5.383KB, category: UIView, stack_id_count: 12, record_count: 14 
++ size: 5.359KB, category: CFString (mutable), stack_id_count: 3, record_count: 28 
++ size: 5.352KB, category: NSKeyValueSlowSetter, stack_id_count: 4, record_count: 73 
++ size: 5.133KB, category: _NSXPCInterfaceMethodInfo, stack_id_count: 1, record_count: 196 
++ size: 4.992KB, category: _UILabelLayer, stack_id_count: 27, record_count: 73 
++ size: 4.906KB, category: UIGestureGraphNode, stack_id_count: 13, record_count: 43 
++ size: 4.852KB, category: FacebookProjectsTableViewController, stack_id_count: 1, record_count: 39 
++ size: 4.401KB, category: CFBag (mutable), stack_id_count: 2, record_count: 89 
++ size: 4.344KB, category: __NSSetI, stack_id_count: 3, record_count: 42 
++ size: 3.875KB, category: NSKeyValueMethodSetter, stack_id_count: 3, record_count: 36 
++ size: 3.867KB, category: UIScrollView, stack_id_count: 3, record_count: 3 
++ size: 3.609KB, category: NSISLinearExpression, stack_id_count: 1, record_count: 34 
++ size: 3.586KB, category: NSKeyValueUnnestedProperty, stack_id_count: 4, record_count: 53 
++ size: 3.562KB, category: NSMethodSignature, stack_id_count: 5, record_count: 80 
++ size: 3.555KB, category: FLEXToolbarItem, stack_id_count: 5, record_count: 5 
++ size: 3.289KB, category: __NSArrayI, stack_id_count: 11, record_count: 58 
++ size: 3.250KB, category: NSLock, stack_id_count: 5, record_count: 69 
++ size: 3.164KB, category: MTHMonitorViewCell, stack_id_count: 3, record_count: 3 
++ size: 3.125KB, category: GithubRepository, stack_id_count: 1, record_count: 100 
++ size: 3.094KB, category: _UITableViewHeaderFooterViewBackground, stack_id_count: 1, record_count: 11 
++ size: 3.070KB, category: NSKeyValueSlowGetter, stack_id_count: 3, record_count: 39 
++ size: 2.500KB, category: UISwitch, stack_id_count: 1, record_count: 5 
++ size: 2.484KB, category: __NSPlaceholderOrderedSet, stack_id_count: 1, record_count: 25 
++ size: 2.266KB, category: NSKeyValueMethodGetter, stack_id_count: 2, record_count: 12 
++ size: 2.016KB, category: CTFont, stack_id_count: 3, record_count: 25 
++ size: 1.938KB, category: _NSObserverList, stack_id_count: 2, record_count: 31 
++ size: 1.859KB, category: CFPrefsManagedSource, stack_id_count: 2, record_count: 14 
++ size: 1.852KB, category: NSTaggedPointerStringCStringContainer, stack_id_count: 3, record_count: 300 
++ size: 1.781KB, category: UITabBarButtonLabel, stack_id_count: 1, record_count: 10 
++ size: 1.719KB, category: UIImage, stack_id_count: 6, record_count: 18 
++ size: 1.469KB, category: _UIResizableImage, stack_id_count: 1, record_count: 6 
++ size: 1.422KB, category: _NSCachedAttributedString, stack_id_count: 1, record_count: 31 
++ size: 1.305KB, category: _NSAutoresizingMaskXAxisAnchor, stack_id_count: 1, record_count: 25 
++ size: 1.266KB, category: UIAutoRespondingScrollViewControllerKeyboardSupport, stack_id_count: 1, record_count: 18 
++ size: 1.242KB, category: _UIFontExtraData, stack_id_count: 3, record_count: 13 
++ size: 1.172KB, category: __NSURLSessionLocal, stack_id_count: 1, record_count: 4 
++ size: 1.102KB, category: NSKeyValueContainerClass, stack_id_count: 1, record_count: 15 
++ size: 1.094KB, category: UITapGestureRecognizer, stack_id_count: 5, record_count: 5 
++ size: 1.062KB, category: NSISRestrictedToZeroMarkerVariable, stack_id_count: 1, record_count: 17 
++ size: 1.062KB, category: _NSConcreteObservation, stack_id_count: 5, record_count: 46 
++ size: 1.047KB, category: _UISystemGestureGateGestureRecognizer, stack_id_count: 1, record_count: 12 
++ size: 1.039KB, category: UINavigationController, stack_id_count: 1, record_count: 1 
++ size: 1.023KB, category: NSKeyValueUndefinedSetter, stack_id_count: 1, record_count: 13 
++ size: 1.023KB, category: UITransitionView, stack_id_count: 1, record_count: 5 
++ size: 1016byte, category: UICachedDeviceRGBColor, stack_id_count: 6, record_count: 25 
++ size: 920byte, category: FLEXExplorerViewController, stack_id_count: 1, record_count: 1 
++ size: 920byte, category: NSSelfExpression, stack_id_count: 1, record_count: 15 
++ size: 872byte, category: CFPrefsSearchListSource, stack_id_count: 1, record_count: 7 
++ size: 864byte, category: UITapRecognizer, stack_id_count: 4, record_count: 8 
++ size: 848byte, category: MTHawkeyeMainPanelViewController, stack_id_count: 1, record_count: 1 
++ size: 832byte, category: FLEXWindow, stack_id_count: 1, record_count: 1 
++ size: 832byte, category: MTHFloatingMonitorWindow, stack_id_count: 1, record_count: 1 
++ size: 816byte, category: UIBarButtonItem, stack_id_count: 3, record_count: 3 
++ size: 800byte, category: MTHAllocationsViewController, stack_id_count: 1, record_count: 1 
++ size: 784byte, category: MTHawkeyeFloatingWidgetViewController, stack_id_count: 1, record_count: 1 
++ size: 768byte, category: MTHUserDefaultsObserverInfo, stack_id_count: 24, record_count: 24 
++ size: 760byte, category: NSConcreteHashTable, stack_id_count: 5, record_count: 5 
++ size: 716byte, category: CFFileDescriptor, stack_id_count: 1, record_count: 8 
++ size: 672byte, category: UITableViewRowData, stack_id_count: 2, record_count: 4 
++ size: 672byte, category: UIPanGestureRecognizer, stack_id_count: 2, record_count: 2 
++ size: 568byte, category: UIActivityIndicatorView, stack_id_count: 1, record_count: 1 
++ size: 520byte, category: FLEXExplorerToolbar, stack_id_count: 1, record_count: 1 
++ size: 496byte, category: __NSDate, stack_id_count: 1, record_count: 31 
++ size: 496byte, category: _UIBackdropViewLayer, stack_id_count: 1, record_count: 16 
++ size: 488byte, category: UIImageView, stack_id_count: 1, record_count: 1 
++ size: 480byte, category: UINavigationItem, stack_id_count: 2, record_count: 2 
++ size: 480byte, category: UIInputSetHostView, stack_id_count: 1, record_count: 2 
++ size: 472byte, category: MTHawkeyeMainPanelTitleView, stack_id_count: 1, record_count: 1 
++ size: 456byte, category: MTHMonitorView, stack_id_count: 1, record_count: 1 
++ size: 448byte, category: WebBackgroundTaskController, stack_id_count: 1, record_count: 8 
++ size: 440byte, category: UIControlTargetAction, stack_id_count: 7, record_count: 11 
++ size: 432byte, category: NSOperationQueue, stack_id_count: 2, record_count: 3 
++ size: 408byte, category: CFArray (store-deque), stack_id_count: 1, record_count: 6 
++ size: 392byte, category: _NSFileManagerInfo, stack_id_count: 1, record_count: 9 
++ size: 384byte, category: MTHFakeKVORemover, stack_id_count: 9, record_count: 16 
++ size: 384byte, category: __NSOperationQueueInternal, stack_id_count: 1, record_count: 1 
++ size: 360byte, category: NSMutableIndexSet, stack_id_count: 7, record_count: 9 
++ size: 360byte, category: _UIFontCacheKey, stack_id_count: 3, record_count: 6 
++ size: 336byte, category: NSRecursiveLock, stack_id_count: 3, record_count: 3 
++ size: 336byte, category: UISectionRowData, stack_id_count: 1, record_count: 2 
++ size: 320byte, category: MTHawkeyeSettingEditorEntity, stack_id_count: 4, record_count: 4 
++ size: 320byte, category: LegacyTileLayer, stack_id_count: 1, record_count: 8 
++ size: 304byte, category: NSMergePolicy, stack_id_count: 1, record_count: 7 
++ size: 288byte, category: UIViewAnimationState, stack_id_count: 1, record_count: 2 
++ size: 288byte, category: UICachedDeviceWhiteColor, stack_id_count: 5, record_count: 6 
++ size: 272byte, category: NSConcreteMutableAttributedString, stack_id_count: 4, record_count: 8 
++ size: 256byte, category: NSConcreteMutableData, stack_id_count: 4, record_count: 7 
++ size: 240byte, category: UIPanGestureVelocitySample, stack_id_count: 2, record_count: 6 
++ size: 208byte, category: _CFXNotificationNameWildcardObjectRegistration, stack_id_count: 1, record_count: 3 
++ size: 192byte, category: MTHViewControllerRecord, stack_id_count: 1, record_count: 2 
++ size: 192byte, category: CFRunLoopSource, stack_id_count: 1, record_count: 1 
++ size: 192byte, category: UIWindowLayer, stack_id_count: 2, record_count: 6 
++ size: 168byte, category: NSAttributeDictionary, stack_id_count: 3, record_count: 3 
++ size: 160byte, category: _NSThreadData, stack_id_count: 1, record_count: 1 
++ size: 144byte, category: CFString (store), stack_id_count: 1, record_count: 4 
++ size: 128byte, category: MTHawkeyeUIClient, stack_id_count: 1, record_count: 1 
++ size: 128byte, category: NSNumberFormatter, stack_id_count: 1, record_count: 1 
++ size: 120byte, category: NSConcreteAttributedString, stack_id_count: 5, record_count: 5 
++ size: 120byte, category: _UIImageViewExtendedStorage, stack_id_count: 1, record_count: 2 
++ size: 96byte, category: NSCountedSet, stack_id_count: 2, record_count: 4 
++ size: 96byte, category: NSRegularExpression, stack_id_count: 2, record_count: 2 
++ size: 96byte, category: BKSEventFocusDeferralProperties, stack_id_count: 1, record_count: 3 
++ size: 96byte, category: UIMenuItem, stack_id_count: 3, record_count: 3 
++ size: 88byte, category: MTHAppPingThread, stack_id_count: 1, record_count: 1 
++ size: 83byte, category: NSConcreteValue, stack_id_count: 2, record_count: 3 
++ size: 80byte, category: MTHDirectoryWatcher, stack_id_count: 1, record_count: 1 
++ size: 80byte, category: NSAutoreleasePool, stack_id_count: 2, record_count: 2 
++ size: 80byte, category: NSKeyValueIvarGetter, stack_id_count: 1, record_count: 1 
++ size: 80byte, category: NSKeyValueObservance, stack_id_count: 1, record_count: 2 
++ size: 80byte, category: CTFeatureSetting, stack_id_count: 1, record_count: 5 
++ size: 64byte, category: MTAppenderFile, stack_id_count: 2, record_count: 2 
++ size: 64byte, category: MTHawkeyeClient, stack_id_count: 1, record_count: 1 
++ size: 64byte, category: MTHDirectoryWatcherMonitor, stack_id_count: 1, record_count: 1 
++ size: 64byte, category: MTHFPSTrace, stack_id_count: 1, record_count: 1 
++ size: 64byte, category: MTHNetworkTaskInspector, stack_id_count: 1, record_count: 1 
++ size: 64byte, category: UIAnimator, stack_id_count: 1, record_count: 1 
++ size: 64byte, category: _UIWeakHelper, stack_id_count: 4, record_count: 4 
++ size: 56byte, category: MTGLDebug, stack_id_count: 1, record_count: 1 
++ size: 56byte, category: MTHawkeyeSettingSwitcherCellEntity, stack_id_count: 1, record_count: 1 
++ size: 48byte, category: MTH_RSSwizzleInfo, stack_id_count: 2, record_count: 2 
++ size: 48byte, category: MTHANRObserver, stack_id_count: 1, record_count: 1 
++ size: 48byte, category: MTHawkeyeStorage, stack_id_count: 1, record_count: 1 
++ size: 48byte, category: MTHLivingObjectShadowTrigger, stack_id_count: 1, record_count: 1 
++ size: 48byte, category: DYDisplayLinkInterposer, stack_id_count: 1, record_count: 2 
++ size: 48byte, category: UIMenuController, stack_id_count: 1, record_count: 1 
++ size: 40byte, category: MTHANRTrace, stack_id_count: 1, record_count: 1 
++ size: 40byte, category: MTHawkeyeMemoryStatFloatingWidget, stack_id_count: 1, record_count: 1 
++ size: 40byte, category: MTHawkeyeFloatingWidgets, stack_id_count: 1, record_count: 1 
++ size: 40byte, category: MTHawkeyeMainPanels, stack_id_count: 1, record_count: 1 
++ size: 40byte, category: MTHLivingObjectSniffer, stack_id_count: 1, record_count: 1 
++ size: 40byte, category: MTHNetworkRecorder, stack_id_count: 1, record_count: 1 
++ size: 32byte, category: FLEXManager, stack_id_count: 1, record_count: 1 
++ size: 32byte, category: MTFPSHawkeyeUI, stack_id_count: 1, record_count: 1 
++ size: 32byte, category: MTHawkeyeCPUStatFloatingWidget, stack_id_count: 1, record_count: 1 
++ size: 32byte, category: MTHLivingObjectSniffService, stack_id_count: 1, record_count: 1 
++ size: 32byte, category: MTHOpenGLTraceHawkeyeAdaptor, stack_id_count: 1, record_count: 1 
++ size: 32byte, category: MTHOpenGLTraceHawkeyeUI, stack_id_count: 1, record_count: 1 
++ size: 32byte, category: __NSOrderedSetM, stack_id_count: 1, record_count: 1 
++ size: 24byte, category: MTHawkeyeSettingUIEntity, stack_id_count: 1, record_count: 1 
++ size: 24byte, category: MTHDirectoryWatcherHawkeyeAdaptor, stack_id_count: 1, record_count: 1 
++ size: 24byte, category: MTHNetworkObserver, stack_id_count: 1, record_count: 1 
++ size: 24byte, category: MTHURLSessionDelegateProxy, stack_id_count: 1, record_count: 1 
++ size: 24byte, category: NSCompoundPredicateOperator, stack_id_count: 1, record_count: 1 
++ size: 24byte, category: CAMediaTimingFunctionBuiltin, stack_id_count: 1, record_count: 1 
++ size: 24byte, category: _UIImageAssetMapEnvelope, stack_id_count: 1, record_count: 75 
++ size: 16byte, category: ANormalViewModel, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: FLEXHawkeyePlugin, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTFPSHawkeyeAdaptor, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHAllocationsHawkeyeAdaptor, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHAllocationsHawkeyeUI, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHANRHawkeyeAdaptor, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHANRHawkeyeUI, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHawkeyeWeakProxy, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHCPUTraceHawkeyeAdaptor, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHCPUTraceHawkeyeUI, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHDirectoryWatcherHawkeyeUI, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHLivingObjectShadowPackage, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHLivingObjectsSnifferHawkeyeAdaptor, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHLivingObjectsSnifferHawkeyeUI, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHNetworkMonitorHawkeyeMainPanelUI, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHNetworkInspectHawkeyeMainPanelUI, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHNetworkHawkeyeSettingUI, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHNetworkInspectHawkeyeAdaptor, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHNetworkMonitor, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHNetworkMonitorHawkeyeAdaptor, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHNetworkRecordsStorage, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHObjcCallTraceHawkeyeAdaptor, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHUITimeProfilerHawkeyeAdaptor, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHUITimeProfilerHawkeyeUI, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: MTHFakeKVOObserver, stack_id_count: 1, record_count: 1 
++ size: 16byte, category: _NSPlaceholderObservation, stack_id_count: 1, record_count: 1 
+
+
+ ---------------------- 
+
+[hawkeye] vm(vmallocate/mmap ...) report: 
+[hawkeye] report threshold: 1024.00KB 
+
+[hawkeye] record_size: 534.01MB, allocates: 66, categories: 6, stacks: 38
+
++ size: 500.531MB, category: malloc_large, stack_id_count: 18, record_count: 26 
+> size: 300.000MB, count:6 
+0 libsystem_malloc.dylib  malloc
+1 MTHawkeyeDemo  -[MemoryAllocationTestViewController add50Clean:]
+2 MTHawkeyeDemo  main
+3 libdyld.dylib 0x181e9d000 0x181ea1598, org: 0x181ea159c
+
+> size: 150.000MB, count:3 
+0 libsystem_malloc.dylib  malloc
+1 MTHawkeyeDemo  -[MemoryAllocationTestViewController add50Dirty:]
+2 MTHawkeyeDemo  main
+3 libdyld.dylib 0x181e9d000 0x181ea1598, org: 0x181ea159c
+
+> size: 50.000MB, count:1 
+0 libsystem_malloc.dylib  malloc
+1 MTHawkeyeDemo  -[MemoryAllocationTestViewController add10v50:]
+2 MTHawkeyeDemo  main
+3 libdyld.dylib 0x181e9d000 0x181ea1598, org: 0x181ea159c
+
++ size: 12.896MB, category: tcmalloc, stack_id_count: 2, record_count: 10 
+> size: 12.850MB, count:7 
+0 UIKit 0x1890d8000 0x1892fdf2c, org: 0x1892fdf7c
+1 MTHawkeyeDemo  -[MTHawkeyeWebViewController initWithNibName:bundle:]
+2 MTHawkeyeDemo  -[MTHawkeyeWebViewController initWithText:]
+3 MTHawkeyeDemo  __44-[MTHAllocationsViewController showContent:]_block_invoke
+4 MTHawkeyeDemo  main
+5 libdyld.dylib 0x181e9d000 0x181ea1598, org: 0x181ea159c
+
++ size: 12.000MB, category: malloc_nano, stack_id_count: 5, record_count: 6 
+> size: 4.000MB, count:2 
+0 Foundation 0x1839a0000 0x183a18284, org: 0x183a18318
+1 MTHawkeyeDemo  -[FacebookProjectsTableViewController viewDidLoad]
+2 MTHawkeyeDemo  mth_viewDidLoad
+3 MTHawkeyeDemo  main
+4 libdyld.dylib 0x181e9d000 0x181ea1598, org: 0x181ea159c
+
+> size: 2.000MB, count:1 
+0 libobjc.A.dylib 0x181a10000 0x181a37090, org: 0x181a370a8
+1 MTHawkeyeDemo  +[NSObject(MTHAllocTrack) mtha_new_alloc]
+2 MTHawkeyeDemo  +[MTHawkeyeUtility stringByEscapingHTMLEntitiesInString:]
+3 MTHawkeyeDemo  -[MTHawkeyeWebViewController initWithText:]
+4 MTHawkeyeDemo  __44-[MTHAllocationsViewController showContent:]_block_invoke
+5 MTHawkeyeDemo  main
+6 libdyld.dylib 0x181e9d000 0x181ea1598, org: 0x181ea159c
+
+> size: 2.000MB, count:1 
+0 libobjc.A.dylib 0x181a10000 0x181a37090, org: 0x181a370a8
+1 MTHawkeyeDemo  +[NSObject(MTHAllocTrack) mtha_new_alloc]
+2 MTHawkeyeDemo  -[MTHawkeyeSettingCell titleLabel]
+3 MTHawkeyeDemo  -[MTHawkeyeSettingCell initWithStyle:reuseIdentifier:]
+4 MTHawkeyeDemo  -[MTHawkeyeSettingViewController tableView:cellForRowAtIndexPath:]
+5 MTHawkeyeDemo  main
+6 libdyld.dylib 0x181e9d000 0x181ea1598, org: 0x181ea159c
+
+> size: 2.000MB, count:1 
+0 UIKit 0x1890d8000 0x189225b30, org: 0x189225c10
+1 MTHawkeyeDemo  -[FLEXFileBrowserTableViewController tableView:cellForRowAtIndexPath:]
+2 MTHawkeyeDemo  main
+3 libdyld.dylib 0x181e9d000 0x181ea1598, org: 0x181ea159c
+
+> size: 2.000MB, count:1 
+0 libobjc.A.dylib 0x181a10000 0x181a37090, org: 0x181a370a8
+1 MTHawkeyeDemo  +[NSObject(MTHAllocTrack) mtha_new_alloc]
+2 MTHawkeyeDemo  +[FLEXUtility stringByEscapingHTMLEntitiesInString:]
+3 MTHawkeyeDemo  -[FLEXWebViewController initWithText:]
+4 MTHawkeyeDemo  -[FLEXFileBrowserTableViewController tableView:didSelectRowAtIndexPath:]
+5 MTHawkeyeDemo  main
+6 libdyld.dylib 0x181e9d000 0x181ea1598, org: 0x181ea159c
+
++ size: 8.287MB, category: 0, stack_id_count: 7, record_count: 8 
+> size: 2.748MB, count:1 
+0 UIKit 0x1890d8000 0x18944cd48, org: 0x18944cf00
+1 MTHawkeyeDemo  -[UIViewController(VCDetector) mth_initWithCoder:]
+2 MTHawkeyeDemo  -[UIViewController(VCDetector) mth_initWithCoder:]
+3 MTHawkeyeDemo  -[UIViewController(VCDetector) mth_initWithCoder:]
+4 MTHawkeyeDemo  main
+5 libdyld.dylib 0x181e9d000 0x181ea1598, org: 0x181ea159c
+
+> size: 2.061MB, count:1 
+0 UIFoundation 0x188ff4000 0x189082b9c, org: 0x189082c20
+1 MTHawkeyeDemo  +[FLEXUtility defaultFontOfSize:]
+2 MTHawkeyeDemo  +[FLEXToolbarItem titleAttributes]
+3 MTHawkeyeDemo  +[FLEXToolbarItem toolbarItemWithTitle:image:]
+4 MTHawkeyeDemo  -[FLEXExplorerToolbar initWithFrame:]
+5 MTHawkeyeDemo  -[FLEXExplorerViewController viewDidLoad]
+6 MTHawkeyeDemo  mth_viewDidLoad
+7 MTHawkeyeDemo  -[FLEXManager showExplorer]
+8 MTHawkeyeDemo  -[FLEXHawkeyePlugin showFLEX]
+9 MTHawkeyeDemo  -[FLEXHawkeyePlugin switchingOptionDidTapped]
+10 MTHawkeyeDemo  -[MTHawkeyeMainPanels panelSwitcherDidSelectAtIndexPath:]
+11 MTHawkeyeDemo  -[MTHawkeyeMainPanelViewController panelSwitcherDidSelectAtIndexPath:]
+12 MTHawkeyeDemo  -[MTHawkeyeMainPanelSwitchViewController tableView:didSelectRowAtIndexPath:]
+13 MTHawkeyeDemo  main
+14 libdyld.dylib 0x181e9d000 0x181ea1598, org: 0x181ea159c
+
+> size: 1.338MB, count:2 
+0 UIKit 0x1890d8000 0x189179244, org: 0x189179358
+1 MTHawkeyeDemo  mth_loadView
+2 MTHawkeyeDemo  mth_viewWillAppear
+3 MTHawkeyeDemo  main
+4 libdyld.dylib 0x181e9d000 0x181ea1598, org: 0x181ea159c
+
+> size: 1.268MB, count:1 
+0 UIFoundation 0x188ff4000 0x189082b9c, org: 0x189082c20
+1 MTHawkeyeDemo  +[MTHMonitorViewConfiguration fontWithSize:]
+2 MTHawkeyeDemo  +[MTHMonitorViewConfiguration initialize]
+3 MTHawkeyeDemo  -[MTHMonitorViewCell infoLabel]
+4 MTHawkeyeDemo  -[MTHMonitorViewCell setup]
+5 MTHawkeyeDemo  -[MTHMonitorViewCell initWithStyle:reuseIdentifier:]
+6 MTHawkeyeDemo  -[MTHMonitorViewCell init]
+7 MTHawkeyeDemo  -[MTHawkeyeMemoryStatFloatingWidget widget]
+8 MTHawkeyeDemo  -[MTHawkeyeFloatingWidgets buildCells]
+9 MTHawkeyeDemo  -[MTHawkeyeFloatingWidgets initWithWidgets:]
+10 MTHawkeyeDemo  -[MTHawkeyeUIClient setupUIPlugins]
+11 MTHawkeyeDemo  -[MTHawkeyeUIClient startServer]
+12 MTHawkeyeDemo  __27-[AppDelegate startHawkeye]_block_invoke_5
+13 MTHawkeyeDemo  main
+14 libdyld.dylib 0x181e9d000 0x181ea1598, org: 0x181ea159c
+
++ size: 304.000KB, category: realloc, stack_id_count: 1, record_count: 11 
++ size: 0byte, category: unknown_vmallocate, stack_id_count: 5, record_count: 5 
+ 
+
+

@@ -1,0 +1,1653 @@
+
+[hawkeye] DefaultMallocZone(Heap) report: 
+[hawkeye] report threshold: 500.00KB 
+
+{
+  "stack_record_count" : 2009,
+  "threshold_in_bytes" : 512000,
+  "category_record_count" : 224,
+  "total_size" : 529385921,
+  "categories" : [
+    {
+      "size" : 525352890,
+      "record_count" : 3724,
+      "stacks" : [
+        {
+          "count" : 6,
+          "size" : 314572800,
+          "frames" : [
+            "0x181fe856c",
+            "0x100009f08",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        },
+        {
+          "count" : 3,
+          "size" : 157286400,
+          "frames" : [
+            "0x181fe856c",
+            "0x100009f88",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        },
+        {
+          "count" : 1,
+          "size" : 52428800,
+          "frames" : [
+            "0x181fe856c",
+            "0x10000a114",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        }
+      ],
+      "stack_id_count" : 963,
+      "name" : "unknown_malloc"
+    },
+    {
+      "size" : 752467,
+      "record_count" : 4038,
+      "stacks" : [
+
+      ],
+      "stack_id_count" : 19,
+      "name" : "CFDictionary (mutable)"
+    },
+    {
+      "size" : 596057,
+      "record_count" : 4266,
+      "stacks" : [
+
+      ],
+      "stack_id_count" : 121,
+      "name" : "__NSArrayM"
+    },
+    {
+      "size" : 532473,
+      "record_count" : 6456,
+      "stacks" : [
+
+      ],
+      "stack_id_count" : 105,
+      "name" : "CFString (immutable)"
+    },
+    {
+      "size" : 451507,
+      "record_count" : 862,
+      "stack_id_count" : 3,
+      "name" : "CTFontDescriptor"
+    },
+    {
+      "size" : 218088,
+      "record_count" : 3379,
+      "stack_id_count" : 1,
+      "name" : "_CFXNotificationDarwinTokenRegistration"
+    },
+    {
+      "size" : 113571,
+      "record_count" : 402,
+      "stack_id_count" : 13,
+      "name" : "CFBasicHash (value-store)"
+    },
+    {
+      "size" : 107793,
+      "record_count" : 1480,
+      "stack_id_count" : 65,
+      "name" : "__NSDictionaryM"
+    },
+    {
+      "size" : 106076,
+      "record_count" : 984,
+      "stack_id_count" : 15,
+      "name" : "CFBasicHash (key-store)"
+    },
+    {
+      "size" : 101391,
+      "record_count" : 502,
+      "stack_id_count" : 1,
+      "name" : "FBSSceneImpl"
+    },
+    {
+      "size" : 62440,
+      "record_count" : 403,
+      "stack_id_count" : 20,
+      "name" : "_CFXNotificationObjcObserverRegistration"
+    },
+    {
+      "size" : 60654,
+      "record_count" : 293,
+      "stack_id_count" : 14,
+      "name" : "CGColor"
+    },
+    {
+      "size" : 48844,
+      "record_count" : 76,
+      "stack_id_count" : 2,
+      "name" : "CFDateFormatter"
+    },
+    {
+      "size" : 46038,
+      "record_count" : 109,
+      "stack_id_count" : 2,
+      "name" : "CGFont"
+    },
+    {
+      "size" : 44864,
+      "record_count" : 349,
+      "stack_id_count" : 11,
+      "name" : "__NSDictionaryI"
+    },
+    {
+      "size" : 39855,
+      "record_count" : 256,
+      "stack_id_count" : 1,
+      "name" : "CFData"
+    },
+    {
+      "size" : 37888,
+      "record_count" : 37,
+      "stack_id_count" : 3,
+      "name" : "UITableViewCell"
+    },
+    {
+      "size" : 36016,
+      "record_count" : 127,
+      "stack_id_count" : 2,
+      "name" : "CFString (mutable)"
+    },
+    {
+      "size" : 34772,
+      "record_count" : 182,
+      "stack_id_count" : 4,
+      "name" : "CGImageProvider"
+    },
+    {
+      "size" : 34672,
+      "record_count" : 167,
+      "stack_id_count" : 4,
+      "name" : "UILongPressGestureRecognizer"
+    },
+    {
+      "size" : 32048,
+      "record_count" : 205,
+      "stack_id_count" : 3,
+      "name" : "_UIAppearanceCustomizableClassInfo"
+    },
+    {
+      "size" : 27832,
+      "record_count" : 143,
+      "stack_id_count" : 4,
+      "name" : "CFCharacterSet"
+    },
+    {
+      "size" : 26832,
+      "record_count" : 212,
+      "stack_id_count" : 19,
+      "name" : "_CFXNotificationTokenRegistration"
+    },
+    {
+      "size" : 24598,
+      "record_count" : 40,
+      "stack_id_count" : 1,
+      "name" : "__NSTimeZone"
+    },
+    {
+      "size" : 24118,
+      "record_count" : 345,
+      "stack_id_count" : 13,
+      "name" : "CFSet (mutable)"
+    },
+    {
+      "size" : 23512,
+      "record_count" : 142,
+      "stack_id_count" : 1,
+      "name" : "CAFilter"
+    },
+    {
+      "size" : 22784,
+      "record_count" : 542,
+      "stack_id_count" : 21,
+      "name" : "__NSSetM"
+    },
+    {
+      "size" : 17340,
+      "record_count" : 10,
+      "stack_id_count" : 1,
+      "name" : "CFArray (mutable-variable)"
+    },
+    {
+      "size" : 16656,
+      "record_count" : 94,
+      "stack_id_count" : 2,
+      "name" : "UISwipeGestureRecognizer"
+    },
+    {
+      "size" : 14673,
+      "record_count" : 250,
+      "stack_id_count" : 8,
+      "name" : "__NSSingleObjectArrayI"
+    },
+    {
+      "size" : 13696,
+      "record_count" : 68,
+      "stack_id_count" : 4,
+      "name" : "UITableViewLabel"
+    },
+    {
+      "size" : 13112,
+      "record_count" : 611,
+      "stack_id_count" : 50,
+      "name" : "CALayer"
+    },
+    {
+      "size" : 12968,
+      "record_count" : 316,
+      "stack_id_count" : 59,
+      "name" : "CALayerArray"
+    },
+    {
+      "size" : 11888,
+      "record_count" : 47,
+      "stack_id_count" : 11,
+      "name" : "UIButtonContent"
+    },
+    {
+      "size" : 11560,
+      "record_count" : 77,
+      "stack_id_count" : 5,
+      "name" : "NSConcreteMapTable"
+    },
+    {
+      "size" : 11536,
+      "record_count" : 155,
+      "stack_id_count" : 6,
+      "name" : "NSKeyValueSlowMutableCollectionGetter"
+    },
+    {
+      "size" : 11448,
+      "record_count" : 223,
+      "stack_id_count" : 1,
+      "name" : "_CFXNotificationObserverRegistration"
+    },
+    {
+      "size" : 11200,
+      "record_count" : 100,
+      "stack_id_count" : 1,
+      "name" : "CFURL"
+    },
+    {
+      "size" : 10496,
+      "record_count" : 16,
+      "stack_id_count" : 8,
+      "name" : "UILabel"
+    },
+    {
+      "size" : 10312,
+      "record_count" : 59,
+      "stack_id_count" : 1,
+      "name" : "_NSInlineData"
+    },
+    {
+      "size" : 10296,
+      "record_count" : 72,
+      "stack_id_count" : 6,
+      "name" : "UIGestureRecognizerTarget"
+    },
+    {
+      "size" : 9608,
+      "record_count" : 86,
+      "stack_id_count" : 1,
+      "name" : "NSConcretePointerArray"
+    },
+    {
+      "size" : 9512,
+      "record_count" : 49,
+      "stack_id_count" : 4,
+      "name" : "NSShadow"
+    },
+    {
+      "size" : 9504,
+      "record_count" : 4,
+      "stack_id_count" : 4,
+      "name" : "UITableView"
+    },
+    {
+      "size" : 9360,
+      "record_count" : 45,
+      "stack_id_count" : 1,
+      "name" : "UITableViewCellContentView"
+    },
+    {
+      "size" : 8136,
+      "record_count" : 36,
+      "stack_id_count" : 1,
+      "name" : "_UIVisualEffectFilterView"
+    },
+    {
+      "size" : 7864,
+      "record_count" : 103,
+      "stack_id_count" : 5,
+      "name" : "NSKeyValueUnnestedProperty"
+    },
+    {
+      "size" : 7496,
+      "record_count" : 101,
+      "stack_id_count" : 5,
+      "name" : "NSKeyValueSlowSetter"
+    },
+    {
+      "size" : 7488,
+      "record_count" : 253,
+      "stack_id_count" : 2,
+      "name" : "_NSXPCInterfaceMethodInfo"
+    },
+    {
+      "size" : 7120,
+      "record_count" : 157,
+      "stack_id_count" : 4,
+      "name" : "NSTaggedPointerStringCStringContainer"
+    },
+    {
+      "size" : 6928,
+      "record_count" : 33,
+      "stack_id_count" : 2,
+      "name" : "_UIFontCacheKey"
+    },
+    {
+      "size" : 6184,
+      "record_count" : 68,
+      "stack_id_count" : 3,
+      "name" : "CFBasicHash"
+    },
+    {
+      "size" : 6120,
+      "record_count" : 89,
+      "stack_id_count" : 27,
+      "name" : "_UILabelLayer"
+    },
+    {
+      "size" : 5864,
+      "record_count" : 43,
+      "stack_id_count" : 2,
+      "name" : "_UIFeedbackZoomEdgeBehavior"
+    },
+    {
+      "size" : 5536,
+      "record_count" : 130,
+      "stack_id_count" : 8,
+      "name" : "NSLock"
+    },
+    {
+      "size" : 5512,
+      "record_count" : 14,
+      "stack_id_count" : 12,
+      "name" : "UIView"
+    },
+    {
+      "size" : 5360,
+      "record_count" : 200,
+      "stack_id_count" : 1,
+      "name" : "UIAutoRespondingScrollViewControllerKeyboardSupport"
+    },
+    {
+      "size" : 4968,
+      "record_count" : 39,
+      "stack_id_count" : 1,
+      "name" : "FacebookProjectsTableViewController"
+    },
+    {
+      "size" : 4944,
+      "record_count" : 41,
+      "stack_id_count" : 13,
+      "name" : "UIGestureGraphNode"
+    },
+    {
+      "size" : 4664,
+      "record_count" : 59,
+      "stack_id_count" : 1,
+      "name" : "UIImageAsset"
+    },
+    {
+      "size" : 4507,
+      "record_count" : 89,
+      "stack_id_count" : 2,
+      "name" : "CFBag (mutable)"
+    },
+    {
+      "size" : 4464,
+      "record_count" : 22,
+      "stack_id_count" : 1,
+      "name" : "__NSPlaceholderOrderedSet"
+    },
+    {
+      "size" : 4400,
+      "record_count" : 40,
+      "stack_id_count" : 3,
+      "name" : "__NSSetI"
+    },
+    {
+      "size" : 3960,
+      "record_count" : 3,
+      "stack_id_count" : 3,
+      "name" : "UIScrollView"
+    },
+    {
+      "size" : 3912,
+      "record_count" : 35,
+      "stack_id_count" : 3,
+      "name" : "NSKeyValueMethodSetter"
+    },
+    {
+      "size" : 3840,
+      "record_count" : 22,
+      "stack_id_count" : 7,
+      "name" : "_UIFontExtraData"
+    },
+    {
+      "size" : 3696,
+      "record_count" : 34,
+      "stack_id_count" : 1,
+      "name" : "NSISLinearExpression"
+    },
+    {
+      "size" : 3648,
+      "record_count" : 65,
+      "stack_id_count" : 5,
+      "name" : "NSMethodSignature"
+    },
+    {
+      "size" : 3640,
+      "record_count" : 5,
+      "stack_id_count" : 5,
+      "name" : "FLEXToolbarItem"
+    },
+    {
+      "size" : 3400,
+      "record_count" : 58,
+      "stack_id_count" : 11,
+      "name" : "__NSArrayI"
+    },
+    {
+      "size" : 3240,
+      "record_count" : 3,
+      "stack_id_count" : 3,
+      "name" : "MTHMonitorViewCell"
+    },
+    {
+      "size" : 3200,
+      "record_count" : 100,
+      "stack_id_count" : 1,
+      "name" : "GithubRepository"
+    },
+    {
+      "size" : 3144,
+      "record_count" : 39,
+      "stack_id_count" : 3,
+      "name" : "NSKeyValueSlowGetter"
+    },
+    {
+      "size" : 2560,
+      "record_count" : 5,
+      "stack_id_count" : 1,
+      "name" : "UISwitch"
+    },
+    {
+      "size" : 2320,
+      "record_count" : 12,
+      "stack_id_count" : 2,
+      "name" : "NSKeyValueMethodGetter"
+    },
+    {
+      "size" : 1984,
+      "record_count" : 31,
+      "stack_id_count" : 2,
+      "name" : "_NSObserverList"
+    },
+    {
+      "size" : 1904,
+      "record_count" : 14,
+      "stack_id_count" : 2,
+      "name" : "CFPrefsManagedSource"
+    },
+    {
+      "size" : 1864,
+      "record_count" : 6,
+      "stack_id_count" : 1,
+      "name" : "CSIHelper"
+    },
+    {
+      "size" : 1824,
+      "record_count" : 31,
+      "stack_id_count" : 1,
+      "name" : "NSInvocation"
+    },
+    {
+      "size" : 1824,
+      "record_count" : 10,
+      "stack_id_count" : 1,
+      "name" : "UITabBarButtonLabel"
+    },
+    {
+      "size" : 1792,
+      "record_count" : 21,
+      "stack_id_count" : 3,
+      "name" : "CTFont"
+    },
+    {
+      "size" : 1676,
+      "record_count" : 12,
+      "stack_id_count" : 4,
+      "name" : "NSPathStore2"
+    },
+    {
+      "size" : 1504,
+      "record_count" : 6,
+      "stack_id_count" : 1,
+      "name" : "_UIResizableImage"
+    },
+    {
+      "size" : 1395,
+      "record_count" : 32,
+      "stack_id_count" : 3,
+      "name" : "NSConcreteValue"
+    },
+    {
+      "size" : 1336,
+      "record_count" : 25,
+      "stack_id_count" : 1,
+      "name" : "_NSAutoresizingMaskXAxisAnchor"
+    },
+    {
+      "size" : 1206,
+      "record_count" : 40,
+      "stack_id_count" : 3,
+      "name" : "CFString (store)"
+    },
+    {
+      "size" : 1200,
+      "record_count" : 4,
+      "stack_id_count" : 1,
+      "name" : "__NSURLSessionLocal"
+    },
+    {
+      "size" : 1128,
+      "record_count" : 15,
+      "stack_id_count" : 1,
+      "name" : "NSKeyValueContainerClass"
+    },
+    {
+      "size" : 1120,
+      "record_count" : 5,
+      "stack_id_count" : 5,
+      "name" : "UITapGestureRecognizer"
+    },
+    {
+      "size" : 1088,
+      "record_count" : 17,
+      "stack_id_count" : 1,
+      "name" : "NSISRestrictedToZeroMarkerVariable"
+    },
+    {
+      "size" : 1088,
+      "record_count" : 52,
+      "stack_id_count" : 1,
+      "name" : "CUIRenditionSliceInformation"
+    },
+    {
+      "size" : 1064,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "UINavigationController"
+    },
+    {
+      "size" : 1048,
+      "record_count" : 13,
+      "stack_id_count" : 1,
+      "name" : "NSKeyValueUndefinedSetter"
+    },
+    {
+      "size" : 1048,
+      "record_count" : 5,
+      "stack_id_count" : 1,
+      "name" : "UITransitionView"
+    },
+    {
+      "size" : 1016,
+      "record_count" : 19,
+      "stack_id_count" : 6,
+      "name" : "UICachedDeviceRGBColor"
+    },
+    {
+      "size" : 1008,
+      "record_count" : 6,
+      "stack_id_count" : 2,
+      "name" : "UISectionRowData"
+    },
+    {
+      "size" : 992,
+      "record_count" : 62,
+      "stack_id_count" : 1,
+      "name" : "__NSDate"
+    },
+    {
+      "size" : 992,
+      "record_count" : 10,
+      "stack_id_count" : 1,
+      "name" : "_UISystemGestureGateGestureRecognizer"
+    },
+    {
+      "size" : 960,
+      "record_count" : 10,
+      "stack_id_count" : 5,
+      "name" : "UIImage"
+    },
+    {
+      "size" : 920,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "FLEXExplorerViewController"
+    },
+    {
+      "size" : 920,
+      "record_count" : 15,
+      "stack_id_count" : 1,
+      "name" : "NSSelfExpression"
+    },
+    {
+      "size" : 912,
+      "record_count" : 20,
+      "stack_id_count" : 7,
+      "name" : "NSConcreteMutableData"
+    },
+    {
+      "size" : 872,
+      "record_count" : 7,
+      "stack_id_count" : 1,
+      "name" : "CFPrefsSearchListSource"
+    },
+    {
+      "size" : 864,
+      "record_count" : 8,
+      "stack_id_count" : 4,
+      "name" : "UITapRecognizer"
+    },
+    {
+      "size" : 848,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHawkeyeMainPanelViewController"
+    },
+    {
+      "size" : 832,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "FLEXWindow"
+    },
+    {
+      "size" : 832,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHFloatingMonitorWindow"
+    },
+    {
+      "size" : 816,
+      "record_count" : 3,
+      "stack_id_count" : 3,
+      "name" : "UIBarButtonItem"
+    },
+    {
+      "size" : 800,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHAllocationsViewController"
+    },
+    {
+      "size" : 800,
+      "record_count" : 117,
+      "stack_id_count" : 1,
+      "name" : "_NSObservingObservation"
+    },
+    {
+      "size" : 800,
+      "record_count" : 5,
+      "stack_id_count" : 1,
+      "name" : "_CTGCommonCache"
+    },
+    {
+      "size" : 784,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHawkeyeFloatingWidgetViewController"
+    },
+    {
+      "size" : 768,
+      "record_count" : 24,
+      "stack_id_count" : 24,
+      "name" : "MTHUserDefaultsObserverInfo"
+    },
+    {
+      "size" : 760,
+      "record_count" : 5,
+      "stack_id_count" : 5,
+      "name" : "NSConcreteHashTable"
+    },
+    {
+      "size" : 736,
+      "record_count" : 310,
+      "stack_id_count" : 1,
+      "name" : "UITraitCollection"
+    },
+    {
+      "size" : 716,
+      "record_count" : 8,
+      "stack_id_count" : 1,
+      "name" : "CFFileDescriptor"
+    },
+    {
+      "size" : 672,
+      "record_count" : 4,
+      "stack_id_count" : 2,
+      "name" : "UITableViewRowData"
+    },
+    {
+      "size" : 672,
+      "record_count" : 2,
+      "stack_id_count" : 2,
+      "name" : "UIPanGestureRecognizer"
+    },
+    {
+      "size" : 656,
+      "record_count" : 17,
+      "stack_id_count" : 1,
+      "name" : "PBRepresentationToObjectCoercion"
+    },
+    {
+      "size" : 568,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "UIActivityIndicatorView"
+    },
+    {
+      "size" : 520,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "FLEXExplorerToolbar"
+    },
+    {
+      "size" : 496,
+      "record_count" : 16,
+      "stack_id_count" : 1,
+      "name" : "_UIBackdropViewLayer"
+    },
+    {
+      "size" : 488,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "UIImageView"
+    },
+    {
+      "size" : 480,
+      "record_count" : 2,
+      "stack_id_count" : 2,
+      "name" : "UINavigationItem"
+    },
+    {
+      "size" : 480,
+      "record_count" : 2,
+      "stack_id_count" : 1,
+      "name" : "UIInputSetHostView"
+    },
+    {
+      "size" : 472,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHawkeyeMainPanelTitleView"
+    },
+    {
+      "size" : 456,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHMonitorView"
+    },
+    {
+      "size" : 448,
+      "record_count" : 8,
+      "stack_id_count" : 1,
+      "name" : "WebBackgroundTaskController"
+    },
+    {
+      "size" : 440,
+      "record_count" : 11,
+      "stack_id_count" : 7,
+      "name" : "UIControlTargetAction"
+    },
+    {
+      "size" : 432,
+      "record_count" : 3,
+      "stack_id_count" : 2,
+      "name" : "NSOperationQueue"
+    },
+    {
+      "size" : 408,
+      "record_count" : 6,
+      "stack_id_count" : 1,
+      "name" : "CFArray (store-deque)"
+    },
+    {
+      "size" : 392,
+      "record_count" : 9,
+      "stack_id_count" : 1,
+      "name" : "_NSFileManagerInfo"
+    },
+    {
+      "size" : 384,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "__NSOperationQueueInternal"
+    },
+    {
+      "size" : 360,
+      "record_count" : 15,
+      "stack_id_count" : 9,
+      "name" : "MTHFakeKVORemover"
+    },
+    {
+      "size" : 360,
+      "record_count" : 12,
+      "stack_id_count" : 1,
+      "name" : "CGDataProvider"
+    },
+    {
+      "size" : 360,
+      "record_count" : 6,
+      "stack_id_count" : 4,
+      "name" : "NSAttributeDictionary"
+    },
+    {
+      "size" : 352,
+      "record_count" : 11,
+      "stack_id_count" : 1,
+      "name" : "_NSCachedIndexSet"
+    },
+    {
+      "size" : 336,
+      "record_count" : 7,
+      "stack_id_count" : 6,
+      "name" : "UICachedDeviceWhiteColor"
+    },
+    {
+      "size" : 320,
+      "record_count" : 4,
+      "stack_id_count" : 4,
+      "name" : "MTHawkeyeSettingEditorEntity"
+    },
+    {
+      "size" : 320,
+      "record_count" : 8,
+      "stack_id_count" : 6,
+      "name" : "NSMutableIndexSet"
+    },
+    {
+      "size" : 304,
+      "record_count" : 7,
+      "stack_id_count" : 1,
+      "name" : "NSMergePolicy"
+    },
+    {
+      "size" : 288,
+      "record_count" : 2,
+      "stack_id_count" : 1,
+      "name" : "UIViewAnimationState"
+    },
+    {
+      "size" : 256,
+      "record_count" : 8,
+      "stack_id_count" : 4,
+      "name" : "_NSConcreteObservation"
+    },
+    {
+      "size" : 240,
+      "record_count" : 6,
+      "stack_id_count" : 1,
+      "name" : "LegacyTileLayer"
+    },
+    {
+      "size" : 240,
+      "record_count" : 6,
+      "stack_id_count" : 2,
+      "name" : "UIPanGestureVelocitySample"
+    },
+    {
+      "size" : 208,
+      "record_count" : 3,
+      "stack_id_count" : 1,
+      "name" : "_CFXNotificationNameWildcardObjectRegistration"
+    },
+    {
+      "size" : 208,
+      "record_count" : 6,
+      "stack_id_count" : 3,
+      "name" : "NSConcreteMutableAttributedString"
+    },
+    {
+      "size" : 192,
+      "record_count" : 2,
+      "stack_id_count" : 1,
+      "name" : "MTHViewControllerRecord"
+    },
+    {
+      "size" : 192,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "CFRunLoopSource"
+    },
+    {
+      "size" : 192,
+      "record_count" : 6,
+      "stack_id_count" : 2,
+      "name" : "UIWindowLayer"
+    },
+    {
+      "size" : 160,
+      "record_count" : 3,
+      "stack_id_count" : 1,
+      "name" : "_NSPlaceholderIndexSet"
+    },
+    {
+      "size" : 160,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "_NSThreadData"
+    },
+    {
+      "size" : 128,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHawkeyeUIClient"
+    },
+    {
+      "size" : 120,
+      "record_count" : 5,
+      "stack_id_count" : 5,
+      "name" : "NSConcreteAttributedString"
+    },
+    {
+      "size" : 112,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "NSRecursiveLock"
+    },
+    {
+      "size" : 96,
+      "record_count" : 4,
+      "stack_id_count" : 2,
+      "name" : "NSCountedSet"
+    },
+    {
+      "size" : 96,
+      "record_count" : 2,
+      "stack_id_count" : 2,
+      "name" : "NSRegularExpression"
+    },
+    {
+      "size" : 96,
+      "record_count" : 3,
+      "stack_id_count" : 3,
+      "name" : "UIMenuItem"
+    },
+    {
+      "size" : 88,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHAppPingThread"
+    },
+    {
+      "size" : 80,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHDirectoryWatcher"
+    },
+    {
+      "size" : 80,
+      "record_count" : 2,
+      "stack_id_count" : 2,
+      "name" : "NSAutoreleasePool"
+    },
+    {
+      "size" : 80,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "NSKeyValueIvarGetter"
+    },
+    {
+      "size" : 80,
+      "record_count" : 2,
+      "stack_id_count" : 1,
+      "name" : "NSKeyValueObservance"
+    },
+    {
+      "size" : 80,
+      "record_count" : 5,
+      "stack_id_count" : 1,
+      "name" : "CTFeatureSetting"
+    },
+    {
+      "size" : 64,
+      "record_count" : 2,
+      "stack_id_count" : 2,
+      "name" : "MTAppenderFile"
+    },
+    {
+      "size" : 64,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHawkeyeClient"
+    },
+    {
+      "size" : 64,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHDirectoryWatcherMonitor"
+    },
+    {
+      "size" : 64,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHFPSTrace"
+    },
+    {
+      "size" : 64,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHNetworkTaskInspector"
+    },
+    {
+      "size" : 64,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "UIAnimator"
+    },
+    {
+      "size" : 64,
+      "record_count" : 4,
+      "stack_id_count" : 4,
+      "name" : "_UIWeakHelper"
+    },
+    {
+      "size" : 56,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTGLDebug"
+    },
+    {
+      "size" : 56,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHawkeyeSettingSwitcherCellEntity"
+    },
+    {
+      "size" : 48,
+      "record_count" : 2,
+      "stack_id_count" : 2,
+      "name" : "MTH_RSSwizzleInfo"
+    },
+    {
+      "size" : 48,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHANRObserver"
+    },
+    {
+      "size" : 48,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHawkeyeStorage"
+    },
+    {
+      "size" : 48,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHLivingObjectShadowTrigger"
+    },
+    {
+      "size" : 48,
+      "record_count" : 2,
+      "stack_id_count" : 1,
+      "name" : "DYDisplayLinkInterposer"
+    },
+    {
+      "size" : 48,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "UIMenuController"
+    },
+    {
+      "size" : 40,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHANRTrace"
+    },
+    {
+      "size" : 40,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHawkeyeMemoryStatFloatingWidget"
+    },
+    {
+      "size" : 40,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHawkeyeFloatingWidgets"
+    },
+    {
+      "size" : 40,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHawkeyeMainPanels"
+    },
+    {
+      "size" : 40,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHLivingObjectSniffer"
+    },
+    {
+      "size" : 40,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHNetworkRecorder"
+    },
+    {
+      "size" : 32,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "FLEXManager"
+    },
+    {
+      "size" : 32,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTFPSHawkeyeUI"
+    },
+    {
+      "size" : 32,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHawkeyeCPUStatFloatingWidget"
+    },
+    {
+      "size" : 32,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHLivingObjectSniffService"
+    },
+    {
+      "size" : 32,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHOpenGLTraceHawkeyeAdaptor"
+    },
+    {
+      "size" : 32,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHOpenGLTraceHawkeyeUI"
+    },
+    {
+      "size" : 32,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "__NSOrderedSetM"
+    },
+    {
+      "size" : 24,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHawkeyeSettingUIEntity"
+    },
+    {
+      "size" : 24,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHDirectoryWatcherHawkeyeAdaptor"
+    },
+    {
+      "size" : 24,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHNetworkObserver"
+    },
+    {
+      "size" : 24,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHURLSessionDelegateProxy"
+    },
+    {
+      "size" : 24,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "NSCompoundPredicateOperator"
+    },
+    {
+      "size" : 24,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "CAMediaTimingFunctionBuiltin"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "ANormalViewModel"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "FLEXHawkeyePlugin"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTFPSHawkeyeAdaptor"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHAllocationsHawkeyeAdaptor"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHAllocationsHawkeyeUI"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHANRHawkeyeAdaptor"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHANRHawkeyeUI"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHawkeyeWeakProxy"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHCPUTraceHawkeyeAdaptor"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHCPUTraceHawkeyeUI"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHDirectoryWatcherHawkeyeUI"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHLivingObjectShadowPackage"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHLivingObjectsSnifferHawkeyeAdaptor"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHLivingObjectsSnifferHawkeyeUI"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHNetworkMonitorHawkeyeMainPanelUI"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHNetworkInspectHawkeyeMainPanelUI"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHNetworkHawkeyeSettingUI"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHNetworkInspectHawkeyeAdaptor"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHNetworkMonitor"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHNetworkMonitorHawkeyeAdaptor"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHNetworkRecordsStorage"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHObjcCallTraceHawkeyeAdaptor"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHUITimeProfilerHawkeyeAdaptor"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHUITimeProfilerHawkeyeUI"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "MTHFakeKVOObserver"
+    },
+    {
+      "size" : 16,
+      "record_count" : 1,
+      "stack_id_count" : 1,
+      "name" : "_NSPlaceholderObservation"
+    }
+  ],
+  "allocate_record_count" : 35170
+}
+
+ ---------------------- 
+
+[hawkeye] vm(vmallocate/mmap ...) report: 
+[hawkeye] report threshold: 1024.00KB 
+
+{
+  "stack_record_count" : 45,
+  "threshold_in_bytes" : 1048576,
+  "category_record_count" : 7,
+  "total_size" : 565375306,
+  "categories" : [
+    {
+      "size" : 528882688,
+      "record_count" : 34,
+      "stacks" : [
+        {
+          "count" : 6,
+          "size" : 314572800,
+          "frames" : [
+            "0x181fe856c",
+            "0x100009f08",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        },
+        {
+          "count" : 3,
+          "size" : 157286400,
+          "frames" : [
+            "0x181fe856c",
+            "0x100009f88",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        },
+        {
+          "count" : 1,
+          "size" : 52428800,
+          "frames" : [
+            "0x181fe856c",
+            "0x10000a114",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        },
+        {
+          "count" : 3,
+          "size" : 3972096,
+          "frames" : [
+            "0x1892cd5d8",
+            "0x1004b04ac",
+            "0x10039ea74",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        }
+      ],
+      "stack_id_count" : 22,
+      "name" : "malloc_large"
+    },
+    {
+      "size" : 13522836,
+      "record_count" : 10,
+      "stacks" : [
+        {
+          "count" : 7,
+          "size" : 13473684,
+          "frames" : [
+            "0x1892fdf7c",
+            "0x10039dba8",
+            "0x10039dd78",
+            "0x10034e66c",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        }
+      ],
+      "stack_id_count" : 2,
+      "name" : "tcmalloc"
+    },
+    {
+      "size" : 12582912,
+      "record_count" : 6,
+      "stacks" : [
+        {
+          "count" : 2,
+          "size" : 4194304,
+          "frames" : [
+            "0x183a18318",
+            "0x1000085c4",
+            "0x1004b04ac",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        },
+        {
+          "count" : 1,
+          "size" : 2097152,
+          "frames" : [
+            "0x181a370a8",
+            "0x1004a9fc8",
+            "0x10039a3e0",
+            "0x10039de00",
+            "0x10034e66c",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        },
+        {
+          "count" : 1,
+          "size" : 2097152,
+          "frames" : [
+            "0x181a370a8",
+            "0x1004a9fc8",
+            "0x10037c8cc",
+            "0x10037b210",
+            "0x100381a68",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        },
+        {
+          "count" : 1,
+          "size" : 2097152,
+          "frames" : [
+            "0x189225c10",
+            "0x100202754",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        },
+        {
+          "count" : 1,
+          "size" : 2097152,
+          "frames" : [
+            "0x181a370a8",
+            "0x1004a9fc8",
+            "0x10026608c",
+            "0x10026b880",
+            "0x1002031f4",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        }
+      ],
+      "stack_id_count" : 5,
+      "name" : "malloc_nano"
+    },
+    {
+      "size" : 9960886,
+      "record_count" : 9,
+      "stacks" : [
+        {
+          "count" : 1,
+          "size" : 2881092,
+          "frames" : [
+            "0x18944cf00",
+            "0x1004b0018",
+            "0x1004b0018",
+            "0x1004b0018",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        },
+        {
+          "count" : 1,
+          "size" : 2160624,
+          "frames" : [
+            "0x189082c20",
+            "0x100265dc0",
+            "0x1002639cc",
+            "0x100263874",
+            "0x1001ecbfc",
+            "0x1001f00e8",
+            "0x1004b04ac",
+            "0x100214364",
+            "0x1002aaee0",
+            "0x1002aadc0",
+            "0x1003723a0",
+            "0x100379234",
+            "0x100373e94",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        },
+        {
+          "count" : 2,
+          "size" : 1403194,
+          "frames" : [
+            "0x189179358",
+            "0x1004b0644",
+            "0x1004b0a30",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        },
+        {
+          "count" : 1,
+          "size" : 1329684,
+          "frames" : [
+            "0x189082c20",
+            "0x1003e5a50",
+            "0x1003e4fd8",
+            "0x1003e48f8",
+            "0x1003e27b4",
+            "0x1003e2564",
+            "0x1003e2604",
+            "0x10035d1b0",
+            "0x100369180",
+            "0x100368820",
+            "0x10038d7f4",
+            "0x10038d0cc",
+            "0x1000145a0",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        },
+        {
+          "count" : 1,
+          "size" : 1271648,
+          "frames" : [
+            "0x189586740",
+            "0x1004b04ac",
+            "0x10039e710",
+            "0x100015414",
+            "0x181ea159c"
+          ]
+        }
+      ],
+      "stack_id_count" : 8
+    },
+    {
+      "size" : 360448,
+      "record_count" : 12,
+      "stack_id_count" : 1,
+      "name" : "realloc"
+    },
+    {
+      "size" : 65536,
+      "record_count" : 3,
+      "stack_id_count" : 1,
+      "name" : "ImageIO_PNG_Data"
+    },
+    {
+      "size" : 0,
+      "record_count" : 11,
+      "stack_id_count" : 6,
+      "name" : "unknown_vmallocate"
+    }
+  ],
+  "allocate_record_count" : 85
+} 
+
+

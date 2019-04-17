@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+sh .git/hooks/pre-commit-clang-format

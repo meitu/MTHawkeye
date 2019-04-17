@@ -1,0 +1,271 @@
+PODS:
+  - AFNetworking (3.2.1):
+    - AFNetworking/NSURLSession (= 3.2.1)
+    - AFNetworking/Reachability (= 3.2.1)
+    - AFNetworking/Security (= 3.2.1)
+    - AFNetworking/Serialization (= 3.2.1)
+    - AFNetworking/UIKit (= 3.2.1)
+  - AFNetworking/NSURLSession (3.2.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.2.1)
+  - AFNetworking/Security (3.2.1)
+  - AFNetworking/Serialization (3.2.1)
+  - AFNetworking/UIKit (3.2.1):
+    - AFNetworking/NSURLSession
+  - AGAsyncTestHelper/Core (1.0)
+  - AGAsyncTestHelper/Shorthand (1.0):
+    - AGAsyncTestHelper/Core
+  - CocoaLumberjack (3.5.2):
+    - CocoaLumberjack/Core (= 3.5.2)
+  - CocoaLumberjack/Core (3.5.2)
+  - FBRetainCycleDetector (0.1.4)
+  - fishhook (0.2)
+  - FLEX (2.4.0)
+  - GYHttpMock (1.0.1)
+  - MTAppenderFile (0.3.5)
+  - MTGLDebug (2.1.0):
+    - fishhook (~> 0.2)
+    - MTGLDebug/ARC (= 2.1.0)
+    - MTGLDebug/MRC (= 2.1.0)
+  - MTGLDebug/ARC (2.1.0):
+    - fishhook (~> 0.2)
+    - MTGLDebug/MRC
+  - MTGLDebug/MRC (2.1.0):
+    - fishhook (~> 0.2)
+  - MTHawkeye (0.11.0):
+    - MTHawkeye/Core (= 0.11.0)
+    - MTHawkeye/DefaultPlugins (= 0.11.0)
+    - MTHawkeye/DefaultPluginsWithoutLog (= 0.11.0)
+    - MTHawkeye/EnergyPlugins (= 0.11.0)
+    - MTHawkeye/FLEXExtension (= 0.11.0)
+    - MTHawkeye/GraphicsPlugins (= 0.11.0)
+    - MTHawkeye/MemoryPlugins (= 0.11.0)
+    - MTHawkeye/NetworkPlugins (= 0.11.0)
+    - MTHawkeye/StackBacktrace (= 0.11.0)
+    - MTHawkeye/StorageMonitorPlugins (= 0.11.0)
+    - MTHawkeye/TimeConsumingPlugins (= 0.11.0)
+    - MTHawkeye/UISkeleton (= 0.11.0)
+    - MTHawkeye/Utils (= 0.11.0)
+  - MTHawkeye/Core (0.11.0):
+    - MTHawkeye/Utils
+  - MTHawkeye/DefaultPlugins (0.11.0):
+    - CocoaLumberjack
+    - MTHawkeye/DefaultPluginsWithoutLog
+  - MTHawkeye/DefaultPluginsWithoutLog (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/EnergyPlugins
+    - MTHawkeye/FLEXExtension
+    - MTHawkeye/GraphicsPlugins
+    - MTHawkeye/MemoryPlugins
+    - MTHawkeye/NetworkPlugins
+    - MTHawkeye/StorageMonitorPlugins
+    - MTHawkeye/TimeConsumingPlugins
+    - MTHawkeye/UISkeleton
+  - MTHawkeye/EnergyPlugins (0.11.0):
+    - MTHawkeye/EnergyPlugins/CPUTrace (= 0.11.0)
+  - MTHawkeye/EnergyPlugins/CPUTrace (0.11.0):
+    - MTHawkeye/EnergyPlugins/CPUTrace/Core (= 0.11.0)
+    - MTHawkeye/EnergyPlugins/CPUTrace/HawkeyeCore (= 0.11.0)
+    - MTHawkeye/EnergyPlugins/CPUTrace/HawkeyeUI (= 0.11.0)
+  - MTHawkeye/EnergyPlugins/CPUTrace/Core (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/StackBacktrace
+  - MTHawkeye/EnergyPlugins/CPUTrace/HawkeyeCore (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/EnergyPlugins/CPUTrace/Core
+  - MTHawkeye/EnergyPlugins/CPUTrace/HawkeyeUI (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/EnergyPlugins/CPUTrace/HawkeyeCore
+    - MTHawkeye/UISkeleton
+  - MTHawkeye/FLEXExtension (0.11.0):
+    - FLEX
+    - MTHawkeye/UISkeleton
+  - MTHawkeye/GraphicsPlugins (0.11.0):
+    - MTHawkeye/GraphicsPlugins/OpenGLTrace (= 0.11.0)
+  - MTHawkeye/GraphicsPlugins/OpenGLTrace (0.11.0):
+    - MTGLDebug
+    - MTHawkeye/UISkeleton
+  - MTHawkeye/MemoryPlugins (0.11.0):
+    - MTHawkeye/MemoryPlugins/Allocations (= 0.11.0)
+    - MTHawkeye/MemoryPlugins/LivingObjectSniffer (= 0.11.0)
+  - MTHawkeye/MemoryPlugins/Allocations (0.11.0):
+    - MTHawkeye/MemoryPlugins/Allocations/Core (= 0.11.0)
+    - MTHawkeye/MemoryPlugins/Allocations/HawkeyeCore (= 0.11.0)
+    - MTHawkeye/MemoryPlugins/Allocations/HawkeyeUI (= 0.11.0)
+  - MTHawkeye/MemoryPlugins/Allocations/Core (0.11.0):
+    - MTHawkeye/MemoryPlugins/Allocations/Core/no-arc (= 0.11.0)
+    - MTHawkeye/StackBacktrace
+    - MTHawkeye/Utils
+  - MTHawkeye/MemoryPlugins/Allocations/Core/no-arc (0.11.0):
+    - MTHawkeye/StackBacktrace
+    - MTHawkeye/Utils
+  - MTHawkeye/MemoryPlugins/Allocations/HawkeyeCore (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/MemoryPlugins/Allocations/Core
+  - MTHawkeye/MemoryPlugins/Allocations/HawkeyeUI (0.11.0):
+    - MTHawkeye/MemoryPlugins/Allocations/Core
+    - MTHawkeye/MemoryPlugins/Allocations/HawkeyeCore
+    - MTHawkeye/UISkeleton
+  - MTHawkeye/MemoryPlugins/LivingObjectSniffer (0.11.0):
+    - MTHawkeye/MemoryPlugins/LivingObjectSniffer/Core (= 0.11.0)
+    - MTHawkeye/MemoryPlugins/LivingObjectSniffer/HawkeyeCore (= 0.11.0)
+    - MTHawkeye/MemoryPlugins/LivingObjectSniffer/HawkeyeUI (= 0.11.0)
+  - MTHawkeye/MemoryPlugins/LivingObjectSniffer/Core (0.11.0):
+    - MTHawkeye/Utils
+  - MTHawkeye/MemoryPlugins/LivingObjectSniffer/HawkeyeCore (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/MemoryPlugins/LivingObjectSniffer/Core
+  - MTHawkeye/MemoryPlugins/LivingObjectSniffer/HawkeyeUI (0.11.0):
+    - FBRetainCycleDetector
+    - MTHawkeye/MemoryPlugins/LivingObjectSniffer/HawkeyeCore
+    - MTHawkeye/UISkeleton
+  - MTHawkeye/NetworkPlugins (0.11.0):
+    - MTHawkeye/NetworkPlugins/HawkeyeUI (= 0.11.0)
+    - MTHawkeye/NetworkPlugins/Inspect (= 0.11.0)
+    - MTHawkeye/NetworkPlugins/Monitor (= 0.11.0)
+  - MTHawkeye/NetworkPlugins/HawkeyeUI (0.11.0):
+    - FLEX
+    - MTHawkeye/NetworkPlugins/Inspect
+    - MTHawkeye/NetworkPlugins/Monitor
+    - MTHawkeye/UISkeleton
+  - MTHawkeye/NetworkPlugins/Inspect (0.11.0):
+    - MTHawkeye/NetworkPlugins/Inspect/Core (= 0.11.0)
+    - MTHawkeye/NetworkPlugins/Inspect/HawkeyeCore (= 0.11.0)
+  - MTHawkeye/NetworkPlugins/Inspect/Core (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/NetworkPlugins/Monitor
+  - MTHawkeye/NetworkPlugins/Inspect/HawkeyeCore (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/NetworkPlugins/Inspect/Core
+  - MTHawkeye/NetworkPlugins/Monitor (0.11.0):
+    - MTHawkeye/NetworkPlugins/Monitor/Core (= 0.11.0)
+    - MTHawkeye/NetworkPlugins/Monitor/HawkeyeCore (= 0.11.0)
+  - MTHawkeye/NetworkPlugins/Monitor/Core (0.11.0):
+    - MTHawkeye/Core
+  - MTHawkeye/NetworkPlugins/Monitor/HawkeyeCore (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/NetworkPlugins/Monitor/Core
+  - MTHawkeye/StackBacktrace (0.11.0):
+    - MTHawkeye/Utils
+  - MTHawkeye/StorageMonitorPlugins (0.11.0):
+    - MTHawkeye/StorageMonitorPlugins/DirectoryWatcher (= 0.11.0)
+  - MTHawkeye/StorageMonitorPlugins/DirectoryWatcher (0.11.0):
+    - MTHawkeye/StorageMonitorPlugins/DirectoryWatcher/Core (= 0.11.0)
+    - MTHawkeye/StorageMonitorPlugins/DirectoryWatcher/HawkeyeCore (= 0.11.0)
+    - MTHawkeye/StorageMonitorPlugins/DirectoryWatcher/HawkeyeUI (= 0.11.0)
+  - MTHawkeye/StorageMonitorPlugins/DirectoryWatcher/Core (0.11.0):
+    - MTHawkeye/Utils
+  - MTHawkeye/StorageMonitorPlugins/DirectoryWatcher/HawkeyeCore (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/StorageMonitorPlugins/DirectoryWatcher/Core
+  - MTHawkeye/StorageMonitorPlugins/DirectoryWatcher/HawkeyeUI (0.11.0):
+    - MTHawkeye/FLEXExtension
+    - MTHawkeye/StorageMonitorPlugins/DirectoryWatcher/HawkeyeCore
+    - MTHawkeye/UISkeleton
+  - MTHawkeye/TimeConsumingPlugins (0.11.0):
+    - MTHawkeye/TimeConsumingPlugins/ANRTrace (= 0.11.0)
+    - MTHawkeye/TimeConsumingPlugins/FPSTrace (= 0.11.0)
+    - MTHawkeye/TimeConsumingPlugins/ObjcCallTrace (= 0.11.0)
+    - MTHawkeye/TimeConsumingPlugins/UITimeProfiler (= 0.11.0)
+  - MTHawkeye/TimeConsumingPlugins/ANRTrace (0.11.0):
+    - MTHawkeye/TimeConsumingPlugins/ANRTrace/Core (= 0.11.0)
+    - MTHawkeye/TimeConsumingPlugins/ANRTrace/HawkeyeCore (= 0.11.0)
+    - MTHawkeye/TimeConsumingPlugins/ANRTrace/HawkeyeUI (= 0.11.0)
+  - MTHawkeye/TimeConsumingPlugins/ANRTrace/Core (0.11.0):
+    - MTHawkeye/StackBacktrace
+    - MTHawkeye/Utils
+  - MTHawkeye/TimeConsumingPlugins/ANRTrace/HawkeyeCore (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/TimeConsumingPlugins/ANRTrace/Core
+  - MTHawkeye/TimeConsumingPlugins/ANRTrace/HawkeyeUI (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/TimeConsumingPlugins/ANRTrace/HawkeyeCore
+    - MTHawkeye/UISkeleton
+  - MTHawkeye/TimeConsumingPlugins/FPSTrace (0.11.0):
+    - MTHawkeye/TimeConsumingPlugins/FPSTrace/Core (= 0.11.0)
+    - MTHawkeye/TimeConsumingPlugins/FPSTrace/HawkeyeCore (= 0.11.0)
+    - MTHawkeye/TimeConsumingPlugins/FPSTrace/HawkeyeUI (= 0.11.0)
+  - MTHawkeye/TimeConsumingPlugins/FPSTrace/Core (0.11.0):
+    - MTHawkeye/Core
+  - MTHawkeye/TimeConsumingPlugins/FPSTrace/HawkeyeCore (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/TimeConsumingPlugins/FPSTrace/Core
+  - MTHawkeye/TimeConsumingPlugins/FPSTrace/HawkeyeUI (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/TimeConsumingPlugins/FPSTrace/Core
+    - MTHawkeye/TimeConsumingPlugins/FPSTrace/HawkeyeCore
+    - MTHawkeye/UISkeleton
+  - MTHawkeye/TimeConsumingPlugins/ObjcCallTrace (0.11.0):
+    - MTHawkeye/TimeConsumingPlugins/ObjcCallTrace/Core (= 0.11.0)
+    - MTHawkeye/TimeConsumingPlugins/ObjcCallTrace/HawkeyeCore (= 0.11.0)
+  - MTHawkeye/TimeConsumingPlugins/ObjcCallTrace/Core (0.11.0):
+    - fishhook (~> 0.2)
+    - MTHawkeye/Utils
+  - MTHawkeye/TimeConsumingPlugins/ObjcCallTrace/HawkeyeCore (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/TimeConsumingPlugins/ObjcCallTrace/Core
+  - MTHawkeye/TimeConsumingPlugins/UITimeProfiler (0.11.0):
+    - MTHawkeye/TimeConsumingPlugins/UITimeProfiler/Core (= 0.11.0)
+    - MTHawkeye/TimeConsumingPlugins/UITimeProfiler/HawkeyeCore (= 0.11.0)
+    - MTHawkeye/TimeConsumingPlugins/UITimeProfiler/HawkeyeUI (= 0.11.0)
+  - MTHawkeye/TimeConsumingPlugins/UITimeProfiler/Core (0.11.0):
+    - MTHawkeye/Core
+  - MTHawkeye/TimeConsumingPlugins/UITimeProfiler/HawkeyeCore (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/TimeConsumingPlugins/UITimeProfiler/Core
+  - MTHawkeye/TimeConsumingPlugins/UITimeProfiler/HawkeyeUI (0.11.0):
+    - MTHawkeye/Core
+    - MTHawkeye/TimeConsumingPlugins/ObjcCallTrace
+    - MTHawkeye/TimeConsumingPlugins/UITimeProfiler/HawkeyeCore
+    - MTHawkeye/UISkeleton
+  - MTHawkeye/UISkeleton (0.11.0):
+    - MTHawkeye/Core
+  - MTHawkeye/Utils (0.11.0):
+    - MTAppenderFile
+
+DEPENDENCIES:
+  - AFNetworking
+  - AGAsyncTestHelper/Shorthand
+  - CocoaLumberjack
+  - FBRetainCycleDetector
+  - fishhook
+  - FLEX
+  - GYHttpMock
+  - MTAppenderFile
+  - MTGLDebug
+  - MTHawkeye (from `../`)
+
+SPEC REPOS:
+  http://techgit.meitu.com/iosmodules/specs.git:
+    - MTAppenderFile
+    - MTGLDebug
+  https://github.com/cocoapods/specs.git:
+    - AFNetworking
+    - AGAsyncTestHelper
+    - CocoaLumberjack
+    - FBRetainCycleDetector
+    - fishhook
+    - FLEX
+    - GYHttpMock
+
+EXTERNAL SOURCES:
+  MTHawkeye:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
+  AGAsyncTestHelper: b1399096574bab94f2c94e9be3e8d88e7cefbc17
+  CocoaLumberjack: 118bf4a820efc641f79fa487b75ed928dccfae23
+  FBRetainCycleDetector: 46f8179bbb1c587deee3ea838a1a3ee02acf5015
+  fishhook: ea19933abfe8f2f52c55fd8b6e2718467d3ebc89
+  FLEX: bd1a39e55b56bb413b6f1b34b3c10a0dc44ef079
+  GYHttpMock: ad08e55ce8bde4e7f7b4d0cbc79ff23c1311658b
+  MTAppenderFile: ebacc6d0fbd8672917e75462c52082c46b74a765
+  MTGLDebug: e043f711d7843600c02dc99ead3b010e9bad3f64
+  MTHawkeye: 5a8067cca863cfb131e95671bca6760a85d8cbb9
+
+PODFILE CHECKSUM: b0006210a6dbe6b685063a91b4cc72fd7415acc8
+
+COCOAPODS: 1.6.0

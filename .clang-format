@@ -1,0 +1,110 @@
+# .clang-format
+# clang 排版配置文件
+#
+# * 配置参数修改参考文档
+#   http://clang.llvm.org/docs/ClangFormatStyleOptions.html
+#
+# * 使用步骤：
+#   Xcode 8.0 之前可安装 ClangFormat-Xcode 插件(https://github.com/travisjeffery/ClangFormat-Xcode)
+#   配置快捷键，如有必要可设置保存文件时自动格式化
+#
+#   将此文件放入工程根目录下，命名为 .clang-format
+#
+#
+# * 若有不特殊的排版 clangformat 不支持，使用以下注释让 clang 跳过自动排版校验
+#   // clang-format off
+#   ... ...
+#   // clang-format on
+#
+#
+
+---
+# Language: Cpp                           # this format style is targeted at. Cpp for c, c++, oc, oc++.
+BasedOnStyle: LLVM
+AccessModifierOffset: -2                            # 控制 @public ... 的左缩进，以 IndentWidth 为基准
+AlignAfterOpenBracket: false                        #
+# AlignConsecutiveAssignments: true                 # Xcode 6.3.2 还不支持此属性
+# AlignConsecutiveDeclarations: false
+AlignEscapedNewlinesLeft: true                      # If true, aligns escaped newlines as far left as possible.
+AlignOperands: true                                 # 有操作符的多行语句，是否水平对齐
+AlignTrailingComments: true                         # 连续行，行尾注释对齐
+AllowAllParametersOfDeclarationOnNextLine: true     # 即使 BinPackParameters 为 false, 仍允许方法声明的多个参数不在同一行
+AllowShortBlocksOnASingleLine: false                # 允许简单 {} 语句单行
+AllowShortCaseLabelsOnASingleLine: true             # 允许 case 单行
+AllowShortFunctionsOnASingleLine: Inline            # 允许方法单行 int f() { return 0; }, 只在 inline 是允许
+AllowShortIfStatementsOnASingleLine: true           # if 语句较短时不强制换行
+AllowShortLoopsOnASingleLine: true                  # 允许单行循环 while (true) continue;
+# AlwaysBreakAfterDefinitionReturnType: true        # deprecated, c 方法定义返回值单起一行
+# AlwaysBreakAfterReturnType:                       # The function declaration return type breaking style to use.
+AlwaysBreakBeforeMultilineStrings: false            #
+AlwaysBreakTemplateDeclarations: false              # template<...> 后强制另起一行
+BinPackArguments: true                              # false 时表示 c 方法调用强制全部在同一行，或者每一行只能有一个参数
+BinPackParameters: true                             # false 时表示 c 方法声明强制全部在同一行，或者每一行只能有一个参数
+# BraceWrapping:                                     # BreakBeforeBraces = BS_Custom 时此参数起作用，自定义不同语义下的 { 是否单起一行策略
+BraceWrapping: {
+    AfterClass: true,                               # class {  的 { 不另起一行
+    AfterControlStatement: false,                   # if { 的 { 不另起一行
+    AfterEnum: false,                               # enum { 的 { 不另起一行
+    AfterFunction: false,                           # aFunc { 的 { 不另起一行
+    AfterNamespace: false                           # aNamespaece { 的 { 不另起一行
+}
+BreakBeforeBinaryOperators: All                     # All: Break before operators.
+BreakBeforeBraces: Custom                           # {} 换行风格, 自定义风格，由 BraceWrapping 配置
+# BreakBeforeInheritanceComma: false                  # class 继承后的多个类，不强制分成多行，暂不支持
+BreakBeforeTernaryOperators: true                   # ? : 如果换行时，强制 ? : 在行首
+BreakConstructorInitializersBeforeComma: true       # cpp 构造函数变量构造强制对齐
+ColumnLimit: 0                                              # 单行最长字符限制，0不限制
+# CommentPragmas:  '^ IWYU pragma:'                         # 正则表达式所匹配的注释有特殊意义，不要换行和修改
+ConstructorInitializerAllOnOneLineOrOnePerLine: false       # 构造函数单行或强制多行
+ConstructorInitializerIndentWidth: 4                        # 构造函数缩进
+ContinuationIndentWidth: 4                                  # [[AFNetworking share] xxx], xxx 单起一行时缩进
+Cpp11BracedListStyle: true                          # format braced lists as best suited for C++11 braced lists.
+DerivePointerAlignment: false                       # 是否将 PointerAlignment 置为备选
+ExperimentalAutoDetectBinPacking: false             #
+# FixNamespaceComments: true                          # namespace a { ... } 后补充注释 // namespace a  暂不支持
+# ForEachMacros:                                    # code FOREACH(<variable-declaration>, ...)<loop-body>
+IncludeCategories:                                       # 头文件排序规则，<> , "" 按字母排序
+  - Regex:           '^"(llvm|llvm-c|clang|clang-c)/'
+    Priority:        2
+  - Regex:           '^(<|"(gtest|isl|json)/)'
+    Priority:        2
+  - Regex:           '.\*'
+    Priority:        1
+IndentCaseLabels: true                              # 强制将 switch case 的 case 进行缩进
+IndentWidth: 4                                      # 默认行缩进量
+IndentWrappedFunctionNames: true                   # Indent if a function definition or declaration is wrapped after the type.
+# JavaScriptQuotes:
+# JavaScriptWrapImports
+KeepEmptyLinesAtTheStartOfBlocks: true              # 一个代码块开头如果是空行，是否保留
+#MacroBlockBegin: "^[A-Z_]+_BEGIN$"                  # block 宏开始正则匹配
+#MacroBlockEnd: "^[A-Z_]+_END$"                      # block 宏结束正则匹配
+MaxEmptyLinesToKeep: 3                              # 最多允许几个连续空行
+NamespaceIndentation: None                          # namespace 是否缩进
+ObjCBlockIndentWidth: 4                             # ObjC block 内缩进
+ObjCSpaceAfterProperty: true                        # @property (readonly) 中间强制一个空格
+ObjCSpaceBeforeProtocolList: true                   # Foo <Protocol> 中强制一个空格
+PenaltyBreakBeforeFirstCallParameter: 19            # The penalty for breaking a function call after `call(`.
+PenaltyBreakComment: 300                            # The penalty for each line break introduced inside a comment.
+PenaltyBreakString: 1000                            # The penalty for each line break introduced inside a string literal.
+PenaltyBreakFirstLessLess: 120                      # The penalty for breaking before the first <<.
+PenaltyExcessCharacter: 1000000                     # The penalty for each character outside of the column limit.
+PenaltyReturnTypeOnItsOwnLine: 60                   # Penalty for putting the return type of a function onto its own line.
+PointerAlignment: Right                             # 指针、引用标识贴着变量名 int *a;  <- int* a;
+ReflowComments: false                               # 多行时是否重排列
+SortIncludes: true                                  # 是否对连续的 include 行进行排序
+SpaceAfterCStyleCast: false                         # c 式类型强转之后是否添加空格 (double)a <- (double) a
+# SpaceAfterTemplateKeyword: false                    # template<int>, template 后不插入空格
+SpaceBeforeAssignmentOperators: true                # = 号前是否加空格
+SpaceBeforeParens: ControlStatements                # 什么时候在括号前插入空格，if (booleanValue), void f() , f()
+SpaceInEmptyParentheses: false                      # 空参数方法调用() 中是否插入空格  f() <- f( )
+SpacesBeforeTrailingComments: 1                     # 行尾注释 // 之前添加几个空格  ; //  <-  ;//
+SpacesInAngles: false                               # < 后 > 前是否插入空格, std::function<void(int)> fct;
+SpacesInCStyleCastParentheses: false                # c 式类型强转之后是否添加空格 x = (int32)y  <- x = ( int32 )y
+SpacesInContainerLiterals: true                     # @[], @{} 等容器前后是否插入空格 [ 1, 2, 3 ];  <- [1, 2, 3];
+SpacesInParentheses: false                          # ( 后 ) 前是否插入空格, t f( Deleted & ) & = delete;  ->  t f(Deleted &) & = delete;
+SpacesInSquareBrackets: false                       # [ 后 ] 前是否插入空格
+Standard: Cpp11                                     # 语言标准 Cpp03 Cpp11 Auto
+TabWidth: 4                                         # Tab 宽度
+UseTab: Never                                       # 保留 Tab 或者用空格替换
+PointerBindsToType: false
+IndentFunctionDeclarationAfterType: true
