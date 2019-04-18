@@ -4,7 +4,7 @@
 
 [Readme 中文版本](./Readme-cn.md)
 
-MTHawkeye is a profiling, debugging tools platform for iOS used in Meitu. It's designed to help iOS developers improve development productivity and assist in optimizing the App performance.
+MTHawkeye is profiling, debugging tools for iOS used in Meitu. It's designed to help iOS developers improve development productivity and assist in optimizing the App performance.
 
 During the App product development cycle, we introduced MTHawkeye to help us discover, find, analyze, locate, and solve problems faster.
 
@@ -16,7 +16,7 @@ MTHawkeye has build-in some common performance detection plug-ins. It also intro
 
 The following are demo diagrams of some built-in plugins for `View time-consuming methods on main Thread`, `View App memory allocations details`, `View network transactions records`. See the post for more plugin instructions.
 
-<img src="./doc/images/ui-time-profiler-demo-flow.gif" width=290> <img src="./doc/images/memory-allocations-demo-flow.gif" width=290> <img src="./doc/images/network-monitor-demo-flow.gif" width=290>
+<img src="./doc/images/ui-time-profiler-demo-flow.gif" width=285> <img src="./doc/images/memory-allocations-demo-flow.gif" width=285> <img src="./doc/images/network-monitor-demo-flow.gif" width=285>
 
 ## 0x00 Features
 

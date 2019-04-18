@@ -1,24 +1,24 @@
-# Hawkeye
+# MTHawkeye
 
 [![Platform](https://img.shields.io/cocoapods/p/Log4G.svg?style=flat)](http://cocoapods.org/pods/MTHawkeye) [![License](https://img.shields.io/cocoapods/l/Log4G.svg?style=flat)](https://github.com/MTlab/MTHawkeye/blob/master/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/MTlab/MTHawkeye/pulls) [![Version](https://img.shields.io/cocoapods/v/Log4G.svg?style=flat)](http://cocoapods.org/pods/MTHawkeye)
 
-Hawkeye 是 iOS 下的调试优化辅助工具，旨在帮助 iOS 开发者提升开发效率、辅助优化性能体验。
+MTHawkeye 是 iOS 下的调试优化辅助工具集，旨在帮助 iOS 开发者提升开发效率、辅助优化性能体验。
 
-在产品开发周期内，我们引入 Hawkeye 来帮助我们更快的发现、查找、分析、定位、解决问题：
+在产品开发周期内，我们引入 MTHawkeye 来帮助我们更快的发现、查找、分析、定位、解决问题：
 
 - 开发阶段，侧重于开发调试辅助，及时侦测问题，并在必要时提示开发者及时处理
 - 测试阶段，侧重于根据测试场景，收集尽可能多的数据，用于自动化测试分析报告
 - 线上阶段，侧重补充传统 APM 组件缺失，但自身业务需要收集的一些性能数据
 
-Hawkeye 内置了一些常用的性能侦测相关插件，也引入并改进了 FLEX 作为调试辅助的一个插件，应用接入 Hawkeye 时可自定义增改自己需要的插件。
+MTHawkeye 内置了一些常用的性能侦测相关插件，也引入并改进了 FLEX 作为调试辅助的一个插件，应用接入 MTHawkeye 时可自定义增改自己需要的插件。
 
 以下为一些内置插件的 demo 演示图，分别用于`查看主线程耗时方法`，`查看 App 内存分配详情`，`查看网络请求详情记录`。更多插件及说明见后文。
 
-<img src="./doc/images/ui-time-profiler-demo-flow.gif" width=290> <img src="./doc/images/memory-allocations-demo-flow.gif" width=290> <img src="./doc/images/network-monitor-demo-flow.gif" width=290>
+<img src="./doc/images/ui-time-profiler-demo-flow.gif" width=285> <img src="./doc/images/memory-allocations-demo-flow.gif" width=285> <img src="./doc/images/network-monitor-demo-flow.gif" width=285>
 
 ## 0x00 功能简介
 
-Hawkeye 简单可分为上中下三层，除了最下面的`基础层`外，中间为`UI 基础层`，最上层的各个插件内部根据不同场景做了职责拆分，应用可根据自己的需要接入。整体结构如下：
+MTHawkeye 简单可分为上中下三层，除了最下面的`基础层`外，中间为`UI 基础层`，最上层的各个插件内部根据不同场景做了职责拆分，应用可根据自己的需要接入。整体结构如下：
 
 ![MTHawkeye overall structure](./doc/images/hawkeye-arch.png)
 
@@ -102,7 +102,7 @@ Hawkeye 简单可分为上中下三层，除了最下面的`基础层`外，中�
 
 ##### # [FLEX](https://github.com/Flipboard/FLEX)
 
-日常开发中常用的调试辅助工具，Hawkeye 插件扩展支持了沙盒文件的 AirDrop 功能。
+MTHawkeye 插件扩展支持了沙盒文件的 AirDrop 功能。
 
 ### 桌面扩展
 
@@ -115,7 +115,7 @@ Hawkeye 简单可分为上中下三层，除了最下面的`基础层`外，中�
 
 ### 开发阶段接入
 
-首先，以 pod 的形式，在项目 podile 文件中加入 Hawkeye 引用：
+首先，以 pod 的形式，在项目 podfile 文件中加入 MTHawkeye 引用：
 
 ```ruby
   #< 开发调试辅助工具, 只在 Debug 时引入 
@@ -140,7 +140,7 @@ Hawkeye 简单可分为上中下三层，除了最下面的`基础层`外，中�
   end
 ```
 
-然后，在应用启动时开启 Hawkeye 服务。可以使用默认集成的所有插件，或者选择自己需要的插件启动。
+然后，在应用启动时开启 MTHawkeye 服务。可以使用默认集成的所有插件，或者选择自己需要的插件启动。
 
 A: 快速集成默认的所有插件:
 
@@ -212,7 +212,7 @@ A: 快速集成默认的所有插件:
 
 ### 测试、线上阶段接入
 
-测试阶段时可能有特殊的需求，而线上阶段可能不需要保留界面部分的代码。这个时候你可以根据工程的需要创建一个新的 `podspec`, 在 podspec 里引入在测试、线上阶段要引入的 Hawkeye subspec, 然后在 podfile 内引入
+测试阶段时可能有特殊的需求，而线上阶段可能不需要保留界面部分的代码。这个时候你可以根据工程的需要创建一个新的 `podspec`, 在 podspec 里引入在测试、线上阶段要引入的 MTHawkeye subspec, 然后在 podfile 内引入
 
 ```ruby
   pod 'YourOnlineHawkeye', :podspec => 'xxx/yourOwnHawkeyeOnline.podspec', :configurations => 'Release'
@@ -256,11 +256,11 @@ A: 快速集成默认的所有插件:
 
 如果你关注的性能指标在自动化测试时无法持续跟踪，考虑编写一个性能分析插件用于抓取性能数据。
 
-详见：[Hawkeye 插件开发说明文档](./doc/hawkeye-plugin-dev-guide-cn.md)
+详见：[MTHawkeye 插件开发说明文档](./doc/hawkeye-plugin-dev-guide-cn.md)
 
-## 0x04 Contribute to Hawkeye
+## 0x04 Contribute to MTHawkeye
 
-For more information about contributing issues or pull requests, see [Hawkeye Contributing Guide](./Contributing.md)。
+For more information about contributing issues or pull requests, see [MTHawkeye Contributing Guide](./Contributing.md)。
 
 ## 0x05 Thanks
 
@@ -276,4 +276,4 @@ For more information about contributing issues or pull requests, see [Hawkeye Co
 
 ## 0x06 License
 
-Hawkeye 使用 MIT 协议，详情请参考 [LICENSE](./LICENSE)。
+MTHawkeye 使用 MIT 协议，详情请参考 [LICENSE](./LICENSE)。
