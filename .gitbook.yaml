@@ -1,0 +1,5 @@
+root: ./
+
+structure:
+  readme: ./Readme.md
+  summary: ./.gitbook.summary.md
