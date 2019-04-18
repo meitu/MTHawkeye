@@ -1,6 +1,9 @@
 # MTHawkeye
 
-[![Platform](https://img.shields.io/cocoapods/p/Log4G.svg?style=flat)](http://cocoapods.org/pods/MTHawkeye) [![License](https://img.shields.io/cocoapods/l/Log4G.svg?style=flat)](https://github.com/Meitu/MTHawkeye/blob/master/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Meitu/MTHawkeye/pulls) [![Version](https://img.shields.io/cocoapods/v/Log4G.svg?style=flat)](http://cocoapods.org/pods/MTHawkeye)
+[![Platform](https://img.shields.io/cocoapods/p/MTHawkeye.svg?style=flat)](http://cocoapods.org/pods/MTHawkeye) 
+[![License](https://img.shields.io/github/license/meitu/MTHawkeye.svg?style=flat)](https://github.com/meitu/MTHawkeye/blob/master/LICENSE) 
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/meitu/MTHawkeye/pulls) 
+[![Version](https://img.shields.io/cocoapods/v/MTHawkeye.svg?style=flat)](http://cocoapods.org/pods/MTHawkeye)
 
 [Readme 中文版本](./Readme-cn.md)
 
