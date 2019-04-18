@@ -1,10 +1,10 @@
 Pod::Spec.new do |s|
   s.name         = "MTHawkeye"
   s.version      = "0.11.0"
-  s.summary      = "Profiling/Debugging assist tools for iOS."
+  s.summary      = "Profiling/Debugging assist tools platform for iOS."
 
   s.description  = <<-DESC
-    Hawkeye is a platform with profiling/debugging assit tools for iOS.
+    MTHawkeye is a profiling/debugging assit tools platform for iOS.
                    DESC
 
   s.homepage     = "https://github.com/MTlab/MTHawkeye"
@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
 
   s.platform     = :ios, "8.0"
 
-  s.source       = { :git => "git@github.com:MTlab/MTHawkeye.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/meitu/MTHawkeye.git", :tag => "#{s.version}" }
 
 
   # ――― Default ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -356,10 +356,6 @@ Pod::Spec.new do |s|
       flex.libraries = "sqlite3"
   end
 
-  s.libraries = "z", "c++", "stdc++"
-
   s.requires_arc = true
-
-  s.xcconfig = { 'OTHER_LDFLAGS' => '-lc++' }
 
 end
