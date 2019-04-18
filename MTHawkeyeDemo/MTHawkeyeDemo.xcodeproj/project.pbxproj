@@ -44,7 +44,6 @@
 		207AFA292230C9C1003BE276 /* EnormousView.m in Sources */ = {isa = PBXBuildFile; fileRef = 207AFA212230C9C0003BE276 /* EnormousView.m */; };
 		207AFA2C2230FF5E003BE276 /* ToastDemo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 207AFA2A2230FF5E003BE276 /* ToastDemo.storyboard */; };
 		207AFA3022310052003BE276 /* ToastDemoTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 207AFA2F22310052003BE276 /* ToastDemoTableViewController.m */; };
-		208016321F3498FB004185D1 /* MTNetworkPerformanceTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2080162F1F3498FB004185D1 /* MTNetworkPerformanceTestViewController.m */; };
 		208016331F3498FB004185D1 /* MTNetworkTaskDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 208016311F3498FB004185D1 /* MTNetworkTaskDemoViewController.m */; };
 		20841F7E1F3B017B002CA705 /* NetworkTransactionsFilterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 20841F7B1F3B017B002CA705 /* NetworkTransactionsFilterTests.m */; };
 		20841F7F1F3B017B002CA705 /* NetworkMonitorViewModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 20841F7C1F3B017B002CA705 /* NetworkMonitorViewModelTests.m */; };
@@ -141,8 +140,6 @@
 		207AFA2B2230FF5E003BE276 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ToastDemo.storyboard; sourceTree = "<group>"; };
 		207AFA2E22310052003BE276 /* ToastDemoTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToastDemoTableViewController.h; sourceTree = "<group>"; };
 		207AFA2F22310052003BE276 /* ToastDemoTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToastDemoTableViewController.m; sourceTree = "<group>"; };
-		2080162E1F3498FB004185D1 /* MTNetworkPerformanceTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTNetworkPerformanceTestViewController.h; sourceTree = "<group>"; };
-		2080162F1F3498FB004185D1 /* MTNetworkPerformanceTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTNetworkPerformanceTestViewController.m; sourceTree = "<group>"; };
 		208016301F3498FB004185D1 /* MTNetworkTaskDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTNetworkTaskDemoViewController.h; sourceTree = "<group>"; };
 		208016311F3498FB004185D1 /* MTNetworkTaskDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTNetworkTaskDemoViewController.m; sourceTree = "<group>"; };
 		20841F7B1F3B017B002CA705 /* NetworkTransactionsFilterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkTransactionsFilterTests.m; sourceTree = "<group>"; };
@@ -417,8 +414,6 @@
 		2080162D1F3498FB004185D1 /* NetworkDemo */ = {
 			isa = PBXGroup;
 			children = (
-				2080162E1F3498FB004185D1 /* MTNetworkPerformanceTestViewController.h */,
-				2080162F1F3498FB004185D1 /* MTNetworkPerformanceTestViewController.m */,
 				208016301F3498FB004185D1 /* MTNetworkTaskDemoViewController.h */,
 				208016311F3498FB004185D1 /* MTNetworkTaskDemoViewController.m */,
 				203AA5111F53F46C006790E2 /* MTURLConnectionInjectTestViewController.h */,
@@ -835,7 +830,6 @@
 				204BBD821F43DE7800A1E419 /* AlertRetainedViewController.m in Sources */,
 				207AFA232230C9C1003BE276 /* EnormousViewModel.m in Sources */,
 				95E412AA2242432100DAC583 /* GraphicsTextureGLKView.m in Sources */,
-				208016321F3498FB004185D1 /* MTNetworkPerformanceTestViewController.m in Sources */,
 				204BBD881F43DE7800A1E419 /* LeakingPropertiesSecondTestViewController.m in Sources */,
 				204BBD8B1F43DE7800A1E419 /* MemoryTestTableViewController.m in Sources */,
 				204BBD901F43DE7800A1E419 /* SharedInstanceExample.m in Sources */,
