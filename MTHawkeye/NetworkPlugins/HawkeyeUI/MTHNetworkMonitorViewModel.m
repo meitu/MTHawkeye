@@ -255,7 +255,6 @@
     // when the total duration is more than 4 times of focusTransaction,
     // put the focusTransaction in the center, and crop head and tail.
     MTHNetworkTransaction *focusTr = [self transactionFromRequestIndex:self.requestIndexFocusOnCurrently];
-    NSTimeInterval focusTrDuration = focusTr.duration;
     if (self.timelineDuration > focusTr.duration * 5) {
         self.timelineStartAt = [focusTr.startTime timeIntervalSince1970] - focusTr.duration * 2.f;
         self.timelineDuration = focusTr.duration * 5.f;

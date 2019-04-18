@@ -71,10 +71,10 @@ static dispatch_source_t memoryPressureEventSource = NULL;
 - (void)installMemoryPressureEventTrace {
     __weak __typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        auto memoryStatusFlags = DISPATCH_MEMORYPRESSURE_NORMAL | DISPATCH_MEMORYPRESSURE_WARN | DISPATCH_MEMORYPRESSURE_CRITICAL;
+        unsigned long memoryStatusFlags = DISPATCH_MEMORYPRESSURE_NORMAL | DISPATCH_MEMORYPRESSURE_WARN | DISPATCH_MEMORYPRESSURE_CRITICAL;
         memoryPressureEventSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_MEMORYPRESSURE, 0, memoryStatusFlags, dispatch_get_main_queue());
         dispatch_source_set_event_handler(memoryPressureEventSource, ^{
-            auto status = dispatch_source_get_data(memoryPressureEventSource);
+            unsigned long status = dispatch_source_get_data(memoryPressureEventSource);
             switch (status) {
                 // VM pressure events.
                 case DISPATCH_MEMORYPRESSURE_NORMAL:

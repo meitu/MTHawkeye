@@ -45,16 +45,16 @@ extern "C" {
 #endif
 
 typedef struct _mthawkeye_property_box {
-    char ivar_name[512];
-    char type_name[128];
-    char *property_name;
-    char *attributtes_short;
+    const char *property_name;
+    const char *attributtes_short;
     bool is_strong;
     bool is_copy;
     bool is_weak;
     bool is_readonly;
     bool is_nonatomic;
     bool is_dynamic;
+    char ivar_name[512];
+    char type_name[128];
 } mthawkeye_property_box;
 
 mthawkeye_property_box mthawkeye_extract_property(objc_property_t property);

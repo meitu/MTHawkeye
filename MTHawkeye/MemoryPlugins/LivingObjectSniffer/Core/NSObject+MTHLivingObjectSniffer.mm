@@ -63,7 +63,7 @@
         for (i = 0; i < count; i++) {
             objc_property_t property = properties[i];
             mthawkeye_property_box property_box = mthawkeye_extract_property(property);
-            if ((!property_box.is_copy && !property_box.is_strong) || property_box.ivar_name == NULL || property_box.ivar_name[0] == '\0')
+            if ((!property_box.is_copy && !property_box.is_strong) || property_box.ivar_name[0] == '\0')
                 continue;
 
             @try {

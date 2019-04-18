@@ -426,7 +426,7 @@ static BOOL needDoSymbolicsRemote = NO;
             NSScanner *scanner = [NSScanner scannerWithString:frame];
             [scanner setScanLocation:2];
             [scanner scanHexLongLong:&frameV];
-            desc = [self recordFrameStringFrom:frameV withoutFnameIfExistSname:YES];
+            desc = [self recordFrameStringFrom:(vm_address_t)frameV withoutFnameIfExistSname:YES];
         }
 
         double proportion = [[obj objectForKey:@"proportion"] doubleValue];

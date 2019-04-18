@@ -29,13 +29,13 @@
     if (self = [super init]) {
         _path = path;
         _triggerLimitTimes = triggerLimitTimes;
-        _fileSize = [MTHDirectoryWatcher fileSizeAtPath:_path];
+        _fileSize = (NSUInteger)[MTHDirectoryWatcher fileSizeAtPath:_path];
     }
     return self;
 }
 
 - (BOOL)fileSizeChanged {
-    NSUInteger size = [MTHDirectoryWatcher fileSizeAtPath:_path];
+    NSUInteger size = (NSUInteger)[MTHDirectoryWatcher fileSizeAtPath:_path];
     BOOL changed = size != _fileSize ? YES : NO;
     _fileSize = size;
     return changed;

@@ -36,8 +36,7 @@
         NSError *error;
         dyldImagesDict = [NSJSONSerialization JSONObjectWithData:dyldImagesInfoData options:0 error:&error];
         if (error || ![dyldImagesDict isKindOfClass:[NSDictionary class]]) {
-            NSString *errMsg = [NSString stringWithFormat:@"convert dyld images file string to json failed: %@", error];
-            MTHLogWarn(@"%@", errMsg);
+            MTHLogWarn(@"%@", [NSString stringWithFormat:@"convert dyld images file string to json failed: %@", error]);
         }
     }
     return dyldImagesDict;

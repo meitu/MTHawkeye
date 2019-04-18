@@ -1418,7 +1418,7 @@ typedef NS_ENUM(NSInteger, MTHInternalTags) {
     float rightLineX = _leftTouchLine.frame.origin.x >= _rightTouchLine.frame.origin.x ? _leftTouchLine.frame.origin.x : _rightTouchLine.frame.origin.x;
 
     CGFloat panX = [self pointXInScope:[recognizer locationInView:self.panView].x];
-    CGPoint panVelocity = [recognizer velocityInView:recognizer.view];
+    // __unused CGPoint panVelocity = [recognizer velocityInView:recognizer.view];
     float panNearToLeftView = fabs(panX - leftLineX);
     float panNearToRightView = fabs(panX - rightLineX);
 

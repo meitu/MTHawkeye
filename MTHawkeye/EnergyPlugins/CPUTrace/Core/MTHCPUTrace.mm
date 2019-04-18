@@ -369,7 +369,6 @@
     double totalUsageRatio = 0.0;
 
     thread_info_data_t thinfo;
-    thread_info_data_t identifier_info;
     thread_act_array_t threads;
     thread_basic_info_t basic_info_t;
 

@@ -261,7 +261,7 @@ static NSString *calculateSize(uint64_t size) {
         endTime = [self.glMemoryUsedRecordTimes[rightIndex] doubleValue];
     }
 
-    if ((startTime > 0.f || (startTime == 0 && leftIndex == 0)) & endTime > 0.f) {
+    if ((startTime > 0.f || (startTime == 0 && leftIndex == 0)) && endTime > 0.f) {
         return [self aliveGLObjectsBetweenStartTime:startTime endTime:endTime from:objects];
     } else {
         return [objects copy];

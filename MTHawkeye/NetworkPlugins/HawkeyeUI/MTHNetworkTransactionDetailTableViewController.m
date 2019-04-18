@@ -697,15 +697,21 @@ typedef UIViewController * (^MTHawkeyeNetworkDetailRowSelectionFuture)(void);
             if ([mimeType containsString:@"webp"]) {
                 SEL sdWebPSEL = NSSelectorFromString(@"sd_imageWithWebPData:");
                 if ([UIImage respondsToSelector:sdWebPSEL]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                     image = [UIImage performSelector:sdWebPSEL withObject:data];
+#pragma clang diagnostic pop
                 }
             }
         }
         if (image == nil) {
             Class yyImageCls = NSClassFromString(@"YYImage");
             if (yyImageCls) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 SEL yyImgSEL = NSSelectorFromString(@"imageWithData:");
                 image = [yyImageCls performSelector:yyImgSEL withObject:data];
+#pragma clang diagnostic pop
             }
         }
         detailViewController = [[FLEXImagePreviewViewController alloc] initWithImage:image];
