@@ -16,46 +16,23 @@ If you open an issue, the more information the better. Such as detailed descript
 
 ## Pull Requests
 
-We strongly welcome your pull request to make Mars better.
+We strongly welcome your pull request to make MTHawkeye better.
 
 ### Branch Management
 
-There are three main branches here:
+We use [Git Flow branching model](http://nvie.com/posts/a-successful-git-branching-model/) in this repository:
 
-- `master` branch.
-  - It is the latest (pre-)release branch. We use `master` for tags, with version number `1.1.0`, `1.2.0`, `1.3.0`...
-  - **Don't submit any PR on `master` branch.**
-- `develop` branch.
-  - It is our stable developing branch. After full testing, `develop` will be merged to `master` branch for the next release.
-  - **You are recommended to submit bugfix or feature PR on `develop` branch.**
-- `hotfix` branch. 
-  - It is the latest tag version for hot fix. If we accept your pull request, we may just tag with version number `1.1.1`, `1.2.3`.
-  - **Only submit urgent PR on `hotfix` branch for next specific release.**
+* We use the `master` branch for bringing forth production releases
+* We use the `develop` branch for "next release" development.
+* We prefix `feature` branch names with `feature/`.
+* We prefix `release` branch names with `release/`.
+* We prefix `hotfix` branch names with `hotfix/`.
 
-Normal bugfix or feature request should be submitted to `develop` branch. After full testing, we will merge them to `master` branch for the next release. 
+Make commits of logical units of work.
 
-If you have some urgent bugfixes on a published version, but the `master` branch have already far away with the latest tag version, you can submit a PR on hotfix. And it will be cherry picked to `develop` branch if it is possible.
-
-```md
-master
- ↑
-develop        <--- hotfix PR
- ↑
-feature/bugfix PR
-```  
-
-### Make Pull Requests
-
-The code team will monitor all pull request, we run some code check and test on it. After all tests passed, we will accecpt this PR. But it won't merge to `master` branch at once, which have some delay.
-
-Before submitting a pull request, please make sure the followings are done:
-
-1. Fork the repo and create your branch from `master` or `hotfix`.
-2. Update code or documentation if you have changed APIs.
-3. Add the copyright notice to the top of any new files you've added.
-4. Check your code lints and checkstyles.
-5. Test and test again your code.
-6. Now, you can submit your pull request on `develop` or `hotfix` branch.
+* Smaller / simpler commits are usually easier to review.
+* Ideally, lint the files to make sure they do not contain syntax errors before committing them. (`pod lib lint`).
+* Ideally, write good commit messages.
 
 ## Code Style Guide
 
