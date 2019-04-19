@@ -20,11 +20,7 @@
 
 - (BOOL)directoryWatcherOn {
     NSNumber *value = [self objectForKey:NSStringFromSelector(@selector(directoryWatcherOn))];
-    if (!value) {
-        value = @(YES);
-        self.directoryWatcherOn = [value boolValue];
-    }
-    return value.boolValue;
+    return value ? value.boolValue : YES;
 }
 
 - (void)setDirectoryWatcherFoldersPath:(NSArray<NSString *> *)foldersPath {
@@ -34,9 +30,6 @@
 - (NSArray<NSString *> *)directoryWatcherFoldersPath {
     NSArray<NSString *> *paths = [self objectForKey:NSStringFromSelector(@selector(directoryWatcherFoldersPath))];
     NSArray<NSString *> *foldersPath = paths.count > 0 ? paths : [NSArray arrayWithObject:@"Documents"];
-    if (!paths.count) {
-        self.directoryWatcherFoldersPath = foldersPath;
-    }
     return foldersPath;
 }
 
@@ -65,7 +58,6 @@
     }
 
     if (valueChanged) {
-        self.directoryWatcherFoldersLimitInMB = dic;
         originDic = dic;
     }
     return originDic;
@@ -86,11 +78,7 @@
 
 - (NSUInteger)directoryWatcherStopAfterTimes {
     NSNumber *value = [self objectForKey:NSStringFromSelector(@selector(directoryWatcherStopAfterTimes))];
-    if (!value) {
-        value = @(3);
-        self.directoryWatcherStopAfterTimes = 3;
-    }
-    return value.unsignedIntegerValue;
+    return value ? value.unsignedIntegerValue : 3;
 }
 
 - (void)setDirectoryWatcherReportMinInterval:(NSTimeInterval)reportMinInterval {
@@ -99,11 +87,7 @@
 
 - (NSTimeInterval)directoryWatcherReportMinInterval {
     NSNumber *value = [self objectForKey:NSStringFromSelector(@selector(directoryWatcherReportMinInterval))];
-    if (!value) {
-        value = @(40);
-        self.directoryWatcherReportMinInterval = 40;
-    }
-    return value.floatValue;
+    return value ? value.floatValue : 40;
 }
 
 - (void)setDirectoryWatcherStartDelay:(NSTimeInterval)startDelay {
@@ -112,11 +96,7 @@
 
 - (NSTimeInterval)directoryWatcherStartDelay {
     NSNumber *value = [self objectForKey:NSStringFromSelector(@selector(directoryWatcherStartDelay))];
-    if (!value) {
-        value = @(5.0);
-        self.directoryWatcherStartDelay = 5.0;
-    }
-    return value.doubleValue;
+    return value ? value.doubleValue : 5.f;
 }
 
 @end

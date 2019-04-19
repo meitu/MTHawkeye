@@ -20,11 +20,7 @@
 
 - (BOOL)networkMonitorOn {
     NSNumber *value = [self objectForKey:NSStringFromSelector(@selector(networkMonitorOn))];
-    if (!value) {
-        value = @(YES);
-        self.networkMonitorOn = [value boolValue];
-    }
-    return [value boolValue];
+    return value ? value.boolValue : YES;
 }
 
 - (void)setNetworkTransactionBodyCacheOn:(BOOL)networkTransactionBodyCacheOn {
@@ -33,11 +29,7 @@
 
 - (BOOL)networkTransactionBodyCacheOn {
     NSNumber *value = [self objectForKey:NSStringFromSelector(@selector(networkTransactionBodyCacheOn))];
-    if (!value) {
-        value = @(YES);
-        self.networkTransactionBodyCacheOn = [value boolValue];
-    }
-    return [value boolValue];
+    return value ? value.boolValue : YES;
 }
 
 - (void)setResponseBodyCacheOn:(BOOL)responseBodyCacheOn {
@@ -46,11 +38,7 @@
 
 - (BOOL)responseBodyCacheOn {
     NSNumber *value = [self objectForKey:NSStringFromSelector(@selector(responseBodyCacheOn))];
-    if (!value) {
-        value = @(YES);
-        self.responseBodyCacheOn = [value boolValue];
-    }
-    return [value boolValue];
+    return value ? value.boolValue : YES;
 }
 
 - (void)setNetworkCacheLimitInMB:(float)networkCacheLimitInMB {
@@ -59,11 +47,7 @@
 
 - (float)networkCacheLimitInMB {
     NSNumber *value = [self objectForKey:NSStringFromSelector(@selector(networkCacheLimitInMB))];
-    if (!value) {
-        value = @(50.0f);
-        self.networkCacheLimitInMB = value.floatValue;
-    }
-    return value.floatValue;
+    return value ? value.floatValue : 50.f;
 }
 
 @end
