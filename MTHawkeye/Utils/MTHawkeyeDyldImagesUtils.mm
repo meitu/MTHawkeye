@@ -133,7 +133,7 @@ void mtha_setup_dyld_images_dumper_with_path(NSString *filepath) {
         NSDictionary *image_info = @{
             @"uuid" : uuidStr ?: @"",
             @"base_addr" : [NSString stringWithFormat:@"0x%llx", imageBaseAddr],
-            @"addr_slide" : [NSString stringWithFormat:@"0x%llx", slide],
+            @"addr_slide" : [NSString stringWithFormat:@"0x%lx", slide],
             @"name" : [NSString stringWithUTF8String:name],
         };
         [dyldImages addObject:image_info];
