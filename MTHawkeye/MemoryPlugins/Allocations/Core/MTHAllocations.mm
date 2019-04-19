@@ -201,7 +201,9 @@ void mtha_cfobject_alloc_set_last_alloc_event_name_function(void *ptr, const cha
 
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.f * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 NSString *dyldDumperPath = [self.logDir stringByAppendingPathComponent:@"dyld-images"];
-                mtha_setup_dyld_images_dumper_with_path(dyldDumperPath);
+                if (![[NSFileManager defaultManager] fileExistsAtPath:dyldDumperPath]) {
+                    mtha_setup_dyld_images_dumper_with_path(dyldDumperPath);
+                }
             });
         });
     }

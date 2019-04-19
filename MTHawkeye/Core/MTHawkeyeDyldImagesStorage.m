@@ -22,9 +22,11 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSString *path = [self storagePath];
-        if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-            mtha_setup_dyld_images_dumper_with_path(path);
-        }
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+            if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+                mtha_setup_dyld_images_dumper_with_path(path);
+            }
+        });
     });
 }
 

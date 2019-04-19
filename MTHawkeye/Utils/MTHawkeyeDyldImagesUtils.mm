@@ -69,9 +69,6 @@ typedef struct section section_t;
 #error Unsupported host cpu.
 #endif
 
-static NSMutableArray *dyldImages = nil;
-static NSString *dyldImagesInfoFilePath = nil;
-
 static void process_binary_image(const void *header, struct uuid_command *out_uuid) {
     uint32_t ncmds;
     const struct mach_header *header32 = (const struct mach_header *)header;
@@ -115,15 +112,20 @@ static void process_binary_image(const void *header, struct uuid_command *out_uu
         memcpy(out_uuid, uuid, sizeof(struct uuid_command));
 }
 
-static void image_list_append(const Dl_info &info, const struct mach_header *mh, intptr_t vmaddr_slide) {
-    @synchronized(dyldImages) {
-        int64_t imageBaseAddr = (uint64_t)mh;
-        int64_t slide = vmaddr_slide;
-        NSString *name = [NSString stringWithFormat:@"%s", info.dli_fname];
+// MARK: - public
+void mtha_setup_dyld_images_dumper_with_path(NSString *filepath) {
+    NSMutableArray *dyldImages = @[].mutableCopy;
+
+    uint32_t count = _dyld_image_count();
+    for (uint32_t i = 0; i < count; ++i) {
+        const char *name = _dyld_get_image_name(i);
+        const mach_header *header = (const mach_header *)_dyld_get_image_header(i);
+        intptr_t slide = _dyld_get_image_vmaddr_slide(i);
+        int64_t imageBaseAddr = (uint64_t)header;
 
         struct uuid_command uuid = {0};
         char uuidstr[64] = {0};
-        process_binary_image(mh, &uuid);
+        process_binary_image(header, &uuid);
         for (int i = 0; i < 16; i++)
             sprintf(&uuidstr[2 * i], "%02x", uuid.uuid[i]);
 
@@ -132,62 +134,35 @@ static void image_list_append(const Dl_info &info, const struct mach_header *mh,
             @"uuid" : uuidStr ?: @"",
             @"base_addr" : [NSString stringWithFormat:@"0x%llx", imageBaseAddr],
             @"addr_slide" : [NSString stringWithFormat:@"0x%llx", slide],
-            @"name" : name ?: @"",
+            @"name" : [NSString stringWithUTF8String:name],
         };
-
-        if (dyldImages == nil)
-            dyldImages = @[].mutableCopy;
-
         [dyldImages addObject:image_info];
+    }
 
-        if (dyldImages.count == _dyld_image_count()) {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                NSString *version = nil;
-                const NXArchInfo *info = NXGetLocalArchInfo();
-                NSString *typeOfCpu = [NSString stringWithUTF8String:info->description];
-                NSString *executableName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-                NSString *model = nil;
+    NSString *version = nil;
+    const NXArchInfo *info = NXGetLocalArchInfo();
+    NSString *typeOfCpu = [NSString stringWithUTF8String:info->description];
+    NSString *executableName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+    NSString *model = nil;
 
 #if TARGET_OS_IOS || TARGET_OS_WATCH || TARGET_OS_TV
-                version = [[UIDevice currentDevice] systemVersion];
-                model = [[UIDevice currentDevice] valueForKey:@"buildVersion"];
+    version = [[UIDevice currentDevice] systemVersion];
+    model = [[UIDevice currentDevice] valueForKey:@"buildVersion"];
 #else
 
 #endif
 
-                NSDictionary *cacheInfo = @{
-                    @"os_version" : version ?: @"",
-                    @"arch" : typeOfCpu ?: @"",
-                    @"model" : model ?: @"",
-                    @"name" : executableName ?: @"",
-                    @"dyld_images" : dyldImages ?: @""
-                };
+    NSDictionary *cacheInfo = @{
+        @"os_version" : version ?: @"",
+        @"arch" : typeOfCpu ?: @"",
+        @"model" : model ?: @"",
+        @"name" : executableName ?: @"",
+        @"dyld_images" : dyldImages ?: @""
+    };
 
-                NSData *data = [NSJSONSerialization dataWithJSONObject:cacheInfo options:NSJSONWritingPrettyPrinted error:nil];
-                NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                [str writeToFile:dyldImagesInfoFilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
-            });
-        }
-    }
-}
-
-static void image_add_callback(const struct mach_header *mh, intptr_t vmaddr_slide) {
-    Dl_info info;
-    if (dladdr(mh, &info) == 0) {
-        return;
-    }
-
-    image_list_append(info, mh, vmaddr_slide);
-}
-
-static void registerDyldCallback() {
-    _dyld_register_func_for_add_image(image_add_callback);
-}
-
-// MARK: - public
-void mtha_setup_dyld_images_dumper_with_path(NSString *filepath) {
-    dyldImagesInfoFilePath = filepath;
-    registerDyldCallback();
+    NSData *data = [NSJSONSerialization dataWithJSONObject:cacheInfo options:NSJSONWritingPrettyPrinted error:nil];
+    NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    [str writeToFile:filepath atomically:YES encoding:NSUTF8StringEncoding error:nil];
 }
 
 static vm_address_t images_begin = 0;

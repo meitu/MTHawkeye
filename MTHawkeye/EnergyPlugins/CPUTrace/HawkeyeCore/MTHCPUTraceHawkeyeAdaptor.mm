@@ -63,6 +63,7 @@
     [tracer startTracing];
     [tracer addDelegate:self];
 
+    // needed for remote symbolics
     [MTHawkeyeDyldImagesStorage asyncCacheDyldImagesInfoIfNeeded];
 }
 

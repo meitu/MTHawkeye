@@ -15,6 +15,7 @@
 #import "MTHawkeyeUserDefaults+ANRMonitor.h"
 
 #import <MTHawkeye/MTHANRRecord.h>
+#import <MTHawkeye/MTHawkeyeDyldImagesStorage.h>
 #import <MTHawkeye/MTHawkeyeLogMacros.h>
 #import <MTHawkeye/MTHawkeyeStorage.h>
 #import <MTHawkeye/MTHawkeyeUtility.h>
@@ -90,6 +91,9 @@
     [[MTHANRTrace shared] start];
 
     MTHLogInfo(@"ANR trace start");
+
+    // needed for remote symbolics
+    [MTHawkeyeDyldImagesStorage asyncCacheDyldImagesInfoIfNeeded];
 }
 
 - (void)stopANRTrace {
