@@ -19,6 +19,7 @@
 #import <MTHawkeye/MTHToast.h>
 #import <MTHawkeye/MTHawkeyeSettingTableEntity.h>
 #import <MTHawkeye/MTHawkeyeUIClient.h>
+#import <MTHawkeye/MTHawkeyeUserDefaults+UISkeleton.h>
 
 
 @interface MTHLivingObjectsSnifferHawkeyeUI () <MTHLivingObjectSnifferDelegate>
@@ -48,6 +49,8 @@ CGFloat gHawkeyeWarningUnexpectedLivingObjectFlashDuration = 5.f;
 
 - (void)livingObjectSniffer:(MTHLivingObjectSniffer *)sniffer
           didSniffOutResult:(MTHLivingObjectShadowPackageInspectResult *)result {
+    if (![MTHawkeyeUserDefaults shared].displayFloatingWindow)
+        return;
 
     for (MTHLivingObjectShadowPackageInspectResultItem *item in result.items) {
         MTHLivingObjectGroupInClass *group = item.theGroupInClass;
