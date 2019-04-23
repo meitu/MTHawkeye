@@ -200,7 +200,7 @@ CGFloat gHawkeyeWarningUnexpectedLivingObjectFlashDuration = 5.f;
     cell.valueChangedHandler = ^BOOL(BOOL newValue) {
         bool oldValue = [self shouldRaiseToastWarningForVC];
         if (newValue != oldValue) {
-            [[MTHawkeyeUserDefaults shared] setValue:@(newValue) forKey:@"toast-warning-for-unexpected-vc"];
+            [[MTHawkeyeUserDefaults shared] setObject:@(newValue) forKey:@"toast-warning-for-unexpected-vc"];
             return YES;
         }
         return NO;
