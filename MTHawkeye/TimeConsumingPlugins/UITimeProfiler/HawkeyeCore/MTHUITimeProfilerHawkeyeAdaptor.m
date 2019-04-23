@@ -206,11 +206,16 @@ BOOL mthawkeye_VCTraceIgnoreSystemVC = YES;
             NSString *value = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
             NSString *key = @"0";
             [[MTHawkeyeStorage shared] syncStoreValue:value withKey:key inCollection:@"app-launch"];
-            for (MTHRunloopActivityRecord *activityRecord in record.runloopActivities) {
-                NSString *timeStampString = [NSString stringWithFormat:@"%lf", activityRecord.timeStamp];
-                NSString *activityString = [NSString stringWithFormat:@"%lu", activityRecord.activity];
-                [[MTHawkeyeStorage shared] syncStoreValue:activityString withKey:timeStampString inCollection:@"head-runloop"];
-            }
+        }
+    });
+}
+
+- (void)timeIntervalRecorder:(MTHTimeIntervalRecorder *)recorder wantPersistRunloopActivities:(NSArray<MTHRunloopActivityRecord *> *)runloopActivities {
+    dispatch_async([MTHawkeyeStorage shared].storeQueue, ^(void) {
+        for (MTHRunloopActivityRecord *activityRecord in runloopActivities) {
+            NSString *timeStampString = [NSString stringWithFormat:@"%lf", activityRecord.timeStamp];
+            NSString *activityString = [NSString stringWithFormat:@"%lu", activityRecord.activity];
+            [[MTHawkeyeStorage shared] syncStoreValue:activityString withKey:timeStampString inCollection:@"head-runloop"];
         }
     });
 }

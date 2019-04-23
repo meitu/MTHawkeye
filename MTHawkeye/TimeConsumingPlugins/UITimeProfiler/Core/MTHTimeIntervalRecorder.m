@@ -154,15 +154,17 @@
             break;
         case MTHAppLaunchStepAppDidLaunchExit:
             self.launchRecord.appDidLaunchExitTime = nowTime;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.persistanceDelegate timeIntervalRecorder:self wantPersistLaunchRecord:self.launchRecord];
+            });
             break;
     }
 }
 
-- (void)recordMainRunLoopActivities:(NSArray<MTHRunloopActivityRecord *> *)activities {
-    self.launchRecord.runloopActivities = activities;
+- (void)recordRunLoopActivities:(NSArray<MTHRunloopActivityRecord *> *)runloopActivities {
     if ([self.persistanceDelegate respondsToSelector:@selector(timeIntervalRecorder:wantPersistLaunchRecord:)]) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self.persistanceDelegate timeIntervalRecorder:self wantPersistLaunchRecord:self.launchRecord];
+            [self.persistanceDelegate timeIntervalRecorder:self wantPersistRunloopActivities:runloopActivities];
         });
     }
 }
