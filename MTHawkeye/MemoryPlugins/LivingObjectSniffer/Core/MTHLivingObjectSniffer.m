@@ -135,42 +135,57 @@
     }
     [self.viewShadowPoolWaitingSniffLock unlock];
 
-    NSMutableArray *unexpectedShadows = @[].mutableCopy;
-    NSMutableArray *resultItems = [self getUnexpectLivingShadows:unexpectedShadows from:[shadowsToSniff copy]];
-    if (resultItems.count == 0)
-        return;
+    __weak __typeof(self) weakSelf = self;
+    [self
+        asyncExtraceUnexpectedLivingShadowsFrom:[shadowsToSniff copy]
+                                     completion:^(NSArray<MTHLivingObjectShadow *> *unexpectedShadows, NSArray<MTHLivingObjectShadowPackageInspectResultItem *> *resultItems) {
+                                         if (resultItems.count == 0)
+                                             return;
 
-    [self.viewShadowPoolWaitingSniffLock lock];
-    for (MTHLivingObjectShadow *unexpectedShadow in unexpectedShadows) {
-        [self.viewShadowPoolWaitingSniff removeObject:unexpectedShadow];
-    }
-    [self.viewShadowPoolWaitingSniffLock unlock];
+                                         __strong __typeof(weakSelf) strongSelf = weakSelf;
+                                         [strongSelf.viewShadowPoolWaitingSniffLock lock];
+                                         for (MTHLivingObjectShadow *unexpectedShadow in unexpectedShadows) {
+                                             [strongSelf.viewShadowPoolWaitingSniff removeObject:unexpectedShadow];
+                                         }
+                                         [strongSelf.viewShadowPoolWaitingSniffLock unlock];
 
-    MTHLivingObjectShadowPackageInspectResult *result = [[MTHLivingObjectShadowPackageInspectResult alloc] init];
-    result.items = resultItems.copy;
+                                         MTHLivingObjectShadowPackageInspectResult *result = [[MTHLivingObjectShadowPackageInspectResult alloc] init];
+                                         result.items = resultItems.copy;
 
-    @synchronized(self.delegates) {
-        for (id<MTHLivingObjectSnifferDelegate> delegate in self.delegates) {
-            [delegate livingObjectSniffer:self didSniffOutResult:result];
-        }
-    }
+                                         dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                             @synchronized(strongSelf.delegates) {
+                                                 for (id<MTHLivingObjectSnifferDelegate> delegate in strongSelf.delegates) {
+                                                     [delegate livingObjectSniffer:strongSelf didSniffOutResult:result];
+                                                 }
+                                             }
+                                         });
+                                     }];
 }
 
 - (void)doSniffLivingObjectShadowPackage:(MTHLivingObjectShadowPackage *)shadowPackage
                              triggerInfo:(MTHLivingObjectShadowTrigger *)trigger {
     NSArray<MTHLivingObjectShadow *> *shadows = shadowPackage.shadows.allObjects;
-    NSMutableArray *resultItems = [self getUnexpectLivingShadows:nil from:shadows];
-    if (resultItems.count == 0) return;
+    __weak __typeof(self) weakSelf = self;
+    [self
+        asyncExtraceUnexpectedLivingShadowsFrom:shadows
+                                     completion:^(NSArray<MTHLivingObjectShadow *> *unexpectedShadows, NSArray<MTHLivingObjectShadowPackageInspectResultItem *> *resultItems) {
+                                         if (resultItems.count == 0)
+                                             return;
 
-    MTHLivingObjectShadowPackageInspectResult *result = [[MTHLivingObjectShadowPackageInspectResult alloc] init];
-    result.items = resultItems.copy;
-    result.trigger = trigger;
+                                         __strong __typeof(weakSelf) strongSelf = weakSelf;
 
-    @synchronized(self.delegates) {
-        for (id<MTHLivingObjectSnifferDelegate> delegate in self.delegates) {
-            [delegate livingObjectSniffer:self didSniffOutResult:result];
-        }
-    }
+                                         MTHLivingObjectShadowPackageInspectResult *result = [[MTHLivingObjectShadowPackageInspectResult alloc] init];
+                                         result.items = resultItems.copy;
+                                         result.trigger = trigger;
+
+                                         dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                             @synchronized(strongSelf.delegates) {
+                                                 for (id<MTHLivingObjectSnifferDelegate> delegate in strongSelf.delegates) {
+                                                     [delegate livingObjectSniffer:strongSelf didSniffOutResult:result];
+                                                 }
+                                             }
+                                         });
+                                     }];
 }
 
 /**
@@ -179,30 +194,32 @@
  when assign `theHodlerIsNotOwner`, we only make mark when it's process though `sniffWillReleased***`,
  the `sniffLivingViewShadow` process was simply ignored.
  */
-- (NSMutableArray<MTHLivingObjectShadowPackageInspectResultItem *> *)getUnexpectLivingShadows:(NSMutableArray<MTHLivingObjectShadow *> *)outUnexpectShadows
-                                                                                         from:(NSArray<MTHLivingObjectShadow *> *)shadowsToSniff {
+- (void)asyncExtraceUnexpectedLivingShadowsFrom:(NSArray<MTHLivingObjectShadow *> *)shadowsToSniff
+                                     completion:(void (^)(NSArray<MTHLivingObjectShadow *> *, NSArray<MTHLivingObjectShadowPackageInspectResultItem *> *))completion {
+    [self asyncPerformBlock:^{
+        NSMutableArray<MTHLivingObjectShadowPackageInspectResultItem *> *resultItems = @[].mutableCopy;
+        NSMutableArray<MTHLivingObjectShadow *> *unexpectShadows = @[].mutableCopy;
+        for (MTHLivingObjectShadow *shadow in shadowsToSniff) {
+            if (shadow.target == nil || [_ignoreList containsObject:NSStringFromClass([shadow.target class])]) {
+                [unexpectShadows addObject:shadow];
+                continue;
+            }
 
-    NSMutableArray<MTHLivingObjectShadowPackageInspectResultItem *> *resultItems = @[].mutableCopy;
-    for (MTHLivingObjectShadow *shadow in shadowsToSniff) {
-        if (shadow.target == nil || [_ignoreList containsObject:NSStringFromClass([shadow.target class])]) {
-            [outUnexpectShadows addObject:shadow];
-            continue;
+            if ([self shouldShadowTargetReleaseButNot:shadow]) {
+                MTHLivingObjectInfo *theInstanceInfo = nil;
+                MTHLivingObjectGroupInClass *theInstanceInfoGroup = nil;
+
+                [self processingUnexpectedLivingObjectShadow:shadow
+                                             getLivingObject:&theInstanceInfo
+                                        getLivingObjectGroup:&theInstanceInfoGroup];
+
+                [self updateInspectResultItems:resultItems withLivingObjInfo:theInstanceInfo underGroup:theInstanceInfoGroup];
+
+                [unexpectShadows addObject:shadow];
+            }
         }
-
-        if ([self shouldShadowTargetReleaseButNot:shadow]) {
-            MTHLivingObjectInfo *theInstanceInfo = nil;
-            MTHLivingObjectGroupInClass *theInstanceInfoGroup = nil;
-
-            [self processingUnexpectedLivingObjectShadow:shadow
-                                         getLivingObject:&theInstanceInfo
-                                    getLivingObjectGroup:&theInstanceInfoGroup];
-
-            [self updateInspectResultItems:resultItems withLivingObjInfo:theInstanceInfo underGroup:theInstanceInfoGroup];
-
-            [outUnexpectShadows addObject:shadow];
-        }
-    }
-    return resultItems;
+        completion(unexpectShadows, resultItems);
+    }];
 }
 
 - (void)updateInspectResultItems:(NSMutableArray<MTHLivingObjectShadowPackageInspectResultItem *> *)resultItems
