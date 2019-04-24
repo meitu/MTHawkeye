@@ -120,15 +120,15 @@ App 生命周期记录点说明
 
 ```txt
 {
-  "initExitTime" : 1533018427.0977719,           // VC 的 -init 方法 return 的时间，可能为 0（同个 VC 多次打开）
+  "initExit" : 1533018427.0977719,               // VC 的 -init 方法 return 的时间，可能为 0（同个 VC 多次打开）
   "loadViewEnter" : 1533018427.1496551,          // VC 的 -loadView 方法被调用的时间（开始加载视图），可能为 0
-  "loadViewTime" : 1533018427.155427,            // VC 的 -loadView 方法 return 的时间，可能为 0
+  "loadViewExit" : 1533018427.155427,            // VC 的 -loadView 方法 return 的时间，可能为 0
   "didLoadEnter" : 1533018427.1554639,           // VC 的 -viewDidLoad 方法被调用的时间，可能为 0
-  "didLoadTime" : 1533018427.1662569,            // VC 的 -viewDidLoad 方法 return 的时间，可能为 0
+  "didLoadExit" : 1533018427.1662569,            // VC 的 -viewDidLoad 方法 return 的时间，可能为 0
   "willAppearEnter" : 1533018427.166456,         // VC 的 -viewWillAppear: 方法被调用的时间
-  "willAppearTime" : 1533018427.166533,          // VC 的 -viewWillAppear: 方法 return 的时间
+  "willAppearExit" : 1533018427.166533,          // VC 的 -viewWillAppear: 方法 return 的时间
   "didAppearEnter" : 1533018427.194926,          // VC 的 -viewDidAppear: 方法被调用的时间
-  "didAppearTime" : 1533018427.195226,           // VC 的 -viewDidAppear: 方法 return 的时间（页面展示完成）
+  "didAppearExit" : 1533018427.195226,           // VC 的 -viewDidAppear: 方法 return 的时间（页面展示完成）
   "name" : "FacebookProjectsTableViewController" // 视图控制器的名称
 }
 ```

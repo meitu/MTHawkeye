@@ -121,15 +121,15 @@ When a ViewController appeared, it will generate record. uses a `collection` nam
 
 ```txt
 {
-  "initExitTime" : 1533018427.0977719,           // VC -init exit, can be 0 (opened the same VC several times)
+  "initExit" : 1533018427.0977719,               // VC -init exit, can be 0 (opened the same VC several times)
   "loadViewEnter" : 1533018427.1496551,          // VC -loadView entry, can be 0
-  "loadViewTime" : 1533018427.155427,            // VC -loadView exit, can be 0
+  "loadViewExit" : 1533018427.155427,            // VC -loadView exit, can be 0
   "didLoadEnter" : 1533018427.1554639,           // VC -viewDidLoad entry, can be 0
-  "didLoadTime" : 1533018427.1662569,            // VC -viewDidLoad exit, can be 0
+  "didLoadExit" : 1533018427.1662569,            // VC -viewDidLoad exit, can be 0
   "willAppearEnter" : 1533018427.166456,         // VC -viewWillAppear: entry
-  "willAppearTime" : 1533018427.166533,          // VC -viewWillAppear: exit
+  "willAppearExit" : 1533018427.166533,          // VC -viewWillAppear: exit
   "didAppearEnter" : 1533018427.194926,          // VC -viewDidAppear: entry
-  "didAppearTime" : 1533018427.195226,           // VC -viewDidAppear: exit (completed)
+  "didAppearExit" : 1533018427.195226,           // VC -viewDidAppear: exit (completed)
   "name" : "FacebookProjectsTableViewController" // the VC name.
 }
 ```
