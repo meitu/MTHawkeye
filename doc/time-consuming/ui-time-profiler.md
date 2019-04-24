@@ -117,7 +117,7 @@ there is only one record for app launch time-consuming, the `collection` name is
 
 ### ViewController display time-consuming records
 
-When a ViewController appeared, it will generate record. uses a `collection` name `view-ctrl`, key is the time ViewController didAppeared exit, and the value is JSON string with the following fields:
+When a ViewController appeared, it will generate record. uses a `collection` name `view-ctrl`, `key` is an incremental subscript starting from 0, and the `value` is JSON string with the following fields:
 
 ```txt
 {

@@ -116,7 +116,7 @@ App 生命周期记录点说明
 
 ### ViewController 打开耗时信息
 
-每个视图控制器打开后，会产生一条记录，`collection` 为 `view-ctrl`，key 为 VC didAppeared 结束的时间点，value 为 json 字符串，字段示例如下：
+每个视图控制器打开后，会产生一条记录，`collection` 为 `view-ctrl`，key 为递增下标，从 0 开始，每一条对应一个 vc 显示耗时记录，value 为 json 字符串，字段示例如下：
 
 ```txt
 {
