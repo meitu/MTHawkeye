@@ -243,10 +243,9 @@
         MTHLogWarn(@"store vc will dealloc failed: %@", error.localizedDescription);
     } else {
         NSString *value = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        MTHLogInfo(@"trigger: %@", value);
         [[MTHawkeyeStorage shared] asyncStoreValue:value
                                            withKey:key
-                                      inCollection:@"obj-shadow-trigger"]; //
+                                      inCollection:@"obj-shadow-trigger"];
     }
 }
 
