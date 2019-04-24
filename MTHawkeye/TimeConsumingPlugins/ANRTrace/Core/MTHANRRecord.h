@@ -15,6 +15,7 @@
 
 @interface MTHANRRecordRaw : NSObject {
   @public
+    uintptr_t titleFrame;
     uintptr_t *stackframes;
     size_t stackframesSize;
 }

@@ -14,6 +14,7 @@
 #import "MTHANRRecord.h"
 
 #import <MTHawkeye/mth_stack_backtrace.h>
+#import <MTHawkeye/MTHawkeyeDyldImagesUtils.h>
 #import <pthread.h>
 
 
@@ -84,6 +85,7 @@ typedef void (^MTHANRThreadResultBlock)(double roughBlockTimeInterval, MTHANRRec
                 mth_stack_backtrace_of_thread(main_thread, stackframes, sizeof(mth_stack_backtrace), 0);
                 threadStack->stackframes = stackframes->frames;
                 threadStack->stackframesSize = stackframes->frames_size;
+                threadStack->titleFrame = [self titleFrameForStackframes:stackframes->frames size:stackframes->frames_size];
             }
         }
         dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
@@ -105,6 +107,21 @@ typedef void (^MTHANRThreadResultBlock)(double roughBlockTimeInterval, MTHANRRec
             });
         }
     }
+}
+
+- (uintptr_t)titleFrameForStackframes:(uintptr_t *)frames size:(size_t)size {
+    for (int fi = 0; fi < size; ++fi) {
+        uintptr_t frame = frames[fi];
+        if (!mtha_addr_is_in_sys_libraries(frame)) {
+            return frame;
+        }
+    }
+    
+    if (size > 0) {
+        uintptr_t frame = frames[0];
+        return frame;
+    }
+    return 0;
 }
 
 @end
