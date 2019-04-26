@@ -24,15 +24,15 @@ PODS:
   - fishhook (0.2)
   - FLEX (2.4.0)
   - GYHttpMock (1.0.1)
-  - MTAppenderFile (0.3.5)
-  - MTGLDebug (2.1.0):
+  - MTAppenderFile (0.4.0)
+  - MTGLDebug (3.0.0):
     - fishhook (~> 0.2)
-    - MTGLDebug/ARC (= 2.1.0)
-    - MTGLDebug/MRC (= 2.1.0)
-  - MTGLDebug/ARC (2.1.0):
+    - MTGLDebug/ARC (= 3.0.0)
+    - MTGLDebug/MRC (= 3.0.0)
+  - MTGLDebug/ARC (3.0.0):
     - fishhook (~> 0.2)
     - MTGLDebug/MRC
-  - MTGLDebug/MRC (2.1.0):
+  - MTGLDebug/MRC (3.0.0):
     - fishhook (~> 0.2)
   - MTHawkeye (0.11.0):
     - MTHawkeye/Core (= 0.11.0)
@@ -233,14 +233,11 @@ DEPENDENCIES:
   - fishhook
   - FLEX
   - GYHttpMock
-  - MTAppenderFile
-  - MTGLDebug
+  - MTAppenderFile (~> 0.4.0)
+  - MTGLDebug (~> 3.0.0)
   - MTHawkeye (from `../`)
 
 SPEC REPOS:
-  http://techgit.meitu.com/iosmodules/specs.git:
-    - MTAppenderFile
-    - MTGLDebug
   https://github.com/cocoapods/specs.git:
     - AFNetworking
     - AGAsyncTestHelper
@@ -249,6 +246,8 @@ SPEC REPOS:
     - fishhook
     - FLEX
     - GYHttpMock
+    - MTAppenderFile
+    - MTGLDebug
 
 EXTERNAL SOURCES:
   MTHawkeye:
@@ -262,10 +261,10 @@ SPEC CHECKSUMS:
   fishhook: ea19933abfe8f2f52c55fd8b6e2718467d3ebc89
   FLEX: bd1a39e55b56bb413b6f1b34b3c10a0dc44ef079
   GYHttpMock: ad08e55ce8bde4e7f7b4d0cbc79ff23c1311658b
-  MTAppenderFile: ebacc6d0fbd8672917e75462c52082c46b74a765
-  MTGLDebug: e043f711d7843600c02dc99ead3b010e9bad3f64
+  MTAppenderFile: bf01581e34bd597267ddbb2b624060203fa2e68e
+  MTGLDebug: b1bbccd25ddd30cc912e9a9e529057e73a2c9dfa
   MTHawkeye: 60e87b80c7a5dd0cb65c4213ddc8ef3b84831eca
 
-PODFILE CHECKSUM: b0006210a6dbe6b685063a91b4cc72fd7415acc8
+PODFILE CHECKSUM: f204e2dc5a15886c0029a8bcaac49dbcdd04ae0e
 
 COCOAPODS: 1.6.0
