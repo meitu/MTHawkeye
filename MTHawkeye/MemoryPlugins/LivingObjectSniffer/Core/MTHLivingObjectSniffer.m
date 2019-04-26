@@ -196,11 +196,13 @@
  */
 - (void)asyncExtraceUnexpectedLivingShadowsFrom:(NSArray<MTHLivingObjectShadow *> *)shadowsToSniff
                                      completion:(void (^)(NSArray<MTHLivingObjectShadow *> *, NSArray<MTHLivingObjectShadowPackageInspectResultItem *> *))completion {
+    __weak __typeof(self) weakSelf = self;
     [self asyncPerformBlock:^{
+        __strong __typeof(weakSelf) self = weakSelf;
         NSMutableArray<MTHLivingObjectShadowPackageInspectResultItem *> *resultItems = @[].mutableCopy;
         NSMutableArray<MTHLivingObjectShadow *> *unexpectShadows = @[].mutableCopy;
         for (MTHLivingObjectShadow *shadow in shadowsToSniff) {
-            if (shadow.target == nil || [_ignoreList containsObject:NSStringFromClass([shadow.target class])]) {
+            if (shadow.target == nil || [self.ignoreList containsObject:NSStringFromClass([shadow.target class])]) {
                 [unexpectShadows addObject:shadow];
                 continue;
             }
