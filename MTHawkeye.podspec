@@ -1,13 +1,13 @@
 Pod::Spec.new do |s|
   s.name         = "MTHawkeye"
-  s.version      = "0.11.0"
-  s.summary      = "Profiling/Debugging assist tools platform for iOS."
+  s.version      = "0.11.1"
+  s.summary      = "Profiling/Debugging assist tools for iOS."
 
   s.description  = <<-DESC
-    MTHawkeye is a profiling/debugging assit tools platform for iOS.
+    MTHawkeye is profiling/debugging assist tools for iOS. It's designed to help iOS developers improve development productivity and assist in optimizing the App performance.
                    DESC
 
-  s.homepage     = "https://github.com/MTlab/MTHawkeye"
+  s.homepage     = "https://github.com/meitu/MTHawkeye"
   s.license      = {
     :type => 'Copyright',
     :text => <<-LICENSE
