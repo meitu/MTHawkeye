@@ -38,7 +38,7 @@
 }
 
 - (void)switchingOptionDidTapped {
-    [self addAirDropMenuForFileBrowserViewController];
+    [FLEXHawkeyePlugin addAirDropMenuForFileBrowserViewController];
     [self showFLEX];
 }
 
@@ -47,7 +47,7 @@
     [[FLEXManager sharedManager] showExplorer];
 }
 
-- (void)addAirDropMenuForFileBrowserViewController {
++ (void)addAirDropMenuForFileBrowserViewController {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [FLEXHawkeyePlugin extendMenuItems];
@@ -157,8 +157,6 @@
     Class cls = NSClassFromString(@"FLEXFileBrowserTableViewCell");
     if (!cls) // for dynamic framework
         cls = NSClassFromString(@"PodMTHawkeye_FLEXFileBrowserTableViewCell");
-    if (!cls)
-        cls = NSClassFromString(@"PodMTHawkeyeInjection_FLEXFileBrowserTableViewCell");
     if (!cls)
         return;
 

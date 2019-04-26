@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FLEXHawkeyePlugin : NSObject <MTHawkeyeMainPanelPlugin>
 
++ (void)addAirDropMenuForFileBrowserViewController;
+
 @end
 
 NS_ASSUME_NONNULL_END
