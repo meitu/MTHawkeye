@@ -127,7 +127,7 @@
         @"time" : @(anrRecord.time),
         @"duration" : [NSString stringWithFormat:@"%@", @(anrRecord.duration * 1000)],
         @"stackframes" : stackInStr.copy,
-        @"titleframe" : [NSString stringWithFormat:@"%p", anrRecord->titleFrame],
+        @"titleframe" : [NSString stringWithFormat:@"%p", (void *)anrRecord->titleFrame],
     };
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict.copy options:0 error:&error];
@@ -171,7 +171,7 @@
             NSScanner *scanner = [NSScanner scannerWithString:dict[@"titleframe"]];
             [scanner setScanLocation:2];
             [scanner scanHexLongLong:&titleframe];
-            record->titleFrame = titleframe;
+            record->titleFrame = (uintptr_t)titleframe;
             [anrRecords addObject:record];
         } else {
             MTHLogWarn(@"[storage] read anr record failed, %@", error);
