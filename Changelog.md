@@ -4,6 +4,7 @@
 
 ### feature
 - store title frame into ANR record
+- support Airdrop while browsing files under DirectoryWatcher
 
 ### bugfix
 - fix crash will tracing unexpected living objc object
