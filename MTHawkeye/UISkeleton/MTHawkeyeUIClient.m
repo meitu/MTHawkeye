@@ -455,13 +455,15 @@ const NSString *kMTHFloatingWidgetRaiseWarningParamsPanelIDKey = @"related-panel
 
 // MARK: -
 
+static void *WindowKVOContext = &WindowKVOContext;
+
 - (void)observeTheWindow {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (self.observingWindow)
             return;
 
         id appDelegate = [UIApplication sharedApplication].delegate;
-        [appDelegate addObserver:self forKeyPath:NSStringFromSelector(@selector(window)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:nil];
+        [appDelegate addObserver:self forKeyPath:NSStringFromSelector(@selector(window)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:WindowKVOContext];
 
         self.observingWindow = YES;
     });
@@ -473,7 +475,10 @@ const NSString *kMTHFloatingWidgetRaiseWarningParamsPanelIDKey = @"related-panel
             return;
 
         id appDelegate = [UIApplication sharedApplication].delegate;
-        [appDelegate removeObserver:self forKeyPath:NSStringFromSelector(@selector(window))];
+        @try {
+            [appDelegate removeObserver:self forKeyPath:NSStringFromSelector(@selector(window)) context:&WindowKVOContext];
+        } @catch (NSException *__unused exception) {
+        }
 
         self.observingWindow = NO;
     });
@@ -487,7 +492,7 @@ const NSString *kMTHFloatingWidgetRaiseWarningParamsPanelIDKey = @"related-panel
         return;
     }
 
-    if ([keyPath isEqualToString:NSStringFromSelector(@selector(window))]) {
+    if (context == WindowKVOContext && [keyPath isEqualToString:NSStringFromSelector(@selector(window))]) {
         if ([MTHawkeyeUserDefaults shared].floatingWindowShowHideGesture)
             [self setupShowHideGestureOnWindow:[self theWindow]];
     }
