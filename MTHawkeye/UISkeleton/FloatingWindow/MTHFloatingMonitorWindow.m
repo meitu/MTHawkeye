@@ -14,7 +14,6 @@
 
 #define DegreesToRadians(degrees) ((degrees)*M_PI / 180.)
 
-static BOOL _allowToBecomeKeyWindow = NO;
 static int _originDegrees = 0;
 
 @interface MTHFloatingMonitorWindow ()
@@ -59,10 +58,6 @@ static int _originDegrees = 0;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(statusBarDidChangeFrame:)
                                                      name:UIApplicationDidChangeStatusBarFrameNotification
-                                                   object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(permissionToBecomeKeyWindowChangedNotification:)
-                                                     name:@"MTHPermissionToBecomeKeyWindowChanged"
                                                    object:nil];
     }
     return self;
@@ -109,17 +104,13 @@ static int _originDegrees = 0;
 }
 
 // MARK: - Private API
-// 防止干扰主程序的状态栏样式，
+// Only when the main panels display, we take control the status bar appearance.
 - (BOOL)_canAffectStatusBarAppearance {
-    return NO;
+    return [self isKeyWindow];
 }
 
 - (BOOL)_canBecomeKeyWindow {
-    return _allowToBecomeKeyWindow;
-}
-
-- (void)permissionToBecomeKeyWindowChangedNotification:(NSNotification *)notification {
-    _allowToBecomeKeyWindow = [notification.userInfo[@"MTHAllowToBecomeKeyWindow"] boolValue];
+    return [self.eventDelegate canBecomeKeyWindow];
 }
 
 @end

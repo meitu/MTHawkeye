@@ -103,19 +103,6 @@
     });
 }
 
-// MARK: - MTHFloatingMonitorWindowDelegate
-- (BOOL)shouldPointBeHandled:(CGPoint)point {
-    if ([self isPresentingOthers]) {
-        return CGRectContainsPoint(self.presentedViewController.view.frame, point);
-    } else {
-        return CGRectContainsPoint(self.monitorView.frame, point);
-    }
-}
-
-- (BOOL)isPresentingOthers {
-    return self.presentedViewController != nil;
-}
-
 // MARK: - UITableViewDatasource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.datasource floatingWidgetCellCount];

@@ -12,6 +12,7 @@
 
 #import "MTHawkeyeUIClient.h"
 #import "MTHFloatingMonitorWindow.h"
+#import "MTHMonitorView.h"
 #import "MTHMonitorViewConfiguration.h"
 #import "MTHawkeyeBuildinFloatingWidget.h"
 #import "MTHawkeyeClient.h"
@@ -43,7 +44,7 @@ NSString *const kMTHawkeyeUIGroupUtility = @"Utility";
 const NSString *kMTHFloatingWidgetRaiseWarningParamsKeepDurationKey = @"keep-duration";
 const NSString *kMTHFloatingWidgetRaiseWarningParamsPanelIDKey = @"related-panel-id";
 
-@interface MTHawkeyeUIClient () <MTHawkeyePlugin, MTHawkeyeFloatingWidgetViewControllerDatasource, MTHawkeyeFloatingWidgetViewControllerDelegate>
+@interface MTHawkeyeUIClient () <MTHawkeyePlugin, MTHFloatingMonitorWindowDelegate, MTHawkeyeFloatingWidgetViewControllerDatasource, MTHawkeyeFloatingWidgetViewControllerDelegate>
 
 @property (nonatomic, copy) MTHawkeyeUIClientPluginsSetupHandler pluginsSetupHandler;
 @property (nonatomic, copy) MTHawkeyeUIClientPluginsCleanHandler pluginsCleanHandler;
@@ -64,6 +65,7 @@ const NSString *kMTHFloatingWidgetRaiseWarningParamsPanelIDKey = @"related-panel
 
 @property (nonatomic, weak) UIViewController *currentExpandController;
 @property (nonatomic, assign) UIStatusBarStyle cachedStatusBarStyle;
+@property (nonatomic, weak) UIWindow *previousKeyWindow;
 
 @property (nonatomic, strong) NSMutableArray<NSString *> *warningRelatedPanelIDs;
 
@@ -255,6 +257,68 @@ const NSString *kMTHFloatingWidgetRaiseWarningParamsPanelIDKey = @"related-panel
     self.buildInCPUFloatingWidget = nil;
 }
 
+// MARK: - Modal Presentation and Window Management
+- (void)makeKeyAndPresentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion {
+    // Save the current key window so we can restore it following dismissal.
+    self.previousKeyWindow = [[UIApplication sharedApplication] keyWindow];
+
+    // Make our window key to correctly handle input.
+    [self.monitorWindow makeKeyWindow];
+
+    // Move the status bar on top of FLEX so we can get scroll to top behavior for taps.
+    [[self statusWindow] setWindowLevel:self.monitorWindow.windowLevel + 1.0];
+
+    // If this app doesn't use view controller based status bar management and we're on iOS 7+,
+    // make sure the status bar style is UIStatusBarStyleDefault. We don't actully have to check
+    // for view controller based management because the global methods no-op if that is turned on.
+    self.cachedStatusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+
+    self.currentExpandController = viewController;
+
+    // Show the view controller.
+    [self.floatingWidgetVC presentViewController:self.currentExpandController animated:animated completion:completion];
+}
+
+- (void)resignKeyAndDismissViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion {
+    if (self.previousKeyWindow) {
+        UIWindow *previousKeyWindow = self.previousKeyWindow;
+        self.previousKeyWindow = nil;
+        [previousKeyWindow makeKeyWindow];
+        [[previousKeyWindow rootViewController] setNeedsStatusBarAppearanceUpdate];
+
+        // Restore the status bar window's normal window level.
+        // We want it above FLEX while a modal is presented for scroll to top, but below FLEX otherwise for exploration.
+        [[self statusWindow] setWindowLevel:UIWindowLevelStatusBar];
+
+        // Restore the stauts bar style if the app is using global status bar management.
+        [[UIApplication sharedApplication] setStatusBarStyle:self.cachedStatusBarStyle];
+    }
+
+    if (self.currentExpandController) {
+        [self.currentExpandController dismissViewControllerAnimated:animated completion:completion];
+        self.currentExpandController = nil;
+    }
+}
+
+- (UIWindow *)statusWindow {
+    NSString *statusBarString = [NSString stringWithFormat:@"%@arWindow", @"_statusB"];
+    return [[UIApplication sharedApplication] valueForKey:statusBarString];
+}
+
+// MARK: - MTHFloatingMonitorWindowDelegate
+- (BOOL)shouldPointBeHandled:(CGPoint)point {
+    if (self.floatingWidgetVC.presentedViewController != nil) {
+        return CGRectContainsPoint(self.floatingWidgetVC.presentedViewController.view.frame, point);
+    } else {
+        return CGRectContainsPoint(self.floatingWidgetVC.monitorView.frame, point);
+    }
+}
+
+- (BOOL)canBecomeKeyWindow {
+    return self.previousKeyWindow != nil;
+}
+
 // MARK: - MTHawkeyeFloatingWidgetViewControllerDatasource
 - (NSInteger)floatingWidgetCellCount {
     return [self.floatingWidgets floatingWidgetCellCount];
@@ -278,27 +342,17 @@ const NSString *kMTHFloatingWidgetRaiseWarningParamsPanelIDKey = @"related-panel
     if (self.currentExpandController)
         return;
 
-    self.cachedStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
-
     MTHawkeyeMainPanelViewController *vc = [[MTHawkeyeMainPanelViewController alloc] initWithSelectedPanelID:panelID
                                                                                                   datasource:self.mainPanels
                                                                                                     delegate:self.mainPanels];
     vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(quitBtnTapped)];
 
     UINavigationController *nv = [[UINavigationController alloc] initWithRootViewController:vc];
-    self.currentExpandController = nv;
-
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-    [self.floatingWidgetVC presentViewController:nv animated:YES completion:nil];
+    [self makeKeyAndPresentViewController:nv animated:YES completion:nil];
 }
 
 - (void)quitBtnTapped {
-    [[UIApplication sharedApplication] setStatusBarStyle:self.cachedStatusBarStyle animated:YES];
-
-    if (self.currentExpandController) {
-        [self.currentExpandController dismissViewControllerAnimated:NO completion:nil];
-        self.currentExpandController = nil;
-    }
+    [self resignKeyAndDismissViewControllerAnimated:NO completion:nil];
 }
 
 // MARK: - show & hide
@@ -519,6 +573,7 @@ static void *WindowKVOContext = &WindowKVOContext;
 - (MTHFloatingMonitorWindow *)monitorWindow {
     if (_monitorWindow == nil) {
         _monitorWindow = [[MTHFloatingMonitorWindow alloc] initWithRootViewController:self.floatingWidgetVC];
+        _monitorWindow.eventDelegate = self;
     }
     return _monitorWindow;
 }

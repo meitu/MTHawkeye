@@ -58,8 +58,6 @@
 @property (nonatomic, assign) BOOL rowInsertInProgress;
 @property (nonatomic, strong) NSMutableArray<MTHNetworkTransaction *> *incomeTransactionsNew;
 
-@property (nonatomic, strong) UIWindow *previousWindow;
-
 @end
 
 
@@ -494,23 +492,6 @@
                      completion:^{
                          [searchBar resignFirstResponder];
                      }];
-}
-
-// 临时开启 MTHFloatingMonitorWindow 的 allowBecomingKeyWindow，暂时解决 iOS 11 下，非 Key Window 不能弹出键盘的问题
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
-    self.previousWindow = [UIApplication sharedApplication].keyWindow;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"MTHPermissionToBecomeKeyWindowChanged"
-                                                        object:nil
-                                                      userInfo:@{@"MTHAllowToBecomeKeyWindow" : @YES}];
-}
-
-// 关闭 MTHFloatingMonitorWindow 的 allowBecomingKeyWindow，恢复之前 Key Window
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"MTHPermissionToBecomeKeyWindowChanged"
-                                                        object:nil
-                                                      userInfo:@{@"MTHAllowToBecomeKeyWindow" : @NO}];
-    [self.previousWindow makeKeyWindow];
-    self.previousWindow = nil;
 }
 
 // MARK: - UISearchResultsUpdating
