@@ -63,8 +63,10 @@ static dispatch_source_t memoryPressureEventSource = NULL;
 
 - (void)uninstallMemoryPressureEventTrace {
     dispatch_async(dispatch_get_main_queue(), ^{
-        dispatch_source_cancel(memoryPressureEventSource);
-        memoryPressureEventSource = NULL;
+        if (memoryPressureEventSource) {
+            dispatch_source_cancel(memoryPressureEventSource);
+            memoryPressureEventSource = NULL;
+        }
     });
 }
 
