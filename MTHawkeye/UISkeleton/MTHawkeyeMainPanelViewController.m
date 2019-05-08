@@ -224,8 +224,8 @@ static NSString *const kPreSelKey = @"com.meitu.hawkeye.pre-select-panel-indexpa
     self.switcherVC.view.frame = CGRectZero;
     CGFloat contentHeight = [self.switcherVC fullContentHeight];
     CGFloat maxHeight = CGRectGetHeight(self.view.bounds) - self.topLayoutGuide.length - self.bottomLayoutGuide.length;
-    if (contentHeight > maxHeight - 170.f) {
-        contentHeight = maxHeight - 170.f;
+    if (contentHeight > maxHeight - 60.f) {
+        contentHeight = maxHeight - 60.f;
     }
 
     CGRect placeViewFrame = CGRectMake(0, 0, self.view.bounds.size.width, contentHeight);

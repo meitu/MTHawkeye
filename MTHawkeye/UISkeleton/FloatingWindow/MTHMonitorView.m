@@ -16,7 +16,6 @@
 @interface MTHMonitorView ()
 
 @property (nonatomic, assign) CGPoint beginPoint;
-@property (nonatomic, assign) CGPoint currentPosition;
 
 @end
 
@@ -113,30 +112,16 @@ static dispatch_source_t memoryPressureEventSource = NULL;
 
     UITouch *touch = [touches anyObject];
 
-    self.currentPosition = [touch locationInView:self];
+    CGPoint currentPosition = [touch locationInView:self];
     CGPoint targetCenter = self.center;
-    CGFloat offsetX = self.currentPosition.x - self.beginPoint.x;
-    CGFloat offsetY = self.currentPosition.y - self.beginPoint.y;
+    CGFloat offsetX = currentPosition.x - self.beginPoint.x;
+    CGFloat offsetY = currentPosition.y - self.beginPoint.y;
 
-    if (fabs(offsetX) < 0.1 && fabs(offsetY) < 0.1) {
+    if (fabs(offsetX) < 1 && fabs(offsetY) < 1) {
         return;
     }
-
-    if (self.center.x > (superView.frame.size.width - self.frame.size.width / 2)) {
-        targetCenter.x = superView.frame.size.width - self.frame.size.width / 2;
-    } else if (self.center.x < self.frame.size.width / 2) {
-        targetCenter.x = self.frame.size.width / 2;
-    } else {
-        targetCenter.x = self.center.x + offsetX;
-    }
-
-    if (self.center.y > (superView.frame.size.height - self.frame.size.height / 2)) {
-        targetCenter.y = superView.frame.size.height - self.frame.size.height / 2;
-    } else if (self.center.y < self.frame.size.height / 2) {
-        targetCenter.y = self.frame.size.height / 2;
-    } else {
-        targetCenter.y = self.center.y + offsetY;
-    }
+    targetCenter.x = ceil(self.center.x + offsetX);
+    targetCenter.y = ceil(self.center.y + offsetY);
 
     self.center = targetCenter;
     self.beginPoint = [touch locationInView:self];
@@ -154,53 +139,54 @@ static dispatch_source_t memoryPressureEventSource = NULL;
     [self attachToEdgeAndSavePosition];
 }
 
+- (CGRect)placeViewSafeArea {
+    CGRect safeArea = self.window.bounds;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_10_3
+    if (@available(iOS 11, *)) {
+        safeArea = UIEdgeInsetsInsetRect(self.window.bounds, self.window.safeAreaInsets);
+    }
+#endif
+    return safeArea;
+}
+
 - (void)attachToEdgeAndSavePosition {
     CGRect screenBounds = [UIScreen mainScreen].bounds;
-    if (!self.superview) {
+    if (!self.window) {
         return;
     }
 
-    CGFloat safeAreaLeft = 0.f;
-    CGFloat safeAreaRight = 0.f;
+    CGRect safeArea = [self placeViewSafeArea];
+    CGFloat minX = CGRectGetMinX(safeArea);
+    CGFloat maxX = CGRectGetMaxX(safeArea);
+    CGFloat minY = CGRectGetMinY(safeArea);
+    CGFloat maxY = CGRectGetMaxY(safeArea);
 
-    CGFloat originY = self.center.y - self.frame.size.height / 2.f;
-    CGFloat safeOriginY = originY;
+    CGFloat y = CGRectGetMinY(self.frame);
+    if (y < minY)
+        y = minY;
+    if (y > (maxY - CGRectGetHeight(self.frame)))
+        y = maxY - CGRectGetHeight(self.frame);
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_10_3
-    if (@available(iOS 11.0, *)) {
-        if (self.superview) {
-            safeAreaLeft = self.superview.safeAreaInsets.left;
-            safeAreaRight = self.superview.safeAreaInsets.right;
-            safeOriginY = self.superview.safeAreaInsets.top;
-        } else {
-            safeAreaLeft = self.safeAreaInsets.left;
-            safeAreaRight = self.safeAreaInsets.right;
-            safeOriginY = self.safeAreaInsets.top;
-        }
-    }
-#endif
-    safeOriginY = safeOriginY <= originY ? originY : safeOriginY;
-
-    CGRect rect;
-    if (self.center.x >= screenBounds.size.width / 2) {
-        rect = CGRectMake(screenBounds.size.width - self.frame.size.width - safeAreaRight,
-            safeOriginY,
-            self.frame.size.width,
-            self.frame.size.height);
+    UIViewAutoresizing autoresizingMask;
+    CGRect rectToAttach;
+    if (self.center.x >= CGRectGetWidth(screenBounds) / 2) {
+        rectToAttach = CGRectMake(maxX - CGRectGetWidth(self.frame), y, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
+        autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
     } else {
-        rect = CGRectMake(0 + safeAreaLeft,
-            safeOriginY,
-            self.frame.size.width,
-            self.frame.size.height);
+        rectToAttach = CGRectMake(minX, y, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
+        autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     }
 
-    [UIView beginAnimations:@"move" context:nil];
-    [UIView setAnimationDuration:0.2];
-    [UIView setAnimationDelegate:self];
-    self.frame = rect;
-    [UIView commitAnimations];
+    [UIView animateWithDuration:.2f
+        animations:^{
+            self.frame = rectToAttach;
+        }
+        completion:^(BOOL finished) {
+            if (self.autoresizingMask != autoresizingMask)
+                self.autoresizingMask = autoresizingMask;
 
-    MTHMonitorViewConfiguration.monitorInitPosition = rect.origin;
+            MTHMonitorViewConfiguration.monitorInitPosition = rectToAttach.origin;
+        }];
 }
 
 @end
