@@ -18,6 +18,7 @@
 #import "MTHUISkeletonUtility.h"
 #import "MTHawkeyeFloatingWidgets.h"
 
+BOOL mthawkeye_disableRotatingAnimation = NO;
 
 @interface MTHawkeyeFloatingWidgetViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -102,16 +103,18 @@
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 
-    // just disable the rotate animation here. (may effect the App's own appearance)
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];
-    [coordinator
-        animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+    if (mthawkeye_disableRotatingAnimation) {
+        // just disable the rotate animation here. (may effect the App's own appearance)
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
+        [coordinator
+            animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 
-        }
-        completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-            [CATransaction commit];
-        }];
+            }
+            completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+                [CATransaction commit];
+            }];
+    }
 }
 
 // MARK: - getter

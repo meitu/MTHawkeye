@@ -16,6 +16,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern BOOL mthawkeye_disableRotatingAnimation; // default NO;
+
 @class MTHMonitorViewConfiguration;
 @class MTHMonitorViewCell;
 @class MTHMonitorView;
