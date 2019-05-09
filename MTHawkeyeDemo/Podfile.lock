@@ -22,7 +22,7 @@ PODS:
   - CocoaLumberjack/Core (3.5.2)
   - FBRetainCycleDetector (0.1.4)
   - fishhook (0.2)
-  - FLEX (2.4.0)
+  - FLEX (3.0.0)
   - GYHttpMock (1.0.1)
   - MTAppenderFile (0.4.0)
   - MTGLDebug (3.0.0):
@@ -231,7 +231,7 @@ DEPENDENCIES:
   - CocoaLumberjack
   - FBRetainCycleDetector
   - fishhook
-  - FLEX
+  - FLEX (~> 3.0.0)
   - GYHttpMock
   - MTAppenderFile (~> 0.4.0)
   - MTGLDebug (~> 3.0.0)
@@ -259,12 +259,12 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 118bf4a820efc641f79fa487b75ed928dccfae23
   FBRetainCycleDetector: 46f8179bbb1c587deee3ea838a1a3ee02acf5015
   fishhook: ea19933abfe8f2f52c55fd8b6e2718467d3ebc89
-  FLEX: bd1a39e55b56bb413b6f1b34b3c10a0dc44ef079
+  FLEX: d66c759bce0f6ebbbf472c742380874d846f2883
   GYHttpMock: ad08e55ce8bde4e7f7b4d0cbc79ff23c1311658b
   MTAppenderFile: bf01581e34bd597267ddbb2b624060203fa2e68e
   MTGLDebug: b1bbccd25ddd30cc912e9a9e529057e73a2c9dfa
   MTHawkeye: ff3689f427e183f002fa4574b45855414feadde5
 
-PODFILE CHECKSUM: f204e2dc5a15886c0029a8bcaac49dbcdd04ae0e
+PODFILE CHECKSUM: 6836df478a8434a33db60ee5bdae355139f9b4fa
 
-COCOAPODS: 1.6.0
+COCOAPODS: 1.6.1
