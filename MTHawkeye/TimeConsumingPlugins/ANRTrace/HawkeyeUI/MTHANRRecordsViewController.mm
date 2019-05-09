@@ -52,7 +52,7 @@
 
 - (void)dealloc {
     if (stackHelper) {
-        free(stackHelper);
+        delete stackHelper;
         stackHelper = nil;
     }
 

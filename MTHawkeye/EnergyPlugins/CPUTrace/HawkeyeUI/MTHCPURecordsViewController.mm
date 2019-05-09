@@ -55,7 +55,7 @@
     [[MTHCPUTrace shareInstance] removeDelegate:self];
 
     if (_stackHelper) {
-        free(_stackHelper);
+        delete _stackHelper;
         _stackHelper = nil;
     }
 }
