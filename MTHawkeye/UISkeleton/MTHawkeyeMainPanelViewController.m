@@ -379,6 +379,7 @@ static NSString *const kPreSelKey = @"com.meitu.hawkeye.pre-select-panel-indexpa
     } else {
         BOOL changeSelect = [self.delegate shouldChangeSelectStatusToNew:indexPath fromOld:self.selectedIndexPath];
         if (changeSelect) {
+            needCacheSelectedIndex = YES;
             self.selectedIndexPath = indexPath;
             [self updateChildVCAsSelectedPanelChanged];
         }

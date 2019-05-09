@@ -68,7 +68,30 @@ static kern_return_t mach_copy_mem(const void *const src, void *const dst, const
     return vm_read_overwrite(mach_task_self(), (vm_address_t)src, (vm_size_t)num_bytes, (vm_address_t)dst, &bytes_copied);
 }
 
+mth_stack_backtrace *mth_malloc_stack_backtrace() {
+    mth_stack_backtrace *stackframes = (mth_stack_backtrace *)malloc(sizeof(mth_stack_backtrace));
+    if (stackframes) {
+        memset(stackframes, 0, sizeof(mth_stack_backtrace));
+    }
+    return stackframes;
+}
+
+void mth_free_stack_backtrace(mth_stack_backtrace *stackframes) {
+    if (stackframes == nil)
+        return;
+
+    if (stackframes->frames) {
+        free(stackframes->frames);
+        stackframes->frames = nil;
+    }
+    stackframes->frames_size = 0;
+
+    free(stackframes);
+}
+
 bool mth_stack_backtrace_of_thread(thread_t thread, mth_stack_backtrace *out_stack_backtrace, const size_t backtrace_depth_max, uintptr_t top_frames_to_skip) {
+    if (out_stack_backtrace == nil)
+        return false;
 
 #if _InternalMTHStackBacktracePerformanceTestEnabled
     mach_timebase_info_data_t timeinfo_;

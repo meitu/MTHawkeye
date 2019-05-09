@@ -31,6 +31,7 @@ MTH_CPUTraceStackFramesNode *MTH_CPUTraceStackFramesNode::addSubCallNode(MTH_CPU
         for (auto item : this->children) {
             if (item->isEquralToStackFrameNode(node)) {
                 item->calledCount++;
+                node->calledCount = item->calledCount;
                 curNode = item;
                 isExist = true;
                 break;
@@ -43,6 +44,7 @@ MTH_CPUTraceStackFramesNode *MTH_CPUTraceStackFramesNode::addSubCallNode(MTH_CPU
         node->calledCount = 1;
         this->children.push_back(node);
     }
+
     return curNode;
 }
 

@@ -13,8 +13,8 @@
 #import "MTHANRObserver.h"
 #import "MTHANRRecord.h"
 
-#import <MTHawkeye/mth_stack_backtrace.h>
 #import <MTHawkeye/MTHawkeyeDyldImagesUtils.h>
+#import <MTHawkeye/mth_stack_backtrace.h>
 #import <pthread.h>
 
 
@@ -81,11 +81,17 @@ typedef void (^MTHANRThreadResultBlock)(double roughBlockTimeInterval, MTHANRRec
 
             if (self.shouldCaptureBackTrace) {
                 threadStack = [[MTHANRRecordRaw alloc] init];
-                mth_stack_backtrace *stackframes = (mth_stack_backtrace *)malloc(sizeof(mth_stack_backtrace));
-                mth_stack_backtrace_of_thread(main_thread, stackframes, sizeof(mth_stack_backtrace), 0);
-                threadStack->stackframes = stackframes->frames;
-                threadStack->stackframesSize = stackframes->frames_size;
-                threadStack->titleFrame = [self titleFrameForStackframes:stackframes->frames size:stackframes->frames_size];
+                mth_stack_backtrace *stackframes = mth_malloc_stack_backtrace();
+                if (stackframes) {
+                    mth_stack_backtrace_of_thread(main_thread, stackframes, sizeof(mth_stack_backtrace), 0);
+                    threadStack->stackframesSize = stackframes->frames_size;
+                    threadStack->stackframes = (uintptr_t *)malloc(sizeof(uintptr_t) * stackframes->frames_size);
+                    memcpy(stackframes->frames, threadStack->stackframes, sizeof(uintptr_t) * stackframes->frames_size);
+
+                    threadStack->titleFrame = [self titleFrameForStackframes:stackframes->frames size:stackframes->frames_size];
+
+                    mth_free_stack_backtrace(stackframes);
+                }
             }
         }
         dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
@@ -116,7 +122,7 @@ typedef void (^MTHANRThreadResultBlock)(double roughBlockTimeInterval, MTHANRRec
             return frame;
         }
     }
-    
+
     if (size > 0) {
         uintptr_t frame = frames[0];
         return frame;

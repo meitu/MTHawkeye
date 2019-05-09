@@ -168,8 +168,8 @@
 - (void)clearStackFramesSample {
     if (_cpuHighLoadStackFramesSample.size() != 0) {
         for (auto iter = _cpuHighLoadStackFramesSample.begin(); iter != _cpuHighLoadStackFramesSample.end(); iter++) {
-            mth_stack_backtrace *tmp = (*iter);
-            free(tmp);
+            mth_stack_backtrace *stackframes = (*iter);
+            mth_free_stack_backtrace(stackframes);
         }
         _cpuHighLoadStackFramesSample.clear();
     }
@@ -185,13 +185,14 @@
 - (void)cpuInspectTaskFired {
     if (!self.ptrToSkipFound) {
         // skip recording cpu_trace thread.
-        mth_stack_backtrace *stackframes = (mth_stack_backtrace *)malloc(sizeof(mth_stack_backtrace));
+        mth_stack_backtrace *stackframes = mth_malloc_stack_backtrace();
         mth_stack_backtrace_of_thread(mach_thread_self(), stackframes, MTHCPUTRACE_MAXSTACKCOUNT, 0);
-        if (stackframes->frames_size > 4) {
+        if (stackframes && stackframes->frames_size > 4) {
             _ptrToSkip = stackframes->frames[5];
             self.ptrToSkipFound = YES;
         }
-        free(stackframes);
+
+        mth_free_stack_backtrace(stackframes);
     }
 
     __unused BOOL _inDB = NO;
@@ -303,7 +304,7 @@
         // only dump stack frames from the thread when the proportion is higher then threshold.
         if ((threadInfo.cpuUsage / cpuTotalUsage) > self.stackFramesDumpThreshold) {
             // get the stack frames of the thread
-            mth_stack_backtrace *stackframes = (mth_stack_backtrace *)malloc(sizeof(mth_stack_backtrace));
+            mth_stack_backtrace *stackframes = mth_malloc_stack_backtrace();
             if (mth_stack_backtrace_of_thread(threadInfo.traceThread, stackframes, MTHCPUTRACE_MAXSTACKCOUNT, 0)) {
                 BOOL shouldSkip = NO;
                 for (int i = 0; i < stackframes->frames_size; i++) {
@@ -313,9 +314,14 @@
                         break;
                     }
                 }
+
                 if (!shouldSkip) {
                     _cpuHighLoadStackFramesSample.push_back(stackframes);
+                } else {
+                    mth_free_stack_backtrace(stackframes);
                 }
+            } else {
+                mth_free_stack_backtrace(stackframes);
             }
         }
     }
@@ -323,25 +329,31 @@
 
 - (void)generateOrUpdateCPUHighLoadRecord {
     for (auto iter = _cpuHighLoadStackFramesSample.begin(); iter != _cpuHighLoadStackFramesSample.end(); iter++) {
-        mth_stack_backtrace *tmp = (*iter);
+        mth_stack_backtrace *stackframes = (*iter);
         MTH_CPUTraceStackFramesNode *curNode = _rootNode;
         int continueCount = 0;
-        int size = (int)tmp->frames_size;
+        int size = (int)stackframes->frames_size;
         for (int i = size - 1; i >= 0; i--) {
             // skip system stack frame.
-            if (mtha_addr_is_in_sys_libraries(tmp->frames[i])) {
+            if (mtha_addr_is_in_sys_libraries(stackframes->frames[i])) {
                 continueCount++;
                 continue;
             }
 
             MTH_CPUTraceStackFramesNode *tmpNode = new MTH_CPUTraceStackFramesNode();
-            tmpNode->stackframeAddr = tmp->frames[i];
+            tmpNode->stackframeAddr = stackframes->frames[i];
             tmpNode->calledCount = 0;
 
             curNode = curNode->addSubCallNode(tmpNode);
+            if (curNode->calledCount > 1) {
+                delete tmpNode;
+            }
         }
+
+        mth_free_stack_backtrace(stackframes);
     }
-    _cpuHighLoadStackFramesSample.erase(_cpuHighLoadStackFramesSample.begin(), _cpuHighLoadStackFramesSample.end());
+
+    _cpuHighLoadStackFramesSample.clear();
 
     CGFloat averageUsage = (self.highLoadLastingSumUsage / (self.highLoadLastingTime / self.checkIntervalBusy));
     CGFloat lasting = CFAbsoluteTimeGetCurrent() - self.highLoadBeginTime;
