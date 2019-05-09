@@ -56,7 +56,8 @@ Pod::Spec.new do |s|
     ui.public_header_files = 'MTHawkeye/UISkeleton/**/*.{h}'
     ui.source_files = 'MTHawkeye/UISkeleton/**/*.{h,m}'
     ui.dependency 'MTHawkeye/Core'
-    ui.framework = 'CoreGraphics', 'UIKit', 'WebKit'
+    ui.framework = 'CoreGraphics', 'QuartzCore', 'UIKit', 'WebKit'
+    ui.libraries = 'z'
   end
 
   s.subspec 'Utils' do |sp|
@@ -147,6 +148,7 @@ Pod::Spec.new do |s|
         core.public_header_files = 'MTHawkeye/TimeConsumingPlugins/FPSTrace/Core/*.{h}'
         core.source_files = 'MTHawkeye/TimeConsumingPlugins/FPSTrace/Core/*.{h,m}'
         core.dependency 'MTHawkeye/Core'
+        core.framework = 'QuartzCore'
       end
 
       fps.subspec 'HawkeyeCore' do |hc|
@@ -283,6 +285,7 @@ Pod::Spec.new do |s|
         core.source_files = 'MTHawkeye/NetworkPlugins/Monitor/Core/**/*.{h,m}'
         core.dependency 'MTHawkeye/Core'
         core.framework = 'ImageIO', 'CFNetwork'
+        core.libraries = 'z'
       end
 
       mnt.subspec 'HawkeyeCore' do |hc|
@@ -318,6 +321,7 @@ Pod::Spec.new do |s|
       ui.dependency 'MTHawkeye/UISkeleton'
       ui.dependency 'FLEX'
       ui.libraries = "sqlite3"
+      ui.framework = 'QuartzCore'
     end
   end # NetworkPlugins
 
