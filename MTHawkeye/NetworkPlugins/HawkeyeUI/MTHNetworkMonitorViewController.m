@@ -214,6 +214,16 @@
     top += waterfallFrame.size.height;
     CGRect listFrame = CGRectMake(0, top, self.view.bounds.size.width, self.view.bounds.size.height - top);
     self.historyTableView.frame = listFrame;
+
+    CGFloat left = 10.f;
+    CGFloat maxWidth = CGRectGetWidth(self.view.bounds);
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_10_3
+    if (@available(iOS 11, *)) {
+        left += self.view.safeAreaInsets.left;
+        maxWidth -= (left + self.view.safeAreaInsets.right);
+    }
+#endif
+    self.headerLabel.frame = CGRectMake(left, 0, maxWidth - left, 30);
 }
 
 - (id<UILayoutSupport>)p_navigationBarTopLayoutGuide {
@@ -408,11 +418,11 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (!self.headerLabel) {
-        self.headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, self.view.frame.size.width - 20, 30)];
+        self.headerLabel = [[UILabel alloc] init];
     }
     self.headerLabel.textColor = [UIColor colorWithWhite:0.0667 alpha:1];
     self.headerLabel.font = [UIFont systemFontOfSize:12.0];
-    self.self.headerLabel.textAlignment = NSTextAlignmentLeft;
+    self.headerLabel.textAlignment = NSTextAlignmentLeft;
     self.headerLabel.numberOfLines = 1;
     UIView *headerView = [[UIView alloc] init];
     [headerView addSubview:self.headerLabel];

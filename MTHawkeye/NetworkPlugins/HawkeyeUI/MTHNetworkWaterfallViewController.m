@@ -51,23 +51,44 @@ static const CGFloat kNetworkHistoryTimelineCellHeight = 20.f;
     [self.view addSubview:self.timeIndicatorView];
 }
 
+- (CGRect)safeAreaForContent {
+    CGRect safeArea = self.view.bounds;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_10_3
+    if (@available(iOS 11, *)) {
+        safeArea = UIEdgeInsetsInsetRect(self.view.bounds, self.view.safeAreaInsets);
+    }
+#endif
+    return safeArea;
+}
+
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
 
-    CGFloat collectionViewHeight = self.view.bounds.size.height - kTimeIndicatorViewHeight;
-    CGRect collectionFrame = CGRectMake(0, 0, self.view.bounds.size.width, collectionViewHeight);
-    self.collectionView.frame = collectionFrame;
+    CGRect safeArea = [self safeAreaForContent];
+    CGFloat minX = CGRectGetMinX(safeArea);
+    CGFloat maxX = CGRectGetMaxX(safeArea);
 
-    CGRect indicatorViewFrame = CGRectMake(20.f, collectionViewHeight, self.view.bounds.size.width - 20.f, kTimeIndicatorViewHeight);
+    CGFloat collectionViewHeight = CGRectGetHeight(self.view.bounds) - kTimeIndicatorViewHeight;
+    CGRect collectionFrame = CGRectMake(minX, 0, CGRectGetWidth(safeArea), collectionViewHeight);
+    self.collectionView.frame = collectionFrame;
+    if ([self.collectionView.collectionViewLayout isKindOfClass:[UICollectionViewFlowLayout class]]) {
+        UICollectionViewFlowLayout *flowLayout = self.collectionView.collectionViewLayout;
+        if (CGRectGetWidth(self.collectionView.frame) - 20.f != flowLayout.itemSize.width) {
+            flowLayout.itemSize = CGSizeMake(CGRectGetWidth(self.collectionView.frame) - 20.f, kNetworkHistoryTimelineCellHeight);
+            [flowLayout invalidateLayout];
+        }
+    }
+
+    CGRect indicatorViewFrame = CGRectMake(20.f + minX, collectionViewHeight, maxX - 20.f - minX, kTimeIndicatorViewHeight);
     self.timeIndicatorView.frame = indicatorViewFrame;
 
-    CGRect lineFrame = CGRectMake(0, 0, self.timeIndicatorView.bounds.size.width, 1.f / [UIScreen mainScreen].scale);
+    CGRect lineFrame = CGRectMake(0, 0, CGRectGetWidth(self.timeIndicatorView.bounds), 1.f / [UIScreen mainScreen].scale);
     self.timeIndicatorLineView.frame = lineFrame;
 
     CGFloat labelPosY = 3.f;
     CGRect leftLabelFrame = CGRectMake(0, labelPosY, 40.f, 12.f);
-    CGRect rightLabelFrame = CGRectMake(self.timeIndicatorLineView.bounds.size.width - 70.f, labelPosY, 60.f, 12.f);
-    CGRect middleLabelFrame = CGRectMake(self.timeIndicatorLineView.bounds.size.width / 2.f - 30.f, labelPosY, 60.f, 12.f);
+    CGRect rightLabelFrame = CGRectMake(CGRectGetWidth(self.timeIndicatorLineView.bounds) - 30.f, labelPosY, 60.f, 12.f);
+    CGRect middleLabelFrame = CGRectMake(CGRectGetWidth(self.timeIndicatorLineView.bounds) / 2.f - 30.f, labelPosY, 60.f, 12.f);
     self.leftTimeIndicatorLabel.frame = leftLabelFrame;
     self.middleTimeIndicatorLabel.frame = middleLabelFrame;
     self.rightTimeIndicatorLabel.frame = rightLabelFrame;
@@ -151,6 +172,7 @@ static const CGFloat kNetworkHistoryTimelineCellHeight = 20.f;
 - (UICollectionView *)collectionView {
     if (_collectionView == nil) {
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+
         layout.itemSize = CGSizeMake([UIScreen mainScreen].bounds.size.width - 20.f, kNetworkHistoryTimelineCellHeight);
         layout.sectionInset = UIEdgeInsetsZero;
         layout.minimumLineSpacing = 0.f;

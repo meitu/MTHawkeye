@@ -56,7 +56,7 @@
     self.myGraph.enableReferenceAxisFrame = NO;
 
     self.myGraph.formatStringForValues = @"%.1f";
-
+    self.myGraph.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     [self addSubview:self.myGraph];
 
     CGRect unitLableFrame = CGRectMake(0, self.bounds.size.height - 30, 30, 15);
