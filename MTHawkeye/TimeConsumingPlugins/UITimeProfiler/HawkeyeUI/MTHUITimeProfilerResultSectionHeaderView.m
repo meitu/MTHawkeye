@@ -16,11 +16,14 @@ static CGFloat const kTopLabelFontSize = 15.f;
 static CGFloat const kBottomLabelFontSize = 14.f;
 static CGFloat const kLabelLeftMargin = 10.f;
 static CGFloat const kHeaderHeight = 40.f;
+static CGFloat const kDetailWidth = 40.f;
 static CGFloat const kDecoratedLineWidth = 4.f;
 
 @interface MTHUITimeProfilerResultSectionHeaderView ()
 
 @property (nonatomic, strong) UIButton *showDetailButton;
+@property (nonatomic, strong) UIView *decoratedView;
+@property (nonatomic, strong) UIView *topSeperatorView;
 
 @end
 
@@ -32,21 +35,21 @@ static CGFloat const kDecoratedLineWidth = 4.f;
         self.topLabel = [[UILabel alloc] init];
         self.bottomLabel = [[UILabel alloc] init];
         self.showDetailButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
-        UIView *decoratedView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kDecoratedLineWidth, kHeaderHeight)];
-        UIView *topSeperatorView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1000, 0.5)];
+        self.decoratedView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kDecoratedLineWidth, kHeaderHeight)];
+        self.topSeperatorView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1000, 1.f / [UIScreen mainScreen].scale)];
 
         [self addSubview:self.topLabel];
         [self addSubview:self.bottomLabel];
         [self addSubview:self.showDetailButton];
-        [self addSubview:decoratedView];
-        [self addSubview:topSeperatorView];
+        [self addSubview:self.decoratedView];
+        [self addSubview:self.topSeperatorView];
 
         self.topLabel.textColor = [UIColor colorWithRed:0.788 green:0.569 blue:0.192 alpha:1];
         self.topLabel.font = [UIFont systemFontOfSize:kTopLabelFontSize];
         self.bottomLabel.font = [UIFont systemFontOfSize:kBottomLabelFontSize];
         [self.showDetailButton addTarget:self action:@selector(didClickDetailButton:) forControlEvents:UIControlEventTouchUpInside];
-        decoratedView.backgroundColor = [UIColor greenColor];
-        topSeperatorView.backgroundColor = [UIColor lightGrayColor];
+        self.decoratedView.backgroundColor = [UIColor greenColor];
+        self.topSeperatorView.backgroundColor = [UIColor lightGrayColor];
     }
     return self;
 }
@@ -61,12 +64,23 @@ static CGFloat const kDecoratedLineWidth = 4.f;
 - (void)layoutSubviews {
     [self.topLabel sizeToFit];
     [self.bottomLabel sizeToFit];
-    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
+
+    CGRect safeArea = self.window.bounds;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_10_3
+    if (@available(iOS 11, *)) {
+        safeArea = UIEdgeInsetsInsetRect(self.window.bounds, self.window.safeAreaInsets);
+    }
+#endif
+    CGFloat minX = CGRectGetMinX(safeArea);
+    CGFloat maxWidth = CGRectGetWidth(safeArea) - minX;
+
     CGSize topLabelSize = self.topLabel.frame.size;
-    self.topLabel.frame = CGRectMake(kLabelLeftMargin, 2, MIN(topLabelSize.width, screenWidth - kHeaderHeight), topLabelSize.height);
+    self.topLabel.frame = CGRectMake(kLabelLeftMargin + minX, 2, MIN(topLabelSize.width, maxWidth - kDetailWidth), topLabelSize.height);
     CGSize bottomLabelSize = self.bottomLabel.frame.size;
-    self.bottomLabel.frame = CGRectMake(kLabelLeftMargin, 22, MIN(bottomLabelSize.width, screenWidth - kHeaderHeight), bottomLabelSize.height);
-    self.showDetailButton.frame = CGRectMake(screenWidth - kHeaderHeight, 0, kHeaderHeight, kHeaderHeight);
+    self.bottomLabel.frame = CGRectMake(kLabelLeftMargin + minX, 22, MIN(bottomLabelSize.width, maxWidth - kDetailWidth), bottomLabelSize.height);
+    self.showDetailButton.frame = CGRectMake(CGRectGetMaxX(safeArea) - kDetailWidth, 0, kDetailWidth, kDetailWidth);
+    self.decoratedView.frame = CGRectMake(minX, 0, kDecoratedLineWidth, kHeaderHeight);
+    self.topSeperatorView.frame = CGRectMake(minX, 0, maxWidth, 1.f / [UIScreen mainScreen].scale);
 }
 
 - (void)didClickDetailButton:(id)sender {

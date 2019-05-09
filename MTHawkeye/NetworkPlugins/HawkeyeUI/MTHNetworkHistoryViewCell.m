@@ -43,6 +43,7 @@ NSString *const MTNetworkHistoryViewCellIdentifier = @"kMTNetworkTransactionCell
         UIImage *bgImage = [self _imageFromColor:[UIColor colorWithWhite:0.8 alpha:0.1f]];
         [self.detailBtnView setBackgroundImage:bgImage forState:UIControlStateNormal];
         [self.detailBtnView addTarget:self action:@selector(detailBtnTapped) forControlEvents:UIControlEventTouchUpInside];
+        self.detailBtnView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
         [self addSubview:self.detailBtnView];
 
         self.nameLabel = [[UILabel alloc] init];
@@ -68,7 +69,7 @@ NSString *const MTNetworkHistoryViewCellIdentifier = @"kMTNetworkTransactionCell
         }
         self.advicesTipLabel.font = advicesTipLabelFont;
         self.advicesTipLabel.textColor = [UIColor colorWithWhite:0.533 alpha:1];
-        [self.contentView addSubview:self.advicesTipLabel];
+        [self addSubview:self.advicesTipLabel];
     }
     return self;
 }
@@ -83,19 +84,28 @@ NSString *const MTNetworkHistoryViewCellIdentifier = @"kMTNetworkTransactionCell
 - (void)layoutSubviews {
     [super layoutSubviews];
 
+    CGRect safeArea = self.bounds;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_10_3
+    if (@available(iOS 11, *)) {
+        safeArea = UIEdgeInsetsInsetRect(self.bounds, self.safeAreaInsets);
+    }
+#endif
+    CGFloat minX = CGRectGetMinX(safeArea);
+    CGFloat maxX = CGRectGetMaxX(safeArea);
+
     const CGFloat left = 10.f;
     const CGFloat top = 10.f;
     const CGFloat lineSpacing = 3.5f;
     const CGFloat labelHeight = 12.f;
     const CGFloat detailBtnWidth = 47.f;
-    const CGFloat availabelTextWidth = self.bounds.size.width - left * 2 - detailBtnWidth;
+    const CGFloat availabelTextWidth = CGRectGetWidth(self.contentView.frame) - (maxX - CGRectGetMaxX(self.contentView.frame));
 
-    CGFloat btnLeft = self.bounds.size.width - detailBtnWidth;
-    CGRect detailBtnFrame = CGRectMake(btnLeft, 0, detailBtnWidth, self.bounds.size.height);
+    CGFloat btnLeft = maxX - detailBtnWidth;
+    CGRect detailBtnFrame = CGRectMake(btnLeft, 0, CGRectGetMaxX(self.bounds) - btnLeft, CGRectGetHeight(self.bounds));
     self.detailBtnView.frame = detailBtnFrame;
 
-    CGFloat advicesTipLeft = self.bounds.size.width - 50.f - 3.f;
-    CGRect advicesTipFrame = CGRectMake(advicesTipLeft, 3.f, 50.f, 14.f);
+    CGFloat advicesTipLeft = maxX - detailBtnWidth - 3;
+    CGRect advicesTipFrame = CGRectMake(advicesTipLeft, 3.f, detailBtnWidth - 3.f, 14.f);
     self.advicesTipLabel.frame = advicesTipFrame;
     if (self.advices.count == 0) {
         self.advicesTipLabel.hidden = YES;

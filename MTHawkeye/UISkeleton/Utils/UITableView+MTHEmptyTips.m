@@ -52,6 +52,7 @@
     footerView.frame = CGRectMake(0, 0, self.bounds.size.width, footerHeight);
 
     [footerView addSubview:tipsLabel];
+    tipsLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     self.tableFooterView = footerView;
 }
 

@@ -20,8 +20,8 @@
 #import "MTHawkeyeUtility.h"
 
 static NSString *const kReuseIdentifier = @"MTHCallTraceVCDetailCell";
-static CGFloat const kPreferContentWidth = 300.f;
-static CGFloat const kPreferContentHeight = 480.f;
+//static CGFloat const kPreferContentWidth = 300.f;
+//static CGFloat const kPreferContentHeight = 480.f;
 static CGFloat const kDurationLabelHeight = 40.f;
 
 
@@ -45,28 +45,33 @@ static CGFloat const kDurationLabelHeight = 40.f;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    CGRect tableViewFrame = CGRectMake(0, 0, kPreferContentWidth, kPreferContentHeight);
 
-    UITableView *tableView = [[UITableView alloc] initWithFrame:tableViewFrame style:UITableViewStylePlain];
+    UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     tableView.dataSource = self;
     tableView.delegate = self;
     tableView.allowsMultipleSelection = YES;
     tableView.contentInset = UIEdgeInsetsMake(0, 0, kDurationLabelHeight, 0);
+    tableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kDurationLabelHeight, 0);
+    tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [tableView registerClass:MTHUITimeProfilerResultCallTraceCell.class forCellReuseIdentifier:NSStringFromClass(MTHUITimeProfilerResultCallTraceCell.class)];
     [tableView registerClass:MTHUITImeProfilerResultEventCell.class forCellReuseIdentifier:NSStringFromClass(MTHUITImeProfilerResultEventCell.class)];
-
     [self.view addSubview:tableView];
     self.tableView = tableView;
 
-    CGRect durationLabelFrame = CGRectMake(0, kPreferContentHeight - kDurationLabelHeight, kPreferContentWidth, kDurationLabelHeight);
-    UIView *durationView = [[UIView alloc] initWithFrame:durationLabelFrame];
-    UILabel *durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, kPreferContentWidth, kDurationLabelHeight)];
+    CGRect durationFrame = CGRectMake(0, CGRectGetHeight(self.view.bounds) - kDurationLabelHeight, CGRectGetWidth(self.view.bounds), kDurationLabelHeight);
+
+    UIView *durationView = [[UIView alloc] initWithFrame:durationFrame];
     durationView.backgroundColor = [UIColor darkGrayColor];
+    durationView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+
+    UILabel *durationLabel = [[UILabel alloc] initWithFrame:durationView.bounds];
     durationLabel.text = @"Please select a time range";
     durationLabel.textColor = [UIColor whiteColor];
     durationLabel.font = [UIFont systemFontOfSize:12];
     durationLabel.textAlignment = NSTextAlignmentCenter;
+    durationLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     [durationView addSubview:durationLabel];
+
     [self.view addSubview:durationView];
     self.durationLabel = durationLabel;
 
@@ -81,8 +86,6 @@ static CGFloat const kDurationLabelHeight = 40.f;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
-    self.tableView.frame = self.view.frame;
 }
 
 - (void)setupWithAppLaunchRecord:(MTHAppLaunchRecord *)launchRecord firstVCRecord:(nullable MTHViewControllerAppearRecord *)vcRecord extraRecords:(nullable NSArray *)extraRecords {
@@ -206,7 +209,17 @@ static CGFloat const kDurationLabelHeight = 40.f;
 #pragma mark - Private
 
 - (CGSize)preferredContentSize {
-    return CGSizeMake(kPreferContentWidth, kPreferContentHeight);
+    CGSize screenSize = [UIScreen mainScreen].bounds.size;
+    CGFloat maxHeight = 540.f;
+    CGFloat height = screenSize.height - 75.f;
+    if (height > maxHeight)
+        height = maxHeight;
+
+    CGFloat maxWidth = 650.f;
+    CGFloat width = screenSize.width - 75.f;
+    if (width > maxWidth)
+        width = maxWidth;
+    return CGSizeMake(width, height);
 }
 
 #pragma mark - Actions
