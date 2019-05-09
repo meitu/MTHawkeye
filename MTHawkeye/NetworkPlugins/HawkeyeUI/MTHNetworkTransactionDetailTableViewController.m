@@ -24,8 +24,9 @@
 #import "MTHawkeyeWebViewController.h"
 
 #import <CoreText/CoreText.h>
-#import <FLEX/FLEXImagePreviewViewController.h>
 #import <MTHawkeye/MTHUISkeletonUtility.h>
+
+#import "FLEXImagePreviewViewController.h"
 
 
 typedef NS_ENUM(NSInteger, MTHawkeyeNetworkDetailRowStyle) {
