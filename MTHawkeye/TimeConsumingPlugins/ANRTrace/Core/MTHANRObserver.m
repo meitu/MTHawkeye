@@ -86,7 +86,7 @@ typedef void (^MTHANRThreadResultBlock)(double roughBlockTimeInterval, MTHANRRec
                     mth_stack_backtrace_of_thread(main_thread, stackframes, sizeof(mth_stack_backtrace), 0);
                     threadStack->stackframesSize = stackframes->frames_size;
                     threadStack->stackframes = (uintptr_t *)malloc(sizeof(uintptr_t) * stackframes->frames_size);
-                    memcpy(stackframes->frames, threadStack->stackframes, sizeof(uintptr_t) * stackframes->frames_size);
+                    memcpy(threadStack->stackframes, stackframes->frames, sizeof(uintptr_t) * stackframes->frames_size);
 
                     threadStack->titleFrame = [self titleFrameForStackframes:stackframes->frames size:stackframes->frames_size];
 
