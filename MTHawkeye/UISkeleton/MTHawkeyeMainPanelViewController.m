@@ -370,16 +370,23 @@ static NSString *const kPreSelKey = @"com.meitu.hawkeye.pre-select-panel-indexpa
 
     [self hidePanelSwitcher];
 
-    if (self.selectedIndexPath == indexPath)
-        return;
+    BOOL needCacheSelectedIndex = NO;
+    if (self.selectedIndexPath == indexPath) {
+        // the very first run, the {0,0} will selected by default.
+        if ([[[MTHawkeyeUserDefaults shared] objectForKey:kPreSelKey] length] == 0) {
+            needCacheSelectedIndex = YES;
+        }
+    } else {
+        BOOL changeSelect = [self.delegate shouldChangeSelectStatusToNew:indexPath fromOld:self.selectedIndexPath];
+        if (changeSelect) {
+            self.selectedIndexPath = indexPath;
+            [self updateChildVCAsSelectedPanelChanged];
+        }
+    }
 
-    BOOL changeSelect = [self.delegate shouldChangeSelectStatusToNew:indexPath fromOld:self.selectedIndexPath];
-    if (changeSelect) {
+    if (needCacheSelectedIndex) {
         NSString *value = [NSString stringWithFormat:@"%ld-%ld", (long)indexPath.section, (long)indexPath.row];
         [[MTHawkeyeUserDefaults shared] setObject:value forKey:kPreSelKey];
-
-        self.selectedIndexPath = indexPath;
-        [self updateChildVCAsSelectedPanelChanged];
     }
 }
 
