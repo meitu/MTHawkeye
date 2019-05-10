@@ -1,5 +1,17 @@
 # MTHawkeye
 
+## 0.11.2
+
+### improve
+- support `use_frameworks!` under Swift projects (remove cpp header from public_header_files)
+- support landscape orientation
+- simplify UI logics
+- exclude GraphicsPlugins/MTGLTrace from podspec by default
+
+### bugfix
+- fix memory leaks in ANR, CPU tracing plugins
+- fix may crashed when remove KVO from key window
+
 ## 0.11.1
 
 ### feature
