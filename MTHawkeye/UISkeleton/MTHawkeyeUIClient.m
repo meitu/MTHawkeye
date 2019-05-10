@@ -574,6 +574,7 @@ static void *WindowKVOContext = &WindowKVOContext;
     if (_monitorWindow == nil) {
         _monitorWindow = [[MTHFloatingMonitorWindow alloc] initWithRootViewController:self.floatingWidgetVC];
         _monitorWindow.eventDelegate = self;
+        _monitorWindow.hidden = YES;
     }
     return _monitorWindow;
 }

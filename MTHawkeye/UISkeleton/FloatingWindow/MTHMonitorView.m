@@ -75,6 +75,9 @@ static dispatch_source_t memoryPressureEventSource = NULL;
         unsigned long memoryStatusFlags = DISPATCH_MEMORYPRESSURE_NORMAL | DISPATCH_MEMORYPRESSURE_WARN | DISPATCH_MEMORYPRESSURE_CRITICAL;
         memoryPressureEventSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_MEMORYPRESSURE, 0, memoryStatusFlags, dispatch_get_main_queue());
         dispatch_source_set_event_handler(memoryPressureEventSource, ^{
+            if (weakSelf.window == nil || weakSelf.window.hidden || weakSelf.hidden)
+                return;
+
             unsigned long status = dispatch_source_get_data(memoryPressureEventSource);
             switch (status) {
                 // VM pressure events.
