@@ -20,7 +20,6 @@
 #import <MTHawkeye/MTHStackFrameSymbolics.h>
 #import <MTHawkeye/MTHStackFrameSymbolicsRemote.h>
 #import <MTHawkeye/MTHawkeyeDyldImagesStorage.h>
-#import <MTHawkeye/MTHawkeyeDyldImagesUtils.h>
 #import <MTHawkeye/MTHawkeyeLogMacros.h>
 #import <MTHawkeye/MTHawkeyeSettingCell.h>
 #import <MTHawkeye/MTHawkeyeSettingTableEntity.h>
@@ -53,7 +52,7 @@
 
 - (void)dealloc {
     if (stackHelper) {
-        free(stackHelper);
+        delete stackHelper;
         stackHelper = nil;
     }
 
@@ -141,9 +140,8 @@
             MTHANRRecordRaw *record = self.records[ri];
             NSString *riStr = [NSString stringWithFormat:@"%ld", (long)ri];
 
-            uintptr_t titleFrame = [self titleFrameForRecord:record];
             @synchronized(self.recordTitles) {
-                self.recordTitles[riStr] = [self recordFrameStringFrom:titleFrame withoutFnameIfExistSname:YES];
+                self.recordTitles[riStr] = [self recordFrameStringFrom:record->titleFrame withoutFnameIfExistSname:YES];
             }
             dispatch_async(dispatch_get_main_queue(), ^(void) {
                 if ([self.tableView numberOfRowsInSection:1] < ri) {
@@ -153,21 +151,6 @@
             });
         }
     });
-}
-
-- (uintptr_t)titleFrameForRecord:(MTHANRRecordRaw *)record {
-    for (int fi = 0; fi < record->stackframesSize; ++fi) {
-        uintptr_t frame = record->stackframes[fi];
-        if (!mtha_addr_is_in_sys_libraries(frame)) {
-            return frame;
-        }
-    }
-
-    if (record->stackframesSize > 0) {
-        uintptr_t frame = record->stackframes[0];
-        return frame;
-    }
-    return 0;
 }
 
 - (NSString *)recordFrameStringFrom:(uintptr_t)frame withoutFnameIfExistSname:(BOOL)shortV {

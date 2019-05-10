@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MTHFloatingMonitorWindow : UIWindow
 
-@property (weak, nonatomic) id<MTHFloatingMonitorWindowDelegate> delegate;
+@property (weak, nonatomic) id<MTHFloatingMonitorWindowDelegate> eventDelegate;
 
 - (instancetype)initWithRootViewController:(UIViewController *)rootViewController NS_DESIGNATED_INITIALIZER;
 
@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @required
 - (BOOL)shouldPointBeHandled:(CGPoint)point;
+- (BOOL)canBecomeKeyWindow;
 
 @end
 

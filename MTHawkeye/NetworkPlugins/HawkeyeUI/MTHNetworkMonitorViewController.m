@@ -58,8 +58,6 @@
 @property (nonatomic, assign) BOOL rowInsertInProgress;
 @property (nonatomic, strong) NSMutableArray<MTHNetworkTransaction *> *incomeTransactionsNew;
 
-@property (nonatomic, strong) UIWindow *previousWindow;
-
 @end
 
 
@@ -216,6 +214,16 @@
     top += waterfallFrame.size.height;
     CGRect listFrame = CGRectMake(0, top, self.view.bounds.size.width, self.view.bounds.size.height - top);
     self.historyTableView.frame = listFrame;
+
+    CGFloat left = 10.f;
+    CGFloat maxWidth = CGRectGetWidth(self.view.bounds);
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_10_3
+    if (@available(iOS 11, *)) {
+        left += self.view.safeAreaInsets.left;
+        maxWidth -= (left + self.view.safeAreaInsets.right);
+    }
+#endif
+    self.headerLabel.frame = CGRectMake(left, 0, maxWidth - left, 30);
 }
 
 - (id<UILayoutSupport>)p_navigationBarTopLayoutGuide {
@@ -410,11 +418,11 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (!self.headerLabel) {
-        self.headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, self.view.frame.size.width - 20, 30)];
+        self.headerLabel = [[UILabel alloc] init];
     }
     self.headerLabel.textColor = [UIColor colorWithWhite:0.0667 alpha:1];
     self.headerLabel.font = [UIFont systemFontOfSize:12.0];
-    self.self.headerLabel.textAlignment = NSTextAlignmentLeft;
+    self.headerLabel.textAlignment = NSTextAlignmentLeft;
     self.headerLabel.numberOfLines = 1;
     UIView *headerView = [[UIView alloc] init];
     [headerView addSubview:self.headerLabel];
@@ -494,23 +502,6 @@
                      completion:^{
                          [searchBar resignFirstResponder];
                      }];
-}
-
-// 临时开启 MTHFloatingMonitorWindow 的 allowBecomingKeyWindow，暂时解决 iOS 11 下，非 Key Window 不能弹出键盘的问题
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
-    self.previousWindow = [UIApplication sharedApplication].keyWindow;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"MTHPermissionToBecomeKeyWindowChanged"
-                                                        object:nil
-                                                      userInfo:@{@"MTHAllowToBecomeKeyWindow" : @YES}];
-}
-
-// 关闭 MTHFloatingMonitorWindow 的 allowBecomingKeyWindow，恢复之前 Key Window
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"MTHPermissionToBecomeKeyWindowChanged"
-                                                        object:nil
-                                                      userInfo:@{@"MTHAllowToBecomeKeyWindow" : @NO}];
-    [self.previousWindow makeKeyWindow];
-    self.previousWindow = nil;
 }
 
 // MARK: - UISearchResultsUpdating

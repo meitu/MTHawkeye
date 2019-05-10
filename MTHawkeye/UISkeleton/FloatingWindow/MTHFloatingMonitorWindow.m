@@ -12,10 +12,6 @@
 
 #import "MTHFloatingMonitorWindow.h"
 
-#define DegreesToRadians(degrees) ((degrees)*M_PI / 180.)
-
-static BOOL _allowToBecomeKeyWindow = NO;
-static int _originDegrees = 0;
 
 @interface MTHFloatingMonitorWindow ()
 
@@ -23,11 +19,8 @@ static int _originDegrees = 0;
 
 @end
 
-@implementation MTHFloatingMonitorWindow
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
+@implementation MTHFloatingMonitorWindow
 
 - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
     return [super initWithCoder:aDecoder];
@@ -38,88 +31,26 @@ static int _originDegrees = 0;
         self.backgroundColor = [UIColor clearColor];
         self.windowLevel = UIWindowLevelStatusBar - 1;
         self.rootViewController = rootViewController;
-
-        UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-        switch (orientation) {
-            case UIInterfaceOrientationLandscapeLeft:
-                _originDegrees = -90;
-                break;
-            case UIInterfaceOrientationLandscapeRight:
-                _originDegrees = 90;
-                break;
-            case UIInterfaceOrientationPortraitUpsideDown:
-                _originDegrees = 180;
-                break;
-            case UIInterfaceOrientationPortrait:
-            default:
-                _originDegrees = 0;
-                break;
-        }
-
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(statusBarDidChangeFrame:)
-                                                     name:UIApplicationDidChangeStatusBarFrameNotification
-                                                   object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(permissionToBecomeKeyWindowChangedNotification:)
-                                                     name:@"MTHPermissionToBecomeKeyWindowChanged"
-                                                   object:nil];
     }
     return self;
 }
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
-    return [self.delegate shouldPointBeHandled:point];
-}
-
-- (CGAffineTransform)transformForOrientation:(UIInterfaceOrientation)orientation {
-
-    double rotateRadian = 0;
-    switch (orientation) {
-        case UIInterfaceOrientationLandscapeLeft:
-            rotateRadian = DegreesToRadians(-90 - _originDegrees);
-            break;
-        case UIInterfaceOrientationLandscapeRight:
-            rotateRadian = DegreesToRadians(90 - _originDegrees);
-            break;
-        case UIInterfaceOrientationPortraitUpsideDown:
-            rotateRadian = DegreesToRadians(180 - _originDegrees);
-            break;
-        case UIInterfaceOrientationPortrait:
-        default:
-            rotateRadian = DegreesToRadians(0 - _originDegrees);
-            break;
+    BOOL ptInside = NO;
+    if ([self.eventDelegate shouldPointBeHandled:point]) {
+        ptInside = [super pointInside:point withEvent:event];
     }
-
-    return CGAffineTransformMakeRotation(rotateRadian);
-}
-
-- (void)statusBarDidChangeFrame:(NSNotification *)notification {
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-
-    // 把内容扭转过去
-    CGAffineTransform contentTransform = [self transformForOrientation:orientation];
-    [self setTransform:contentTransform];
-
-    // 把 frame 扭转回来
-    CGRect windowFrame = [UIScreen mainScreen].bounds;
-    windowFrame = CGRectApplyAffineTransform(windowFrame, contentTransform);
-    windowFrame.origin = CGPointZero;
-    self.frame = windowFrame;
+    return ptInside;
 }
 
 // MARK: - Private API
-// 防止干扰主程序的状态栏样式，
+// Only when the main panels display, we take control the status bar appearance.
 - (BOOL)_canAffectStatusBarAppearance {
-    return NO;
+    return [self isKeyWindow];
 }
 
 - (BOOL)_canBecomeKeyWindow {
-    return _allowToBecomeKeyWindow;
-}
-
-- (void)permissionToBecomeKeyWindowChangedNotification:(NSNotification *)notification {
-    _allowToBecomeKeyWindow = [notification.userInfo[@"MTHAllowToBecomeKeyWindow"] boolValue];
+    return [self.eventDelegate canBecomeKeyWindow];
 }
 
 @end

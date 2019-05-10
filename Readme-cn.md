@@ -121,20 +121,21 @@ MTHawkeye 插件扩展支持了沙盒文件的 AirDrop 功能。
 首先，以 pod 的形式，在项目 podfile 文件中加入 MTHawkeye 引用：
 
 ```ruby
-  #< 开发调试辅助工具, 只在 Debug 时引入 
-  #< 由于目前 podfile 依赖项不支持环境配置，因此 Hawkeye 依赖的库也都需要显式配置为 Debug
+  #< Only used during Debug
+  #< Since the podfile dependency doesn't support environment configuration, 
+  #< the dependent pods also need to be explicitly configured as Debug.
+  
   def hawkeye
-    pod 'MTHawkeye', :configurations => 'Debug'  # use subspec if you don't want all the plugins or dependencies.
+    pod 'MTHawkeye', :configurations => 'Debug'
 
-    pod 'MTGLDebug', :configurations => ['Debug']
     pod 'FLEX', :configurations => ['Debug']
     pod 'FBRetainCycleDetector', :configurations => ['Debug']
     pod 'fishhook', :configurations => ['Debug']
-    pod 'CocoaLumberjack', :configurations => ['Debug'] # CocoaLumberjack 为可选接入，主要用于内部日志信息的持久化，若不需要，选择 `Hawkeye/DefaultPluginsWithoutLog`
+    pod 'CocoaLumberjack', :configurations => ['Debug'] # CocoaLumberjack is optional, change to `MTHawkeye/DefaultPluginsWithoutLog` if don't need.
+    # pod 'MTGLDebug', :configurations => ['Debug'] # MTGLDebug is exclude by default, change `MTHawkeye` to `MTHawkeye/DefaultPlugins` to include.
 
     pod 'MTAppenderFile', :configurations => ['Debug']
   end
-
 
   target "YourProject" do
     hawkeye

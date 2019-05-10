@@ -112,15 +112,15 @@ BOOL mthawkeye_VCTraceIgnoreSystemVC = YES;
         MTHViewControllerAppearRecord *aRecord = [[MTHViewControllerAppearRecord alloc] init];
         aRecord.className = recordDict[@"name"];
 
-        aRecord.initExitTime = [recordDict[@"initExitTime"] doubleValue];
+        aRecord.initExitTime = [recordDict[@"initExit"] doubleValue];
         aRecord.loadViewEnterTime = [recordDict[@"loadViewEnter"] doubleValue];
-        aRecord.loadViewExitTime = [recordDict[@"loadviewTime"] doubleValue];
+        aRecord.loadViewExitTime = [recordDict[@"loadViewExit"] doubleValue];
         aRecord.viewDidLoadEnterTime = [recordDict[@"didLoadEnter"] doubleValue];
-        aRecord.viewDidLoadExitTime = [recordDict[@"didLoadTime"] doubleValue];
+        aRecord.viewDidLoadExitTime = [recordDict[@"didLoadExit"] doubleValue];
         aRecord.viewWillAppearEnterTime = [recordDict[@"willAppearEnter"] doubleValue];
-        aRecord.viewWillAppearExitTime = [recordDict[@"willAppearTime"] doubleValue];
+        aRecord.viewWillAppearExitTime = [recordDict[@"willAppearExit"] doubleValue];
         aRecord.viewDidAppearEnterTime = [recordDict[@"didAppearEnter"] doubleValue];
-        aRecord.viewDidAppearExitTime = [recordDict[@"didAppearTime"] doubleValue];
+        aRecord.viewDidAppearExitTime = [recordDict[@"didAppearExit"] doubleValue];
 
         [records addObject:aRecord];
     }];
@@ -159,15 +159,15 @@ BOOL mthawkeye_VCTraceIgnoreSystemVC = YES;
         NSString *key = [NSString stringWithFormat:@"%@", @(index++)];
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"name"] = record.className ?: @"";
-        dict[@"initExitTime"] = @(record.initExitTime);
+        dict[@"initExit"] = @(record.initExitTime);
         dict[@"loadViewEnter"] = @(record.loadViewEnterTime);
-        dict[@"loadviewTime"] = @(record.loadViewExitTime);
+        dict[@"loadViewExit"] = @(record.loadViewExitTime);
         dict[@"didLoadEnter"] = @(record.viewDidLoadEnterTime);
-        dict[@"didLoadTime"] = @(record.viewDidLoadExitTime);
+        dict[@"didLoadExit"] = @(record.viewDidLoadExitTime);
         dict[@"willAppearEnter"] = @(record.viewWillAppearEnterTime);
-        dict[@"willAppearTime"] = @(record.viewWillAppearExitTime);
+        dict[@"willAppearExit"] = @(record.viewWillAppearExitTime);
         dict[@"didAppearEnter"] = @(record.viewDidAppearEnterTime);
-        dict[@"didAppearTime"] = @(record.viewDidAppearExitTime);
+        dict[@"didAppearExit"] = @(record.viewDidAppearExitTime);
 
         NSError *error;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict.copy options:0 error:&error];
@@ -206,11 +206,16 @@ BOOL mthawkeye_VCTraceIgnoreSystemVC = YES;
             NSString *value = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
             NSString *key = @"0";
             [[MTHawkeyeStorage shared] syncStoreValue:value withKey:key inCollection:@"app-launch"];
-            for (MTHRunloopActivityRecord *activityRecord in record.runloopActivities) {
-                NSString *timeStampString = [NSString stringWithFormat:@"%lf", activityRecord.timeStamp];
-                NSString *activityString = [NSString stringWithFormat:@"%lu", activityRecord.activity];
-                [[MTHawkeyeStorage shared] syncStoreValue:activityString withKey:timeStampString inCollection:@"head-runloop"];
-            }
+        }
+    });
+}
+
+- (void)timeIntervalRecorder:(MTHTimeIntervalRecorder *)recorder wantPersistRunloopActivities:(NSArray<MTHRunloopActivityRecord *> *)runloopActivities {
+    dispatch_async([MTHawkeyeStorage shared].storeQueue, ^(void) {
+        for (MTHRunloopActivityRecord *activityRecord in runloopActivities) {
+            NSString *timeStampString = [NSString stringWithFormat:@"%lf", activityRecord.timeStamp];
+            NSString *activityString = [NSString stringWithFormat:@"%lu", activityRecord.activity];
+            [[MTHawkeyeStorage shared] syncStoreValue:activityString withKey:timeStampString inCollection:@"head-runloop"];
         }
     });
 }

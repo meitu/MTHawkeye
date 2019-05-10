@@ -53,14 +53,6 @@
 }
 
 // MARK: -
-//- (void)observeObjectForKey:(NSString *)keyPath withBlock:(MTHawkeyeUserDefaultChangedHandler)handler {
-//    NSPointerArray *handlers = [self.observerHandlers objectForKey:keyPath];
-//    if (handlers == nil) {
-//        handlers = [NSPointerArray weakObjectsPointerArray];
-//        [self.observerHandlers setObject:handlers forKey:keyPath];
-//    }[self observeValueForKeyPath:<#(nullable NSString *)#> ofObject:<#(nullable id)#> change:<#(nullable NSDictionary<NSKeyValueChangeKey,id> *)#> context:<#(nullable void *)#>]
-//    [handlers addPointer:(__bridge_retained void *_Nullable)(handler)];
-//}
 
 - (void)mth_addObserver:(NSObject *)object forKey:(NSString *)key withHandler:(MTHawkeyeUserDefaultChangedHandler)handler {
     @synchronized(self.observerHandlers) {

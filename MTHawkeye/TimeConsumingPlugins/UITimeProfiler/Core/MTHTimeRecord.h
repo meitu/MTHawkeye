@@ -51,8 +51,6 @@ typedef NS_ENUM(NSInteger, MTHAppLaunchStep) {
 @property (nonatomic, assign) NSTimeInterval appDidLaunchEnterTime;
 @property (nonatomic, assign) NSTimeInterval appDidLaunchExitTime;
 
-@property (nonatomic, copy, nullable) NSArray *runloopActivities; /**< 主线程 RunLoop 启动后的前 50 个 activities。 */
-
 + (NSString *)displayNameOfStep:(MTHAppLaunchStep)step;
 
 - (NSTimeInterval)timeStampOfStep:(MTHAppLaunchStep)step;

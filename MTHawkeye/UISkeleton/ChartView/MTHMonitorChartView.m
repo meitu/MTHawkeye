@@ -56,7 +56,7 @@
     self.myGraph.enableReferenceAxisFrame = NO;
 
     self.myGraph.formatStringForValues = @"%.1f";
-
+    self.myGraph.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     [self addSubview:self.myGraph];
 
     CGRect unitLableFrame = CGRectMake(0, self.bounds.size.height - 30, 30, 15);
@@ -66,6 +66,19 @@
     self.unitLabel.textColor = [UIColor lightGrayColor];
     self.unitLabel.textAlignment = NSTextAlignmentRight;
     [self addSubview:self.unitLabel];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+
+    CGRect safeArea = self.bounds;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_10_3
+    if (@available(iOS 11, *)) {
+        safeArea = UIEdgeInsetsInsetRect(self.bounds, self.safeAreaInsets);
+    }
+#endif
+    self.myGraph.frame = safeArea;
+    self.unitLabel.frame = CGRectMake(CGRectGetMinX(safeArea), CGRectGetHeight(self.bounds) - 30, 30, 15);
 }
 
 - (void)reloadData {

@@ -15,8 +15,10 @@
 #import "MTHMonitorView.h"
 #import "MTHMonitorViewCell.h"
 #import "MTHMonitorViewConfiguration.h"
+#import "MTHUISkeletonUtility.h"
 #import "MTHawkeyeFloatingWidgets.h"
 
+BOOL mthawkeye_disableRotatingAnimation = NO;
 
 @interface MTHawkeyeFloatingWidgetViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -26,10 +28,6 @@
 
 @implementation MTHawkeyeFloatingWidgetViewController
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 - (instancetype)init {
     if (self = [super init]) {
     }
@@ -38,36 +36,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    [self showFloatingWidget];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(statusBarDidChangeFrame:)
-                                                 name:UIApplicationDidChangeStatusBarFrameNotification
-                                               object:nil];
-}
-
-- (void)statusBarDidChangeFrame:(NSNotification *)notification {
-    CGRect screenBounds = [UIScreen mainScreen].bounds;
-    CGRect monitorFrame = self.monitorView.frame;
-    if (!CGRectContainsRect(screenBounds, monitorFrame)) {
-        CGPoint targetOrigin = monitorFrame.origin;
-        CGRect validRect = CGRectMake(0,
-            0,
-            screenBounds.size.width - monitorFrame.size.width,
-            screenBounds.size.height - monitorFrame.size.height);
-        targetOrigin.x = MAX(MIN(targetOrigin.x, CGRectGetMaxX(validRect)), CGRectGetMinX(validRect));
-        targetOrigin.y = MAX(MIN(targetOrigin.y, CGRectGetMaxY(validRect)), CGRectGetMinY(validRect));
-        monitorFrame.origin = targetOrigin;
-        self.monitorView.frame = monitorFrame;
-    }
-
-    [self.monitorView attachToEdgeAndSavePosition];
-}
-
-- (void)showFloatingWidget {
-    if ([self.monitorView superview] != nil)
-        return;
 
     [self.view addSubview:self.monitorView];
     [self.monitorView attachToEdgeAndSavePosition];
@@ -103,19 +71,6 @@
     });
 }
 
-// MARK: - MTHFloatingMonitorWindowDelegate
-- (BOOL)shouldPointBeHandled:(CGPoint)point {
-    if ([self isPresentingOthers]) {
-        return CGRectContainsPoint(self.presentedViewController.view.frame, point);
-    } else {
-        return CGRectContainsPoint(self.monitorView.frame, point);
-    }
-}
-
-- (BOOL)isPresentingOthers {
-    return self.presentedViewController != nil;
-}
-
 // MARK: - UITableViewDatasource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.datasource floatingWidgetCellCount];
@@ -133,6 +88,33 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return MTHMonitorViewConfiguration.monitorCellHeight;
+}
+
+// MARK: - Rotation
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+
+    if (mthawkeye_disableRotatingAnimation) {
+        // just disable the rotate animation here. (may effect the App's own appearance)
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
+        [coordinator
+            animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+
+            }
+            completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+                [CATransaction commit];
+            }];
+    }
 }
 
 // MARK: - getter

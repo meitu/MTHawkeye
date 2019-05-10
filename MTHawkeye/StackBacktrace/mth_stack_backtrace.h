@@ -34,6 +34,9 @@ typedef struct {
     size_t frames_size;
 } mth_stack_backtrace;
 
+mth_stack_backtrace *mth_malloc_stack_backtrace();
+void mth_free_stack_backtrace(mth_stack_backtrace *stack_backtrace);
+
 bool mth_stack_backtrace_of_thread(thread_t thread, mth_stack_backtrace *stack_backtrace, const size_t backtrace_depth_max, uintptr_t top_frames_to_skip);
 
 #ifdef __cplusplus

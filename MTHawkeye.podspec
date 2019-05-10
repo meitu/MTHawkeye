@@ -1,13 +1,13 @@
 Pod::Spec.new do |s|
   s.name         = "MTHawkeye"
-  s.version      = "0.11.0"
-  s.summary      = "Profiling/Debugging assist tools platform for iOS."
+  s.version      = "0.11.2"
+  s.summary      = "Profiling/Debugging assist tools for iOS."
 
   s.description  = <<-DESC
-    MTHawkeye is a profiling/debugging assit tools platform for iOS.
+    MTHawkeye is profiling/debugging assist tools for iOS. It's designed to help iOS developers improve development productivity and assist in optimizing the App performance.
                    DESC
 
-  s.homepage     = "https://github.com/MTlab/MTHawkeye"
+  s.homepage     = "https://github.com/meitu/MTHawkeye"
   s.license      = {
     :type => 'Copyright',
     :text => <<-LICENSE
@@ -21,6 +21,7 @@ Pod::Spec.new do |s|
 
   s.source       = { :git => "https://github.com/meitu/MTHawkeye.git", :tag => "#{s.version}" }
 
+  s.default_subspec = 'DefaultPluginsExcludeGL'
 
   # ――― Default ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   s.subspec 'DefaultPlugins' do |sp|
@@ -28,7 +29,21 @@ Pod::Spec.new do |s|
     sp.dependency 'CocoaLumberjack'
   end
 
+  s.subspec 'DefaultPluginsExcludeGL' do |sp|
+    sp.dependency 'MTHawkeye/DefaultPluginsWithoutLogAndGL'
+    sp.dependency 'CocoaLumberjack'
+  end
+
   s.subspec 'DefaultPluginsWithoutLog' do |sp|
+    sp.dependency 'MTHawkeye/DefaultPluginsWithoutLogAndGL'
+    sp.dependency 'MTHawkeye/GraphicsPlugins'
+
+    sp.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) MTH_INCLUDE_GLTRACE=1' }
+
+  end
+
+  # without GraphicsPlugins( GLTrace )
+  s.subspec 'DefaultPluginsWithoutLogAndGL' do |sp|
     sp.public_header_files = 'MTHawkeye/DefaultPlugins/**/*.{h}'
     sp.source_files  = 'MTHawkeye/DefaultPlugins/**/*.{h,m,mm}'
 
@@ -38,11 +53,11 @@ Pod::Spec.new do |s|
     sp.dependency 'MTHawkeye/MemoryPlugins'
     sp.dependency 'MTHawkeye/TimeConsumingPlugins'
     sp.dependency 'MTHawkeye/EnergyPlugins'
-    sp.dependency 'MTHawkeye/GraphicsPlugins'
     sp.dependency 'MTHawkeye/NetworkPlugins'
     sp.dependency 'MTHawkeye/StorageMonitorPlugins'
 
     sp.dependency 'MTHawkeye/FLEXExtension'
+
   end
 
   # ――― Basic ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -56,18 +71,31 @@ Pod::Spec.new do |s|
     ui.public_header_files = 'MTHawkeye/UISkeleton/**/*.{h}'
     ui.source_files = 'MTHawkeye/UISkeleton/**/*.{h,m}'
     ui.dependency 'MTHawkeye/Core'
-    ui.framework = 'CoreGraphics', 'UIKit', 'WebKit'
+    ui.framework = 'CoreGraphics', 'QuartzCore', 'UIKit', 'WebKit'
+    ui.libraries = 'z'
   end
 
   s.subspec 'Utils' do |sp|
-      sp.public_header_files = 'MTHawkeye/Utils/**/*.{h}'
-      sp.source_files = 'MTHawkeye/Utils/**/*.{h,m,cpp,mm}'
+      sp.public_header_files = 'MTHawkeye/Utils/*.{h}'
+      sp.source_files = 'MTHawkeye/Utils/**/*.{h,m,mm}'
       sp.dependency 'MTAppenderFile'
       sp.framework = 'Foundation', 'SystemConfiguration'
+
+      cpp_files = 'MTHawkeye/Utils/*.{cpp,hpp}'
+      sp.exclude_files = cpp_files
+      sp.subspec 'cpp' do |cpp|
+        # tricks to ignore public_header_files.
+        cpp.public_header_files = 'MTHawkeye/Utils/MTHawkeyeEmptyHeaderForCPP.hpp'
+        cpp.source_files = cpp_files
+        cpp.libraries = "stdc++"
+      end
   end
 
   s.subspec 'StackBacktrace' do |sp|
-      sp.public_header_files = 'MTHawkeye/StackBacktrace/**/*.{h}'
+      sp.public_header_files =
+        'MTHawkeye/StackBacktrace/MTHStackFrameSymbolicsRemote.h',
+        'MTHawkeye/StackBacktrace/mth_stack_backtrace.h'
+
       sp.source_files = 'MTHawkeye/StackBacktrace/**/*.{h,m,mm,cpp}'
       sp.dependency 'MTHawkeye/Utils'
       sp.framework = 'Foundation'
@@ -105,12 +133,12 @@ Pod::Spec.new do |s|
     # memory allocation events tracer
     mem.subspec 'Allocations' do |alloc|
       alloc.subspec 'Core' do |core|
-        core.public_header_files = 'MTHawkeye/MemoryPlugins/Allocations/Core/*.{h,hpp}'
+        core.public_header_files = 'MTHawkeye/MemoryPlugins/Allocations/Core/MTHAllocations.h'
         core.source_files = 'MTHawkeye/MemoryPlugins/Allocations/Core/*.{h,c,cpp,m,mm}'
         core.dependency 'MTHawkeye/Utils'
         core.dependency 'MTHawkeye/StackBacktrace'
 
-        core.libraries = "c++", "stdc++"
+        core.libraries = "stdc++"
 
         non_arc_files   = 'MTHawkeye/MemoryPlugins/Allocations/Core/NSObject+MTHAllocTrack.{h,m}'
         core.exclude_files = non_arc_files
@@ -147,6 +175,7 @@ Pod::Spec.new do |s|
         core.public_header_files = 'MTHawkeye/TimeConsumingPlugins/FPSTrace/Core/*.{h}'
         core.source_files = 'MTHawkeye/TimeConsumingPlugins/FPSTrace/Core/*.{h,m}'
         core.dependency 'MTHawkeye/Core'
+        core.framework = 'QuartzCore'
       end
 
       fps.subspec 'HawkeyeCore' do |hc|
@@ -240,11 +269,12 @@ Pod::Spec.new do |s|
     # CPU Trace
     ep.subspec 'CPUTrace' do |cpu|
       cpu.subspec 'Core' do |core|
-        core.public_header_files = 'MTHawkeye/EnergyPlugins/CPUTrace/Core/*.{h}'
+        # tricks: *.{h} will match hpp files, which will copy to xx-umbrella.h and cause compile error under swift project
+        core.public_header_files = 'MTHawkeye/EnergyPlugins/CPUTrace/Core/MTHCPUTracePublicHeader.{h}'
         core.source_files = 'MTHawkeye/EnergyPlugins/CPUTrace/Core/*.{h,m,mm}'
         core.dependency 'MTHawkeye/Core'
         core.dependency 'MTHawkeye/StackBacktrace'
-        core.libraries = "c++", "stdc++"
+        core.libraries = "stdc++"
       end
 
       cpu.subspec 'HawkeyeCore' do |hc|
@@ -266,12 +296,12 @@ Pod::Spec.new do |s|
 
   # ――― Graphics ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   s.subspec 'GraphicsPlugins' do |gp|
-      gp.subspec 'OpenGLTrace' do |sp|
-          sp.public_header_files = 'MTHawkeye/GraphicsPlugins/OpenGLTrace/**/*.{h}'
-          sp.source_files = 'MTHawkeye/GraphicsPlugins/OpenGLTrace/**/*.{h,m}'
-          sp.dependency 'MTGLDebug'
-          sp.dependency 'MTHawkeye/UISkeleton'
-      end
+    gp.subspec 'OpenGLTrace' do |sp|
+      sp.public_header_files = 'MTHawkeye/GraphicsPlugins/OpenGLTrace/**/*.{h}'
+      sp.source_files = 'MTHawkeye/GraphicsPlugins/OpenGLTrace/**/*.{h,m}'
+      sp.dependency 'MTGLDebug'
+      sp.dependency 'MTHawkeye/UISkeleton'
+    end
   end # GraphicsPlugins
 
   # ――― Network ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -283,6 +313,7 @@ Pod::Spec.new do |s|
         core.source_files = 'MTHawkeye/NetworkPlugins/Monitor/Core/**/*.{h,m}'
         core.dependency 'MTHawkeye/Core'
         core.framework = 'ImageIO', 'CFNetwork'
+        core.libraries = 'z'
       end
 
       mnt.subspec 'HawkeyeCore' do |hc|
@@ -318,6 +349,7 @@ Pod::Spec.new do |s|
       ui.dependency 'MTHawkeye/UISkeleton'
       ui.dependency 'FLEX'
       ui.libraries = "sqlite3"
+      ui.framework = 'QuartzCore'
     end
   end # NetworkPlugins
 

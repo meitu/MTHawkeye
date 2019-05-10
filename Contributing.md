@@ -1,6 +1,6 @@
 # Contributing to MTHawkeye
 
-Welcome to [report Issues](https://github.com/MTlab/MTHawkeye/issues) or [pull requests](https://github.com/MTlab/MTHawkeye/pulls). It's recommended to read the following Contributing Guide first before contributing.
+Welcome to [report Issues](https://github.com/meitu/MTHawkeye/issues) or [pull requests](https://github.com/meitu/MTHawkeye/pulls). It's recommended to read the following Contributing Guide first before contributing.
 
 ## Issues
 

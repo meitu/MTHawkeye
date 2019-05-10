@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)prettyJSONStringFromData:(NSData *)data;
 + (BOOL)isValidJSONData:(NSData *)data;
 + (NSData *)inflatedDataFromCompressedData:(NSData *)compressedData;
++ (UIInterfaceOrientationMask)infoPlistSupportedInterfaceOrientationsMask;
 
 @end
 

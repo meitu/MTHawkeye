@@ -16,14 +16,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern BOOL mthawkeye_disableRotatingAnimation; // default NO;
+
 @class MTHMonitorViewConfiguration;
 @class MTHMonitorViewCell;
+@class MTHMonitorView;
 @protocol MTHawkeyeFloatingWidgetViewControllerDatasource;
 @protocol MTHawkeyeFloatingWidgetViewControllerDelegate;
 
 
-@interface MTHawkeyeFloatingWidgetViewController : UIViewController <MTHFloatingMonitorWindowDelegate, MTHawkeyeFloatingWidgetsDataDelegate>
+@interface MTHawkeyeFloatingWidgetViewController : UIViewController <MTHawkeyeFloatingWidgetsDataDelegate>
 
+@property (nonatomic, readonly) MTHMonitorView *monitorView;
 @property (nonatomic, weak) id<MTHawkeyeFloatingWidgetViewControllerDatasource> datasource;
 @property (nonatomic, weak) id<MTHawkeyeFloatingWidgetViewControllerDelegate> delegate;
 

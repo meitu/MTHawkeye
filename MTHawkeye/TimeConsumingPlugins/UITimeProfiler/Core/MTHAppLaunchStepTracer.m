@@ -101,7 +101,7 @@
                 record.activity = activities[i];
                 [records addObject:record];
             }
-            [[MTHTimeIntervalRecorder shared] recordMainRunLoopActivities:records];
+            [[MTHTimeIntervalRecorder shared] recordRunLoopActivities:records];
             free(timeStamps);
             free(activities);
         }

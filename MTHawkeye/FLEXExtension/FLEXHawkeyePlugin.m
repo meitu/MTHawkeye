@@ -14,7 +14,6 @@
 #import "MTHawkeyeHooking.h"
 
 #import <FLEX/FLEX.h>
-#import <FLEX/FLEXFileBrowserTableViewController.h>
 
 @interface FLEXHawkeyePlugin ()
 
@@ -38,7 +37,7 @@
 }
 
 - (void)switchingOptionDidTapped {
-    [self addAirDropMenuForFileBrowserViewController];
+    [FLEXHawkeyePlugin addAirDropMenuForFileBrowserViewController];
     [self showFLEX];
 }
 
@@ -47,7 +46,7 @@
     [[FLEXManager sharedManager] showExplorer];
 }
 
-- (void)addAirDropMenuForFileBrowserViewController {
++ (void)addAirDropMenuForFileBrowserViewController {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [FLEXHawkeyePlugin extendMenuItems];
@@ -88,7 +87,7 @@
         [items addObject:airDropMenuItem];
         [UIMenuController sharedMenuController].menuItems = [items copy];
     };
-    [MTHawkeyeHooking replaceImplementationOfKnownSelector:sel onClass:FLEXFileBrowserTableViewController.class withBlock:swzBlock swizzledSelector:swzSel];
+    [MTHawkeyeHooking replaceImplementationOfKnownSelector:sel onClass:NSClassFromString(@"FLEXFileBrowserTableViewController") withBlock:swzBlock swizzledSelector:swzSel];
 }
 
 + (void)extendPerformAction {
@@ -120,7 +119,7 @@
         }
         return resp;
     };
-    [MTHawkeyeHooking replaceImplementationOfKnownSelector:performSel onClass:FLEXFileBrowserTableViewController.class withBlock:performSwzBlock swizzledSelector:performSwzSel];
+    [MTHawkeyeHooking replaceImplementationOfKnownSelector:performSel onClass:NSClassFromString(@"FLEXFileBrowserTableViewController") withBlock:performSwzBlock swizzledSelector:performSwzSel];
 
     ///
     SEL sel = NSSelectorFromString(@"fileAirDrop:");
@@ -139,7 +138,7 @@
 #pragma clang diagnostic pop
     };
     IMP imp = imp_implementationWithBlock(swzBlock);
-    class_addMethod(FLEXFileBrowserTableViewController.class, sel, imp, "@@:@");
+    class_addMethod(NSClassFromString(@"FLEXFileBrowserTableViewController"), sel, imp, "@@:@");
 }
 
 + (void)extendBrowserTableViewCell {
@@ -157,8 +156,6 @@
     Class cls = NSClassFromString(@"FLEXFileBrowserTableViewCell");
     if (!cls) // for dynamic framework
         cls = NSClassFromString(@"PodMTHawkeye_FLEXFileBrowserTableViewCell");
-    if (!cls)
-        cls = NSClassFromString(@"PodMTHawkeyeInjection_FLEXFileBrowserTableViewCell");
     if (!cls)
         return;
 

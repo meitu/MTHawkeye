@@ -15,9 +15,9 @@ During the App product development cycle, we introduced MTHawkeye to help us dis
 - Test phase, focusing on collecting performance data as much as possible from the test case, for generating automated test analysis reports.
 - Online phase, focusing on performance data that needs by our own business but missing from third party APM components.
 
-MTHawkeye has build-in some common performance detection plug-ins. It also introduces and improve FLEX as a plug-in for debugging assistance. When you use MTHawkeye, you can customize and add the plug-ins you need.
+MTHawkeye has built-in some common performance detection plug-ins. It also introduces and improves FLEX as a plug-in for debugging assistance. When you use MTHawkeye, you can customize and add the plug-ins you need.
 
-The following are demo diagrams of some built-in plugins for `View time-consuming methods on main Thread`, `View App memory allocations details`, `View network transactions records`. See the post for more plugin instructions.
+The following are demo diagrams of some built-in plugins for `View time-consuming methods on main Thread`, `View App memory allocations details`, `View network transaction records`. See the post for more plugin instructions.
 
 <img src="./doc/images/ui-time-profiler-demo-flow.gif" width=285> <img src="./doc/images/memory-allocations-demo-flow.gif" width=285> <img src="./doc/images/network-monitor-demo-flow.gif" width=285>
 
@@ -31,7 +31,7 @@ MTHawkeye can be divided into upper, middle and lower layers. In addition to the
 
 The `Base` layer mainly provides plugin management capabilities, [storage API](./doc/hawkeye-storage.md) and util classes.
 
-`UI Skeleton` provides an interface interaction framework for development and testing phase. It include a floating window, a main panels frame, and a setting panel, all of which can be modified, and the plug-in can integrate the interface interaction.
+`UI Skeleton` provides an interface interaction framework for the development and testing phase. It includes a floating window, the main panels frame, and a setting panel, all of which can be modified, and the plug-in can integrate the interface interaction.
 
 ### Optional plugins
 
@@ -43,13 +43,13 @@ The built-in plugins are divided into `Memory`, `TimeConsuming`, `Energy`, `Netw
 
 `LivingObjectSniffer` is mainly used to track and observe objects directly or indirectly held by ViewController, as well as custom View objects. Detects whether these objects are unexpected alive, which may cause by leaks, not released in time, or unnecessary memory buffers.
 
-In the development and testing phase, the detected unexpected alive objects can be prompted to developer in the form of floating windows flash warning or toast.
+In the development and testing phase, the detected unexpected alive objects can be prompted to the developer in the form of floating windows flash warning or toast.
 
-In the automated test, the recorded unexpected alive objects can also be extracted for further memory usage analysis.
+In the automated test, the recorded unexpected alive objects can also be extracted for the further memory usage analysis.
 
 ##### # [Allocations](./doc/memory/allocations.md)
   
-`Allocations` is similar to Instrument's Allocations module, It tracks the memory details actually allocated by the application. When the application memory usage is abnormal (abnormal rise, OOM exit), the recorded memory allocation details can be used to analyze specific memory usage issues.
+`Allocations` is similar to the Instrument's Allocations module, It tracks the memory details actually allocated by the application. When the application memory usage is abnormal (abnormal rise, OOM exit), the recorded memory allocation details can be used to analyze specific memory usage issues.
 
 #### TimeConsuming
 
@@ -59,13 +59,13 @@ In the automated test, the recorded unexpected alive objects can also be extract
 
 The data collection part mainly includes two components, `VC Life Trace` and `ObjC CallTrace`. `VC Life Trace` tracking the time of each key node when opening ViewController, and when `ObjC CallTrace` is turned on, it can track Objective-C methods that are executed on the main thread and take longer than the specified threshold.
 
-The interface layer part combines the tow parts of data to make it easier for developers to find out the time-consuming details of the operations they are focusing on. The example diagram is as shown in the previous section, for a more detailed description, see the `UITimeProfiler` plugin documentation.
+The interface layer part combines the two parts of data to make it easier for developers to find out the time-consuming details of the operations they are focusing on. The example diagram is as shown in the previous section, for a more detailed description, see the `UITimeProfiler` plugin documentation.
 
-After enabling the plug-in on the automated test or online phase, without other code, you can continuously automate tracking the startup, page open, and other critical process time-consuming.
+After enabling the plug-in on the automated test or online phase, without other code, you can continuously automate tracking the startup, page open, and other critical processes time-consuming.
 
 ##### # [ANRTrace](./doc/time-consuming/anr-tracer.md)
 
-`ANRTrace` is used to capture the stuck event, and will sampling the main thread stack frame when the jam occurs.
+`ANRTrace` is used to capture the stuck event, and will sample the main thread stack frame when the jam occurs.
 
 ##### # [FPSTrace](./doc/time-consuming/fps-tracer.md)
 
@@ -81,9 +81,9 @@ After enabling the plug-in on the automated test or online phase, without other 
 
 ##### # [NetworkMonitor](./doc/network/network-monitor.md)
 
-`NetworkMonitor` observe and records HTTP(S) network transactions with metrics info in the App. Providing a built-in records viewing interface for developer to troubleshoot network problems.
+`NetworkMonitor` observes and records HTTP(S) network transactions with metrics info in the App. Providing built-in records viewing interface for a developer to troubleshoot network problems.
 
-1. Inherit FLEX's network recording logics, and optimize the initialization logic, greatly reducing the impact by hooking on startup time.
+1. Inherit FLEX's network recording logic, and optimize the initialization logic, greatly reducing the impact by hooking on startup time.
 2. For NSURLSession after iOS 9, add the URLSessionTaskMetrics record to view the time of each stage of the transaction.
 3. Add a waterfall view similar to Chrome network debugging based on transaction metrics, to view the queue and concurrency of network transactions, and do further optimization.
 4. Add the ability to detect duplicate unnecessary network transactions.
@@ -92,7 +92,7 @@ After enabling the plug-in on the automated test or online phase, without other 
 
 ##### # [NetworkInspect](./doc/network/network-inspect.md)
 
-`NetworkInspect` is based on `NetworkMonitor`. Depending on the actual of the network transaction, checking whether the network request can be improved according to the inspection rules, and your can add your own inspection rules by yourself.
+`NetworkInspect` is based on `NetworkMonitor`. Depending on the actual of the network transaction, checking whether the network request can be improved according to the inspection rules, and you can add your own inspection rules by yourself.
 
 #### Graphics
 
@@ -110,11 +110,11 @@ After enabling the plug-in on the automated test or online phase, without other 
 
 ##### # [FLEX](https://github.com/Flipboard/FLEX)
 
-FLEX is commonly used in daily development, MTHawkeye adds it as a plugin, and extends the use of AirDrop for sandboxed files.
+FLEX is commonly used in daily development, MTHawkeye adds it as a plugin and extends the use of AirDrop for sandboxed files.
 
 ### Desktop Extension
 
-If you need to extend the plugin to the desktop, such as viewing and processing the data on the desktop collected by the plugins, you can get the data based on the interface provided by each plugin, and then bridge to the protocol provided by the third party desktop client. Such as
+If you need to extend the plugin to the desktop, such as viewing and processing the data on the desktop collected by the plugins, you can get the data based on the interface provided by each plugin, and then bridge to the protocol provided by the third-party desktop client. Such as
 
 - [Facebook Flipper](https://github.com/facebook/flipper)
 - [Woodpecker](http://www.woodpeck.cn/)
@@ -123,20 +123,21 @@ If you need to extend the plugin to the desktop, such as viewing and processing 
 
 ### Use during development
 
-First, add a MTHawkeye reference to the project podfile:
+First, add an MTHawkeye reference to the project podfile:
 
 ```ruby
   #< Only used during Debug
   #< Since the podfile dependency doesn't support environment configuration, 
   #< the dependent pods also need to be explicitly configured as Debug.
+  
   def hawkeye
-    pod 'MTHawkeye', :configurations => 'Debug' # use subspec if you don't want all the plugins or dependencies.
+    pod 'MTHawkeye', :configurations => 'Debug'
 
     pod 'FLEX', :configurations => ['Debug']
     pod 'FBRetainCycleDetector', :configurations => ['Debug']
     pod 'fishhook', :configurations => ['Debug']
     pod 'CocoaLumberjack', :configurations => ['Debug'] # CocoaLumberjack is optional, change to `MTHawkeye/DefaultPluginsWithoutLog` if don't need.
-    pod 'MTGLDebug', :configurations => ['Debug']
+    # pod 'MTGLDebug', :configurations => ['Debug'] # MTGLDebug is exclude by default, change `MTHawkeye` to `MTHawkeye/DefaultPlugins` to include.
 
     pod 'MTAppenderFile', :configurations => ['Debug']
   end
@@ -218,9 +219,9 @@ A: Quickly integrate all default plugins and start:
 
 </details>
 
-### For test, online phase
+### For the test, online
 
-There may be special requirements during the test phase, or may not need to retain the code for the interface while publish the App. At this point, you can create a new `podspec` according to the needs, introduce the needed sub-spec to the pod-spec, and then add it into the podfile.
+There may be special requirements during the test phase, or may not need to retain the code for the interface while publishing the App. At this point, you can create a new `podspec` according to the needs, introduce the needed sub-spec to the pod-spec, and then add it into the podfile.
 
 ```ruby
   pod 'YourOnlineHawkeye', :podspec => 'xxx/yourOwnHawkeyeOnline.podspec', :configurations => 'Release'
@@ -252,7 +253,7 @@ Then in the initialization, load the plugin as your needs, configure whether the
   - Show and hide floating window: three-finger long press gesture for two seconds or a three-finger left swipe gesture.
   - Show and hide floating window widget: Enter Setting view, then select `Floating Window`, switch the widget to show or hide.
 - Main panels: tap the floating window to view the plugin panel you viewed last time.
-- Setting view: Enter main panel, tap the title unfold the switching module view, top the `Setting` on the upper right corner.
+- Setting view: Enter the main panel, tap the title unfold the switching module view, top the `Setting` on the upper right corner.
 
 Interface interaction documentation for each plugin: [see links above](#optional-plugins)
 

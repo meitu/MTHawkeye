@@ -224,8 +224,8 @@ static NSString *const kPreSelKey = @"com.meitu.hawkeye.pre-select-panel-indexpa
     self.switcherVC.view.frame = CGRectZero;
     CGFloat contentHeight = [self.switcherVC fullContentHeight];
     CGFloat maxHeight = CGRectGetHeight(self.view.bounds) - self.topLayoutGuide.length - self.bottomLayoutGuide.length;
-    if (contentHeight > maxHeight - 170.f) {
-        contentHeight = maxHeight - 170.f;
+    if (contentHeight > maxHeight - 60.f) {
+        contentHeight = maxHeight - 60.f;
     }
 
     CGRect placeViewFrame = CGRectMake(0, 0, self.view.bounds.size.width, contentHeight);
@@ -370,16 +370,24 @@ static NSString *const kPreSelKey = @"com.meitu.hawkeye.pre-select-panel-indexpa
 
     [self hidePanelSwitcher];
 
-    if (self.selectedIndexPath == indexPath)
-        return;
+    BOOL needCacheSelectedIndex = NO;
+    if (self.selectedIndexPath == indexPath) {
+        // the very first run, the {0,0} will selected by default.
+        if ([[[MTHawkeyeUserDefaults shared] objectForKey:kPreSelKey] length] == 0) {
+            needCacheSelectedIndex = YES;
+        }
+    } else {
+        BOOL changeSelect = [self.delegate shouldChangeSelectStatusToNew:indexPath fromOld:self.selectedIndexPath];
+        if (changeSelect) {
+            needCacheSelectedIndex = YES;
+            self.selectedIndexPath = indexPath;
+            [self updateChildVCAsSelectedPanelChanged];
+        }
+    }
 
-    BOOL changeSelect = [self.delegate shouldChangeSelectStatusToNew:indexPath fromOld:self.selectedIndexPath];
-    if (changeSelect) {
+    if (needCacheSelectedIndex) {
         NSString *value = [NSString stringWithFormat:@"%ld-%ld", (long)indexPath.section, (long)indexPath.row];
         [[MTHawkeyeUserDefaults shared] setObject:value forKey:kPreSelKey];
-
-        self.selectedIndexPath = indexPath;
-        [self updateChildVCAsSelectedPanelChanged];
     }
 }
 

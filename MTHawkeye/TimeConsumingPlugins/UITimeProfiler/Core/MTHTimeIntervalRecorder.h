@@ -31,7 +31,7 @@ typedef BOOL (^MTHViewControllerLifeCycleFilter)(UIViewController *vc);
 
 - (void)recordViewController:(UIViewController *)vc processInStep:(MTHViewControllerLifeCycleStep)step;
 - (void)recordAppLaunchStep:(MTHAppLaunchStep)step;
-- (void)recordMainRunLoopActivities:(NSArray<MTHRunloopActivityRecord *> *)activities;
+- (void)recordRunLoopActivities:(NSArray<MTHRunloopActivityRecord *> *)activities;
 
 /**
  You can add your own time event here, the record result will be shown in UITimeProfilerUI.
@@ -60,6 +60,7 @@ typedef BOOL (^MTHViewControllerLifeCycleFilter)(UIViewController *vc);
 
 - (void)timeIntervalRecorder:(MTHTimeIntervalRecorder *)recorder wantPersistVCRecord:(MTHViewControllerAppearRecord *)record;
 - (void)timeIntervalRecorder:(MTHTimeIntervalRecorder *)recorder wantPersistLaunchRecord:(MTHAppLaunchRecord *)record;
+- (void)timeIntervalRecorder:(MTHTimeIntervalRecorder *)recorder wantPersistRunloopActivities:(NSArray<MTHRunloopActivityRecord *> *)runloopActivities;
 - (void)timeIntervalRecorder:(MTHTimeIntervalRecorder *)recorder wantPersistCustomEvent:(MTHTimeIntervalCustomEventRecord *)record;
 
 @end

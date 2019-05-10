@@ -11,6 +11,8 @@
 
 
 #import "MTHDirectoryWatcherHawkeyeUI.h"
+
+#import "FLEXHawkeyePlugin.h"
 #import "MTHDirectoryTree.h"
 #import "MTHDirectoryWatcherSelctionViewController.h"
 #import "MTHDirectoryWatcherViewController.h"
@@ -18,7 +20,12 @@
 #import "MTHawkeyeUserDefaults+DirectorWatcher.h"
 #import "UIViewController+MTHawkeyeCurrentViewController.h"
 
+
 @implementation MTHDirectoryWatcherHawkeyeUI
+
++ (void)initialize {
+    [FLEXHawkeyePlugin addAirDropMenuForFileBrowserViewController];
+}
 
 // MARK: - MTHawkeyeMainPanelPlugin
 - (NSString *)groupNameSwitchingOptionUnder {
