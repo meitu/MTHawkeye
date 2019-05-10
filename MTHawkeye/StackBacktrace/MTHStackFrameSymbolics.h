@@ -13,7 +13,6 @@
 #import <mach/mach.h>
 #import <mach/vm_types.h>
 #import <malloc/malloc.h>
-#import <vector>
 
 typedef struct _mthawkeye_dyld_image_ {
     const char *name;         // image name

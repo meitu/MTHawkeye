@@ -10,7 +10,7 @@
 //
 
 
-#import "MTHawkeyeLFUCache.h"
+#import "MTHawkeyeLFUCache.hpp"
 
 MTHawkeyeLFUCache::MTHawkeyeLFUCache(int capacity) {
     cur_cap = 0;

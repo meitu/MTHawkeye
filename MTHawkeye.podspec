@@ -61,14 +61,23 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'Utils' do |sp|
-      sp.public_header_files = 'MTHawkeye/Utils/**/*.{h}'
-      sp.source_files = 'MTHawkeye/Utils/**/*.{h,m,cpp,mm}'
+      sp.public_header_files = 'MTHawkeye/Utils/*.{h}'
+      sp.source_files = 'MTHawkeye/Utils/**/*.{h,m,mm}'
       sp.dependency 'MTAppenderFile'
       sp.framework = 'Foundation', 'SystemConfiguration'
+
+      cpp_files = 'MTHawkeye/Utils/*.{cpp,hpp}'
+      sp.exclude_files = cpp_files
+      sp.subspec 'cpp' do |cpp|
+        # tricks to ignore public_header_files.
+        cpp.public_header_files = 'MTHawkeye/Utils/MTHawkeyeEmptyHeaderForCPP.hpp'
+        cpp.source_files = cpp_files
+        cpp.libraries = "stdc++"
+      end
   end
 
   s.subspec 'StackBacktrace' do |sp|
-      sp.public_header_files = 'MTHawkeye/StackBacktrace/**/*.{h}'
+      sp.public_header_files = 'MTHawkeye/StackBacktrace/mth_stack_backtrace.h'
       sp.source_files = 'MTHawkeye/StackBacktrace/**/*.{h,m,mm,cpp}'
       sp.dependency 'MTHawkeye/Utils'
       sp.framework = 'Foundation'
@@ -106,12 +115,12 @@ Pod::Spec.new do |s|
     # memory allocation events tracer
     mem.subspec 'Allocations' do |alloc|
       alloc.subspec 'Core' do |core|
-        core.public_header_files = 'MTHawkeye/MemoryPlugins/Allocations/Core/*.{h,hpp}'
+        core.public_header_files = 'MTHawkeye/MemoryPlugins/Allocations/Core/MTHAllocations.h'
         core.source_files = 'MTHawkeye/MemoryPlugins/Allocations/Core/*.{h,c,cpp,m,mm}'
         core.dependency 'MTHawkeye/Utils'
         core.dependency 'MTHawkeye/StackBacktrace'
 
-        core.libraries = "c++", "stdc++"
+        core.libraries = "stdc++"
 
         non_arc_files   = 'MTHawkeye/MemoryPlugins/Allocations/Core/NSObject+MTHAllocTrack.{h,m}'
         core.exclude_files = non_arc_files
@@ -242,11 +251,12 @@ Pod::Spec.new do |s|
     # CPU Trace
     ep.subspec 'CPUTrace' do |cpu|
       cpu.subspec 'Core' do |core|
-        core.public_header_files = 'MTHawkeye/EnergyPlugins/CPUTrace/Core/*.{h}'
+        # tricks: *.{h} will match hpp files, which will copy to xx-umbrella.h and cause compile error under swift project
+        core.public_header_files = 'MTHawkeye/EnergyPlugins/CPUTrace/Core/MTHCPUTracePublicHeader.{h}'
         core.source_files = 'MTHawkeye/EnergyPlugins/CPUTrace/Core/*.{h,m,mm}'
         core.dependency 'MTHawkeye/Core'
         core.dependency 'MTHawkeye/StackBacktrace'
-        core.libraries = "c++", "stdc++"
+        core.libraries = "stdc++"
       end
 
       cpu.subspec 'HawkeyeCore' do |hc|
@@ -268,12 +278,12 @@ Pod::Spec.new do |s|
 
   # ――― Graphics ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   s.subspec 'GraphicsPlugins' do |gp|
-      gp.subspec 'OpenGLTrace' do |sp|
-          sp.public_header_files = 'MTHawkeye/GraphicsPlugins/OpenGLTrace/**/*.{h}'
-          sp.source_files = 'MTHawkeye/GraphicsPlugins/OpenGLTrace/**/*.{h,m}'
-          sp.dependency 'MTGLDebug'
-          sp.dependency 'MTHawkeye/UISkeleton'
-      end
+    gp.subspec 'OpenGLTrace' do |sp|
+      sp.public_header_files = 'MTHawkeye/GraphicsPlugins/OpenGLTrace/**/*.{h}'
+      sp.source_files = 'MTHawkeye/GraphicsPlugins/OpenGLTrace/**/*.{h,m}'
+      sp.dependency 'MTGLDebug'
+      sp.dependency 'MTHawkeye/UISkeleton'
+    end
   end # GraphicsPlugins
 
   # ――― Network ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
