@@ -77,7 +77,10 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'StackBacktrace' do |sp|
-      sp.public_header_files = 'MTHawkeye/StackBacktrace/mth_stack_backtrace.h'
+      sp.public_header_files =
+        'MTHawkeye/StackBacktrace/MTHStackFrameSymbolicsRemote.h',
+        'MTHawkeye/StackBacktrace/mth_stack_backtrace.h'
+
       sp.source_files = 'MTHawkeye/StackBacktrace/**/*.{h,m,mm,cpp}'
       sp.dependency 'MTHawkeye/Utils'
       sp.framework = 'Foundation'
