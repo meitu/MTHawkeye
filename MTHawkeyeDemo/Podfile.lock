@@ -25,39 +25,27 @@ PODS:
   - FLEX (3.0.0)
   - GYHttpMock (1.0.1)
   - MTAppenderFile (0.4.0)
-  - MTGLDebug (3.0.0):
+  - MTGLDebug (3.1.0):
     - fishhook (~> 0.2)
-    - MTGLDebug/ARC (= 3.0.0)
-    - MTGLDebug/MRC (= 3.0.0)
-  - MTGLDebug/ARC (3.0.0):
+    - MTGLDebug/ARC (= 3.1.0)
+    - MTGLDebug/MRC (= 3.1.0)
+  - MTGLDebug/ARC (3.1.0):
     - fishhook (~> 0.2)
     - MTGLDebug/MRC
-  - MTGLDebug/MRC (3.0.0):
+  - MTGLDebug/MRC (3.1.0):
     - fishhook (~> 0.2)
-  - MTHawkeye (0.11.1):
-    - MTHawkeye/Core (= 0.11.1)
-    - MTHawkeye/DefaultPlugins (= 0.11.1)
-    - MTHawkeye/DefaultPluginsWithoutLog (= 0.11.1)
-    - MTHawkeye/EnergyPlugins (= 0.11.1)
-    - MTHawkeye/FLEXExtension (= 0.11.1)
-    - MTHawkeye/GraphicsPlugins (= 0.11.1)
-    - MTHawkeye/MemoryPlugins (= 0.11.1)
-    - MTHawkeye/NetworkPlugins (= 0.11.1)
-    - MTHawkeye/StackBacktrace (= 0.11.1)
-    - MTHawkeye/StorageMonitorPlugins (= 0.11.1)
-    - MTHawkeye/TimeConsumingPlugins (= 0.11.1)
-    - MTHawkeye/UISkeleton (= 0.11.1)
-    - MTHawkeye/Utils (= 0.11.1)
   - MTHawkeye/Core (0.11.1):
     - MTHawkeye/Utils
   - MTHawkeye/DefaultPlugins (0.11.1):
     - CocoaLumberjack
     - MTHawkeye/DefaultPluginsWithoutLog
   - MTHawkeye/DefaultPluginsWithoutLog (0.11.1):
+    - MTHawkeye/DefaultPluginsWithoutLogAndGL
+    - MTHawkeye/GraphicsPlugins
+  - MTHawkeye/DefaultPluginsWithoutLogAndGL (0.11.1):
     - MTHawkeye/Core
     - MTHawkeye/EnergyPlugins
     - MTHawkeye/FLEXExtension
-    - MTHawkeye/GraphicsPlugins
     - MTHawkeye/MemoryPlugins
     - MTHawkeye/NetworkPlugins
     - MTHawkeye/StorageMonitorPlugins
@@ -224,6 +212,9 @@ PODS:
     - MTHawkeye/Core
   - MTHawkeye/Utils (0.11.1):
     - MTAppenderFile
+    - MTHawkeye/Utils/cpp (= 0.11.1)
+  - MTHawkeye/Utils/cpp (0.11.1):
+    - MTAppenderFile
 
 DEPENDENCIES:
   - AFNetworking
@@ -231,11 +222,11 @@ DEPENDENCIES:
   - CocoaLumberjack
   - FBRetainCycleDetector
   - fishhook
-  - FLEX (~> 3.0.0)
+  - FLEX
   - GYHttpMock
   - MTAppenderFile (~> 0.4.0)
-  - MTGLDebug (~> 3.0.0)
-  - MTHawkeye (from `../`)
+  - MTGLDebug
+  - MTHawkeye/DefaultPlugins (from `../`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -262,9 +253,9 @@ SPEC CHECKSUMS:
   FLEX: d66c759bce0f6ebbbf472c742380874d846f2883
   GYHttpMock: ad08e55ce8bde4e7f7b4d0cbc79ff23c1311658b
   MTAppenderFile: bf01581e34bd597267ddbb2b624060203fa2e68e
-  MTGLDebug: b1bbccd25ddd30cc912e9a9e529057e73a2c9dfa
-  MTHawkeye: ff3689f427e183f002fa4574b45855414feadde5
+  MTGLDebug: 00dd831397c86bfd06cd977eae8e46b82cf5e502
+  MTHawkeye: 32451e42879816849a95f341f975a7d541282a73
 
-PODFILE CHECKSUM: 6836df478a8434a33db60ee5bdae355139f9b4fa
+PODFILE CHECKSUM: 1a50971648bd5bfb0a07424b96c647281f88511a
 
 COCOAPODS: 1.6.1

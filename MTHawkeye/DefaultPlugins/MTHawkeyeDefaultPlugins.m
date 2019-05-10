@@ -40,8 +40,10 @@
 #import <MTHawkeye/MTHAllocationsHawkeyeUI.h>
 #import <MTHawkeye/MTHawkeyeUserDefaults+Allocations.h>
 
+#ifdef MTH_INCLUDE_GLTRACE
 #import <MTHawkeye/MTHOpenGLTraceHawkeyeAdaptor.h>
 #import <MTHawkeye/MTHOpenGLTraceHawkeyeUI.h>
+#endif
 
 #import <MTHawkeye/MTHNetworkHawkeyeUI.h>
 #import <MTHawkeye/MTHNetworkInspectHawkeyeAdaptor.h>
@@ -210,8 +212,10 @@ static NSMutableArray<id<MTHawkeyeFloatingWidgetPlugin>> *defaultdefaultFloating
     [defaultClientPlugins addObject:[MTHNetworkMonitorHawkeyeAdaptor new]];
     [defaultClientPlugins addObject:[MTHNetworkInspectHawkeyeAdaptor new]];
 
+#ifdef MTH_INCLUDE_GLTRACE
     // graphics
     [defaultClientPlugins addObject:[MTHOpenGLTraceHawkeyeAdaptor new]];
+#endif
 
     // storage
     [defaultClientPlugins addObject:[MTHDirectoryWatcherHawkeyeAdaptor new]];
@@ -252,10 +256,12 @@ static NSMutableArray<id<MTHawkeyeFloatingWidgetPlugin>> *defaultdefaultFloating
     MTHNetworkHawkeyeSettingUI *netSetUI = [[MTHNetworkHawkeyeSettingUI alloc] init];
     [defaultdefaultSettingUIPluginsInto addObject:netSetUI];
 
+#ifdef MTH_INCLUDE_GLTRACE
     MTHOpenGLTraceHawkeyeUI *gltraceUI = [MTHOpenGLTraceHawkeyeUI new];
     [defaultMainPanelPlugins addObject:gltraceUI];
     [defaultdefaultSettingUIPluginsInto addObject:gltraceUI];
     [defaultdefaultFloatingWidgetsPluginsInto addObject:gltraceUI];
+#endif
 
     MTHDirectoryWatcherHawkeyeUI *dirWatcherUI = [[MTHDirectoryWatcherHawkeyeUI alloc] init];
     [defaultMainPanelPlugins addObject:dirWatcherUI];

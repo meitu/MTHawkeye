@@ -21,6 +21,7 @@ Pod::Spec.new do |s|
 
   s.source       = { :git => "https://github.com/meitu/MTHawkeye.git", :tag => "#{s.version}" }
 
+  s.default_subspec = 'DefaultPluginsExcludeGL'
 
   # ――― Default ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   s.subspec 'DefaultPlugins' do |sp|
@@ -28,7 +29,21 @@ Pod::Spec.new do |s|
     sp.dependency 'CocoaLumberjack'
   end
 
+  s.subspec 'DefaultPluginsExcludeGL' do |sp|
+    sp.dependency 'MTHawkeye/DefaultPluginsWithoutLogAndGL'
+    sp.dependency 'CocoaLumberjack'
+  end
+
   s.subspec 'DefaultPluginsWithoutLog' do |sp|
+    sp.dependency 'MTHawkeye/DefaultPluginsWithoutLogAndGL'
+    sp.dependency 'MTHawkeye/GraphicsPlugins'
+
+    sp.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) MTH_INCLUDE_GLTRACE=1' }
+
+  end
+
+  # without GraphicsPlugins( GLTrace )
+  s.subspec 'DefaultPluginsWithoutLogAndGL' do |sp|
     sp.public_header_files = 'MTHawkeye/DefaultPlugins/**/*.{h}'
     sp.source_files  = 'MTHawkeye/DefaultPlugins/**/*.{h,m,mm}'
 
@@ -38,11 +53,11 @@ Pod::Spec.new do |s|
     sp.dependency 'MTHawkeye/MemoryPlugins'
     sp.dependency 'MTHawkeye/TimeConsumingPlugins'
     sp.dependency 'MTHawkeye/EnergyPlugins'
-    sp.dependency 'MTHawkeye/GraphicsPlugins'
     sp.dependency 'MTHawkeye/NetworkPlugins'
     sp.dependency 'MTHawkeye/StorageMonitorPlugins'
 
     sp.dependency 'MTHawkeye/FLEXExtension'
+
   end
 
   # ――― Basic ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

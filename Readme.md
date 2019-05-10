@@ -129,14 +129,15 @@ First, add an MTHawkeye reference to the project podfile:
   #< Only used during Debug
   #< Since the podfile dependency doesn't support environment configuration, 
   #< the dependent pods also need to be explicitly configured as Debug.
+  
   def hawkeye
-    pod 'MTHawkeye', :configurations => 'Debug' # use subspec if you don't want all the plugins or dependencies.
+    pod 'MTHawkeye', :configurations => 'Debug'
 
     pod 'FLEX', :configurations => ['Debug']
     pod 'FBRetainCycleDetector', :configurations => ['Debug']
     pod 'fishhook', :configurations => ['Debug']
     pod 'CocoaLumberjack', :configurations => ['Debug'] # CocoaLumberjack is optional, change to `MTHawkeye/DefaultPluginsWithoutLog` if don't need.
-    pod 'MTGLDebug', :configurations => ['Debug']
+    # pod 'MTGLDebug', :configurations => ['Debug'] # MTGLDebug is exclude by default, change `MTHawkeye` to `MTHawkeye/DefaultPlugins` to include.
 
     pod 'MTAppenderFile', :configurations => ['Debug']
   end
