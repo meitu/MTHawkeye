@@ -11,6 +11,7 @@
 
 
 #import "MTHawkeyeUserDefaults.h"
+#import "MTHawkeyeUtility.h"
 
 @interface MTHUserDefaultsObserverInfo : NSObject
 @property (nonatomic, assign) NSInteger observer;
@@ -24,7 +25,7 @@
 
 @interface MTHawkeyeUserDefaults ()
 
-@property (nonatomic, strong) NSUserDefaults *defaults;
+@property (nonatomic, strong) NSMutableDictionary *defaults;
 
 @property (nonatomic, strong) NSMapTable<NSString *, NSMutableArray *> *observerHandlers;
 
@@ -44,7 +45,8 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        _defaults = [[NSUserDefaults alloc] initWithSuiteName:@"com.meitu.hawkeye"];
+        NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:[self cachePath]];
+        _defaults = defaults ? defaults.mutableCopy : @{}.mutableCopy;
         _observerHandlers = [NSMapTable strongToStrongObjectsMapTable];
         _recordMemoryUsage = YES;
         _recordCPUUsage = YES;
@@ -114,15 +116,20 @@
 
 // MARK: -
 - (nullable id)objectForKey:(NSString *)defaultName {
-    return [self.defaults objectForKey:defaultName];
+    @synchronized(self.defaults) {
+        return [self.defaults objectForKey:defaultName];
+    }
 }
 
 - (void)setObject:(nullable id)value forKey:(NSString *)defaultName {
-    id oldValue = [self.defaults objectForKey:defaultName];
+    id oldValue = [self objectForKey:defaultName];
     if (oldValue == value)
         return;
 
-    [self.defaults setObject:value forKey:defaultName];
+    @synchronized(self.defaults) {
+        [self.defaults setObject:value forKey:defaultName];
+        [self.defaults writeToFile:[self cachePath] atomically:NO];
+    }
 
     @synchronized(self.observerHandlers) {
         NSEnumerator *keyEnumerator = [self.observerHandlers keyEnumerator];
@@ -137,6 +144,10 @@
             }
         }
     }
+}
+
+- (NSString *)cachePath {
+    return [[MTHawkeyeUtility hawkeyeStoreDirectory] stringByAppendingPathComponent:@"preferences"];
 }
 
 @end
