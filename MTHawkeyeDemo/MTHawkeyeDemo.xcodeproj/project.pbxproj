@@ -116,6 +116,10 @@
 		204C0CAB2230C338005CBC46 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/TimeConsumingDemo.storyboard; sourceTree = "<group>"; };
 		2053F1CC2074787E00ED57F8 /* CallTraceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CallTraceTests.m; sourceTree = "<group>"; };
 		205D1E4621EF205C0053735D /* MTHawkeyeUserDefaultsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MTHawkeyeUserDefaultsTests.m; sourceTree = "<group>"; };
+		20734EA622897F5A00EB985E /* mtha_allocate_logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mtha_allocate_logging.h; path = ../../MTHawkeye/MemoryPlugins/Allocations/Core/mtha_allocate_logging.h; sourceTree = "<group>"; };
+		20734EA722897F5A00EB985E /* mtha_backtrace_uniquing_table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mtha_backtrace_uniquing_table.h; path = ../../MTHawkeye/MemoryPlugins/Allocations/Core/mtha_backtrace_uniquing_table.h; sourceTree = "<group>"; };
+		20734EA822897F5A00EB985E /* mtha_splay_tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mtha_splay_tree.h; path = ../../MTHawkeye/MemoryPlugins/Allocations/Core/mtha_splay_tree.h; sourceTree = "<group>"; };
+		20734EA922897F9A00EB985E /* mtha_inner_allocate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mtha_inner_allocate.h; path = ../../MTHawkeye/MemoryPlugins/Allocations/Core/mtha_inner_allocate.h; sourceTree = "<group>"; };
 		207AFA072230C398003BE276 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/EnergyDemo.storyboard; sourceTree = "<group>"; };
 		207AFA0A2230C3D0003BE276 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/GraphicsDemo.storyboard; sourceTree = "<group>"; };
 		207AFA0C2230C3EE003BE276 /* GraphicsDemoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GraphicsDemoViewController.h; sourceTree = "<group>"; };
@@ -388,6 +392,19 @@
 			path = StorageDemo;
 			sourceTree = "<group>";
 		};
+		20734EA522897EDC00EB985E /* Allocations */ = {
+			isa = PBXGroup;
+			children = (
+				20734EA922897F9A00EB985E /* mtha_inner_allocate.h */,
+				20734EA622897F5A00EB985E /* mtha_allocate_logging.h */,
+				20734EA722897F5A00EB985E /* mtha_backtrace_uniquing_table.h */,
+				20734EA822897F5A00EB985E /* mtha_splay_tree.h */,
+				20E671472189D17C0078DAAF /* mtha_backtrace_uniquing_table_test.m */,
+				20E67149218ACEC90078DAAF /* mtha_splay_tree_test.m */,
+			);
+			name = Allocations;
+			sourceTree = "<group>";
+		};
 		207AFA192230C9C0003BE276 /* FacebookProjects */ = {
 			isa = PBXGroup;
 			children = (
@@ -628,6 +645,7 @@
 		20DC16B21ECDAAD500694EB9 /* MTHawkeyeDemoTests */ = {
 			isa = PBXGroup;
 			children = (
+				20734EA522897EDC00EB985E /* Allocations */,
 				20841F7C1F3B017B002CA705 /* NetworkMonitorViewModelTests.m */,
 				20841F7B1F3B017B002CA705 /* NetworkTransactionsFilterTests.m */,
 				20DC16B51ECDAAD500694EB9 /* Info.plist */,
@@ -635,8 +653,6 @@
 				203AA50B1F53A924006790E2 /* NetworkURLConnectionDelegateTests.m */,
 				20D186991F551C1100091A19 /* NetworkURLSessionDelegateTests.m */,
 				2053F1CC2074787E00ED57F8 /* CallTraceTests.m */,
-				20E671472189D17C0078DAAF /* mtha_backtrace_uniquing_table_test.m */,
-				20E67149218ACEC90078DAAF /* mtha_splay_tree_test.m */,
 				205D1E4621EF205C0053735D /* MTHawkeyeUserDefaultsTests.m */,
 				20BCE4252203E048009E5CCF /* MTHawkeyeClientTests.m */,
 			);
