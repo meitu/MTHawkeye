@@ -90,7 +90,6 @@ NSString *const MTNetworkHistoryViewCellIdentifier = @"kMTNetworkTransactionCell
         safeArea = UIEdgeInsetsInsetRect(self.bounds, self.safeAreaInsets);
     }
 #endif
-    CGFloat minX = CGRectGetMinX(safeArea);
     CGFloat maxX = CGRectGetMaxX(safeArea);
 
     const CGFloat left = 10.f;

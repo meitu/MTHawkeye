@@ -72,7 +72,7 @@ static const CGFloat kNetworkHistoryTimelineCellHeight = 20.f;
     CGRect collectionFrame = CGRectMake(minX, 0, CGRectGetWidth(safeArea), collectionViewHeight);
     self.collectionView.frame = collectionFrame;
     if ([self.collectionView.collectionViewLayout isKindOfClass:[UICollectionViewFlowLayout class]]) {
-        UICollectionViewFlowLayout *flowLayout = self.collectionView.collectionViewLayout;
+        UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
         if (CGRectGetWidth(self.collectionView.frame) - 20.f != flowLayout.itemSize.width) {
             flowLayout.itemSize = CGSizeMake(CGRectGetWidth(self.collectionView.frame) - 20.f, kNetworkHistoryTimelineCellHeight);
             [flowLayout invalidateLayout];
