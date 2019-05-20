@@ -199,7 +199,7 @@
         for (MTHLivingObjectInfo *insts in instsGroup.aliveInstances) {
             [instsListGroup addObject:@{
                 @"pre_holder_name" : insts.preHolderName ?: @"",
-                @"instance" : [NSString stringWithFormat:@"%p", insts.instance],
+                @"instance" : [NSString stringWithFormat:@"%p", (void *)insts.instance],
                 @"time" : [NSString stringWithFormat:@"%@", @(insts.recordTime)],
                 @"not_owner" : @(insts.theHodlerIsNotOwner),
             }];

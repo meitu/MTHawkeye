@@ -54,7 +54,7 @@
     gettimeofday(&now, NULL);
     NSTimeInterval nowTime = now.tv_sec + now.tv_usec * 1e-6;
 
-    NSString *key = [NSString stringWithFormat:@"%p", vc];
+    NSString *key = [NSString stringWithFormat:@"%p", (void *)vc];
 
     if (self.blacklistFilter && self.blacklistFilter(vc)) {
         [self.recordDict removeObjectForKey:key];

@@ -108,7 +108,7 @@
 }
 
 + (NSString *)keyForInstance:(id)object {
-    return [NSString stringWithFormat:@"%p", object];
+    return [NSString stringWithFormat:@"%p", (void *)object];
 }
 
 - (NSInteger)aliveInstanceCount {
