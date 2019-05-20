@@ -103,7 +103,7 @@ static NSString *const kMTHCallTraceIsNeedAlertKey = @"com.meitu.hawkeye.calltr
     if (@available(iOS 11.0, *)) {
     } else {
         UIEdgeInsets insets = UIEdgeInsetsMake([self mt_hawkeye_navigationBarTopLayoutGuide].length, 0, 0, 0);
-        if (insets.top != self.tableView.contentInset.top) {
+        if (fabs(insets.top - self.tableView.contentInset.top) < DBL_EPSILON) {
             self.tableView.contentInset = insets;
             self.tableView.scrollIndicatorInsets = insets;
             self.tableView.contentOffset = CGPointMake(0, -insets.top);

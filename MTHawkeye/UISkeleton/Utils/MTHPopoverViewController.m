@@ -45,7 +45,7 @@
     CGSize preferedSize = self.contentViewController.preferredContentSize;
     CGSize restrictedSize = CGSizeApplyAffineTransform([UIScreen mainScreen].bounds.size, CGAffineTransformMakeScale(0.95, 0.8));
     CGSize actualSize;
-    if (preferedSize.height == 0 || preferedSize.width == 0) {
+    if (preferedSize.height < DBL_EPSILON || preferedSize.width < DBL_EPSILON) {
         actualSize = restrictedSize;
     } else {
         actualSize = CGSizeMake(MIN(preferedSize.width, restrictedSize.width), MIN(preferedSize.height, restrictedSize.height));

@@ -184,7 +184,7 @@
         NSTimeInterval end = start + item.duration;
         if (end > focusOnTransStartTime) {
             [onViewIndexArray insertObject:@(item.requestIndex) atIndex:0];
-        } else if (item.duration == 0) {
+        } else if (item.duration < DBL_EPSILON) {
             // 未完成的请求
             if (item.transactionState != MTHNetworkTransactionStateFailed && item.transactionState != MTHNetworkTransactionStateFinished) {
                 [onViewIndexArray insertObject:@(item.requestIndex) atIndex:0];

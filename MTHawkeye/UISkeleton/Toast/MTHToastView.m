@@ -444,7 +444,7 @@ static MTHToastWindow *sharedWindow;
         subView.hidden = NO;
     }
     CGFloat expandHeight = (self.fixedHeight + self.calculatedHeight - self.shortContentHeight + 10 < kScreenHeight - 16) ? (self.fixedHeight + self.calculatedHeight - self.shortContentHeight + 10) : (kScreenHeight - 16);
-    if (expandHeight == kScreenHeight - 16) {
+    if (fabs(expandHeight - (kScreenHeight - 16)) < FLT_EPSILON) {
         NSLayoutConstraint *bottomContraint = [NSLayoutConstraint constraintWithItem:self.contentLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-38.0];
         [self addConstraint:bottomContraint];
     }

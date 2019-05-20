@@ -152,7 +152,7 @@
 
         // call our delegate of the directory change
         NSTimeInterval eclipse = [[NSDate dateWithTimeIntervalSinceNow:0] timeIntervalSince1970] - strongSelf.taskTime;
-        if (strongSelf.taskTime == 0 || eclipse > strongSelf.changeReportInterval) {
+        if (fabs(strongSelf.taskTime) < DBL_EPSILON || eclipse > strongSelf.changeReportInterval) {
             strongSelf.reportCount++;
             strongSelf.taskTime = [[NSDate dateWithTimeIntervalSinceNow:0] timeIntervalSince1970];
             strongSelf.folderSize = [[strongSelf class] fileSizeAtPath:strongSelf.dirPath] ?: 0;

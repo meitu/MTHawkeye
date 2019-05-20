@@ -918,7 +918,7 @@ typedef NS_ENUM(NSInteger, MTHInternalTags) {
         minimumValue = [self calculateMinimumPointValue];
         maximumValue = [self calculateMaximumPointValue];
 
-        CGFloat numberOfLabels;
+        NSInteger numberOfLabels;
         if ([self.delegate respondsToSelector:@selector(numberOfYAxisLabelsOnLineGraph:)]) {
             numberOfLabels = [self.delegate numberOfYAxisLabelsOnLineGraph:self];
         } else
@@ -1558,7 +1558,7 @@ typedef NS_ENUM(NSInteger, MTHInternalTags) {
                 } else {
                     dotValue = 0;
                 }
-                if (dotValue == MTHNullGraphValue) {
+                if (fabs(dotValue - MTHNullGraphValue) < DBL_EPSILON) {
                     continue;
                 }
 
@@ -1599,7 +1599,7 @@ typedef NS_ENUM(NSInteger, MTHInternalTags) {
                 } else
                     dotValue = 0;
 
-                if (dotValue == MTHNullGraphValue) {
+                if (fabs(dotValue - MTHNullGraphValue) < DBL_EPSILON) {
                     continue;
                 }
                 if (dotValue < minValue) {
@@ -1612,7 +1612,7 @@ typedef NS_ENUM(NSInteger, MTHInternalTags) {
 }
 
 - (CGFloat)yPositionForDotValue:(CGFloat)dotValue {
-    if (dotValue == MTHNullGraphValue) {
+    if (fabs(dotValue - MTHNullGraphValue) < DBL_EPSILON) {
         return MTHNullGraphValue;
     }
 
@@ -1634,7 +1634,7 @@ typedef NS_ENUM(NSInteger, MTHInternalTags) {
         }
     }
 
-    if (self.minValue == self.maxValue && self.autoScaleYAxis == YES)
+    if (fabs(self.minValue - self.maxValue) < DBL_EPSILON && self.autoScaleYAxis == YES)
         positionOnYAxis = self.frame.size.height / 2;
     else if (self.autoScaleYAxis == YES)
         positionOnYAxis = ((self.frame.size.height - padding / 2) - ((dotValue - self.minValue) / ((self.maxValue - self.minValue) / (self.frame.size.height - padding)))) + self.XAxisLabelYOffset / 2;

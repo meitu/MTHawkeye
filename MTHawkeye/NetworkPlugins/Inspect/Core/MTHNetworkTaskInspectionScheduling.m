@@ -331,7 +331,7 @@ NSString *kMTHNetworkTaskAdviceKeyParallelRequestIndexList = @"MTHNetworkTaskAdv
         }
 
         // 如果 HTTP/2 & priority 已设置，预期行为
-        if (isUsingHttp2 && (transaction.sessionTaskAPIUsage.taskPriority != NSURLSessionTaskPriorityDefault)) {
+        if (isUsingHttp2 && (fabs(transaction.sessionTaskAPIUsage.taskPriority - NSURLSessionTaskPriorityDefault) < DBL_EPSILON)) {
             return nil;
         }
 

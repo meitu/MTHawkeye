@@ -63,7 +63,7 @@
     @autoreleasepool {
         for (int i = 0; i < self.arrayOfPoints.count; i++) {
             CGPoint value = CGPointMake(xIndexScale * i, [self.arrayOfPoints[i] CGFloatValue]);
-            if (value.y != MTHNullGraphValue || !self.interpolateNullValues) {
+            if (fabs(value.y - MTHNullGraphValue) < DBL_EPSILON || !self.interpolateNullValues) {
                 [self.points addObject:[NSValue valueWithCGPoint:value]];
             }
         }
@@ -170,7 +170,7 @@ static CGPoint controlPointForPoints(CGPoint p1, CGPoint p2) {
         pathAnimation.duration = self.animationTime;
         pathAnimation.fromValue = [NSNumber numberWithFloat:0.0f];
         if (shouldHalfOpacity == YES)
-            pathAnimation.toValue = [NSNumber numberWithFloat:self.lineAlpha == 0 ? 0.1 : self.lineAlpha / 2];
+            pathAnimation.toValue = [NSNumber numberWithFloat:(self.lineAlpha < FLT_EPSILON) ? 0.1 : self.lineAlpha / 2];
         else
             pathAnimation.toValue = [NSNumber numberWithFloat:self.lineAlpha];
         [shapeLayer addAnimation:pathAnimation forKey:@"opacity"];

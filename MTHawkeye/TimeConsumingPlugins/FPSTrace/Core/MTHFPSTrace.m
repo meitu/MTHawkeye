@@ -140,7 +140,7 @@
 // MARK: - tick
 - (void)tick:(CADisplayLink *)link {
     static NSInteger signpostId = 0;
-    if (_lastTime == 0) {
+    if (_lastTime < DBL_EPSILON) {
         _lastTime = link.timestamp;
         MTHSignpostStartCustom(999, signpostId, 0);
         return;

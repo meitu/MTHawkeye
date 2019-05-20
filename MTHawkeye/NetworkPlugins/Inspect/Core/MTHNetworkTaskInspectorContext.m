@@ -143,7 +143,7 @@
         NSTimeInterval end = start + item.duration;
         if (end > transStartTime) {
             [tempParallelTransactions addObject:item];
-        } else if (item.duration == 0) {
+        } else if (item.duration < DBL_EPSILON) {
             // 未完成的请求
             if (item.transactionState != MTHNetworkTransactionStateFailed && item.transactionState != MTHNetworkTransactionStateFinished) {
                 [tempParallelTransactions addObject:item];

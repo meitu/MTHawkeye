@@ -167,7 +167,7 @@
     };
     editor.valueChangedHandler = ^BOOL(NSString *_Nonnull newValue) {
         float value = newValue.floatValue;
-        if (value != [MTHawkeyeUserDefaults shared].networkCacheLimitInMB)
+        if (fabsf(value - [MTHawkeyeUserDefaults shared].networkCacheLimitInMB) < FLT_EPSILON)
             [MTHawkeyeUserDefaults shared].networkCacheLimitInMB = value;
         return YES;
     };

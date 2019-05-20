@@ -120,7 +120,7 @@
     };
     editor.valueChangedHandler = ^BOOL(NSString *_Nonnull newValue) {
         CGFloat value = newValue.floatValue / 100.f;
-        if (value != [MTHawkeyeUserDefaults shared].cpuTraceHighLoadThreshold)
+        if (fabs(value - [MTHawkeyeUserDefaults shared].cpuTraceHighLoadThreshold) < DBL_EPSILON)
             [MTHawkeyeUserDefaults shared].cpuTraceHighLoadThreshold = value;
         return YES;
     };
@@ -140,7 +140,7 @@
     };
     editor.valueChangedHandler = ^BOOL(NSString *_Nonnull newValue) {
         CGFloat value = newValue.floatValue / 100.f;
-        if (value != [MTHawkeyeUserDefaults shared].cpuTraceStackFramesDumpThreshold)
+        if (fabs(value - [MTHawkeyeUserDefaults shared].cpuTraceStackFramesDumpThreshold) < DBL_EPSILON)
             [MTHawkeyeUserDefaults shared].cpuTraceStackFramesDumpThreshold = value;
         return YES;
     };
@@ -160,7 +160,7 @@
     };
     editor.valueChangedHandler = ^BOOL(NSString *_Nonnull newValue) {
         CGFloat value = newValue.floatValue;
-        if (value != [MTHawkeyeUserDefaults shared].cpuTraceHighLoadLastingLimit)
+        if (fabs(value - [MTHawkeyeUserDefaults shared].cpuTraceHighLoadLastingLimit) < DBL_EPSILON)
             [MTHawkeyeUserDefaults shared].cpuTraceHighLoadLastingLimit = value;
         return YES;
     };
@@ -180,7 +180,7 @@
     };
     editor.valueChangedHandler = ^BOOL(NSString *_Nonnull newValue) {
         CGFloat value = newValue.floatValue;
-        if (value != [MTHawkeyeUserDefaults shared].cpuTraceCheckIntervalIdle)
+        if (fabs(value - [MTHawkeyeUserDefaults shared].cpuTraceCheckIntervalIdle) < DBL_EPSILON)
             [MTHawkeyeUserDefaults shared].cpuTraceCheckIntervalIdle = value;
         return YES;
     };
@@ -200,7 +200,7 @@
     };
     editor.valueChangedHandler = ^BOOL(NSString *_Nonnull newValue) {
         CGFloat value = newValue.floatValue;
-        if (value != [MTHawkeyeUserDefaults shared].cpuTraceCheckIntervalBusy)
+        if (fabs(value - [MTHawkeyeUserDefaults shared].cpuTraceCheckIntervalBusy) < DBL_EPSILON)
             [MTHawkeyeUserDefaults shared].cpuTraceCheckIntervalBusy = value;
         return YES;
     };

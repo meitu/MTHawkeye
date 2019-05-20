@@ -125,7 +125,7 @@ NSInteger gMTHNetworkStatDefaultSamplesToQualityChange = 3;
 
 - (void)addBandwidthWithBytes:(int64_t)bytes duration:(NSTimeInterval)timeInMs {
     // ignore garbage values
-    if (timeInMs == 0 || bytes < gMTHNetworkStatBytesLowerBound || bytes * 1.0 / timeInMs * kBytesToBits < gMTHNetworkStatBandwidthLowerBound) {
+    if (timeInMs < DBL_EPSILON || bytes < gMTHNetworkStatBytesLowerBound || bytes * 1.0 / timeInMs * kBytesToBits < gMTHNetworkStatBandwidthLowerBound) {
         return;
     }
 

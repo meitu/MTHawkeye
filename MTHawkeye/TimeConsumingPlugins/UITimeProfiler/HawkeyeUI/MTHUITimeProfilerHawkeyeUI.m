@@ -179,7 +179,7 @@
     };
     editor.valueChangedHandler = ^BOOL(NSString *_Nonnull newValue) {
         CGFloat value = newValue.floatValue;
-        if (value != [MTHawkeyeUserDefaults shared].objcCallTraceTimeThresholdInMS)
+        if (fabs(value - [MTHawkeyeUserDefaults shared].objcCallTraceTimeThresholdInMS) < DBL_EPSILON)
             [MTHawkeyeUserDefaults shared].objcCallTraceTimeThresholdInMS = value;
         return YES;
     };

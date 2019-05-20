@@ -54,7 +54,7 @@
         mth_addObserver:self
                  forKey:NSStringFromSelector(@selector(anrThresholdInSeconds))
             withHandler:^(id _Nullable oldValue, id _Nullable newValue) {
-                if ([oldValue floatValue] != [newValue floatValue])
+                if (fabsf([oldValue floatValue] - [newValue floatValue]) < FLT_EPSILON)
                     [MTHANRTrace shared].thresholdInSeconds = [newValue floatValue];
             }];
 }
