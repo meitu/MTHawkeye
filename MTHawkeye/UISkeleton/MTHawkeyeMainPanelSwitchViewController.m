@@ -34,7 +34,7 @@
 
 - (instancetype)initWithSelectedIndexPath:(NSIndexPath *)selectedIndexPath
                                  delegate:(id<MTHawkeyeMainPanelSwitcherDelegate>)delegate {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _selectedIndexPath = selectedIndexPath;
         _highlightIndexPath = selectedIndexPath;
         _delegate = delegate;

@@ -60,7 +60,7 @@
 }
 
 - (instancetype)initWithANRMonitor:(MTHANRTrace *)anrMonitor {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         self.anrMonitor = anrMonitor;
         [self.anrMonitor addDelegate:self];
         self.recordTitles = @{}.mutableCopy;

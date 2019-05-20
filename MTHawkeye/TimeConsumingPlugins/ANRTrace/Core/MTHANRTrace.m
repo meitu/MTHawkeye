@@ -34,7 +34,7 @@
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _thresholdInSeconds = 0.4;
     }
     return self;

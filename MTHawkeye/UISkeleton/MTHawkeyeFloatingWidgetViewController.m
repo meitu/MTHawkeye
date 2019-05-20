@@ -29,7 +29,7 @@ BOOL mthawkeye_disableRotatingAnimation = NO;
 @implementation MTHawkeyeFloatingWidgetViewController
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
     }
     return self;
 }

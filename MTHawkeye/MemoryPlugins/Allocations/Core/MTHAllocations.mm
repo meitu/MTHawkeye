@@ -105,7 +105,7 @@ void mtha_cfobject_alloc_set_last_alloc_event_name_function(void *ptr, const cha
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _mallocReportThresholdInBytes = 1024 * 500;  // 500KB
         _vmReportThresholdInBytes = 1024 * 1024 * 1; // 1MB
     }

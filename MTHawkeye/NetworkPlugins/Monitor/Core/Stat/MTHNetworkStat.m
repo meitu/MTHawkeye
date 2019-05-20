@@ -28,7 +28,7 @@
 @implementation MTHawkeyeNetworkExponentialGeometricAverage
 
 - (instancetype)initWithDecayConstant:(CGFloat)decayConstant {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _decayConstant = decayConstant;
         _cutover = (decayConstant == 0.f) ? NSIntegerMax : ceil(1 / decayConstant);
         _value = -1.f;
@@ -114,7 +114,7 @@ NSInteger gMTHNetworkStatDefaultSamplesToQualityChange = 3;
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _downloadBandwidth = [[MTHawkeyeNetworkExponentialGeometricAverage alloc] initWithDecayConstant:gMTHNetworkStatDefaultDecayConstant];
         _initiateStateChange = NO;
         _connQuality = MTHawkeyeNetworkConnectionQualityUnknown;

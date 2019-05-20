@@ -46,7 +46,7 @@
 
 - (instancetype)initWithLivingInstancesGroupInClass:(MTHLivingObjectGroupInClass *)groupInClass
                                     groupsInTrigger:(NSArray<MTHLivingObjectGroupInTrigger *> *)groupsInTrigger {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _instancesGroups = groupsInTrigger;
         _instancesGroupInClass = groupInClass;
 

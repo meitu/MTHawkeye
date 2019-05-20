@@ -22,16 +22,9 @@
 
 @implementation MTHawkeyeSettingViewController
 
-//- (instancetype)initWithTitle:(NSString *)title {
-//    if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-//
-//    }
-//    return self;
-//}
-
 - (instancetype)initWithTitle:(NSString *)title
               viewModelEntity:(MTHawkeyeSettingTableEntity *)entity {
-    if (self = [super initWithStyle:UITableViewStyleGrouped]) {
+    if ((self = [super initWithStyle:UITableViewStyleGrouped])) {
         self.title = title;
         self.viewModelEntity = entity;
     }

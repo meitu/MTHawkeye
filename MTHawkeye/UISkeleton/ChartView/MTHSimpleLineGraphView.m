@@ -1908,7 +1908,7 @@ static const CGFloat rangePickViewHeight = 20;
 @implementation MTHTouchLineView
 
 - (instancetype)initWithFrame:(CGRect)frame labelTopOffset:(CGFloat)topOffset {
-    if (self = [super initWithFrame:frame]) {
+    if ((self = [super initWithFrame:frame])) {
         //
         CGRect rect = CGRectMake(3, topOffset, 100, 15);
         self.numLabel = [[UILabel alloc] initWithFrame:rect];

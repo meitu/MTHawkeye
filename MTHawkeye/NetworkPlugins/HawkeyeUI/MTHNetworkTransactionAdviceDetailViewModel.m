@@ -26,7 +26,7 @@
 @implementation MTHNetworkTransactionAdviceDetailViewModel
 
 - (instancetype)initWithRequestIndex:(NSInteger)index relatedRequestIndexes:(NSIndexSet *)indexes {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         // 把问题所在的 request 也加入列表
         NSMutableIndexSet *combineIndexes = [indexes mutableCopy];
         [combineIndexes addIndex:index];

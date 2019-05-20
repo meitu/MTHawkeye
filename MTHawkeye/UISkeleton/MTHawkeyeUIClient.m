@@ -94,7 +94,7 @@ const NSString *kMTHFloatingWidgetRaiseWarningParamsPanelIDKey = @"related-panel
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _floatingWidgetsDataBuild = NO;
 
         _warningRelatedPanelIDs = @[].mutableCopy;

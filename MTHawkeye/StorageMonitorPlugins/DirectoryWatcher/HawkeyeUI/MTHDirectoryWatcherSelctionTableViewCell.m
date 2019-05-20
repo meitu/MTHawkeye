@@ -19,14 +19,14 @@
 @implementation MTHDirectoryWatcherSelctionTableViewCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+    if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
         [self addSubview:self.watchingSwitch];
     }
     return self;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
+    if ((self = [super initWithFrame:frame])) {
         [self addSubview:self.watchingSwitch];
     }
     return self;

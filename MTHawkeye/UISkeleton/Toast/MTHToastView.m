@@ -72,7 +72,7 @@ static MTHToastWindow *sharedWindow;
 }
 
 - (instancetype)initViewWithConstarints {
-    self = [super init];
+    (self = [super init]);
     if (self) {
         [self makeBackgroundViewConstraints];
         [self makeTitleLabelConstraints];

@@ -33,7 +33,7 @@
 @synthesize widgetHidden = _widgetHidden;
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _widgetHidden = [self widgetHiddenDefault];
         [[MTHFPSTrace shared] addDelegate:self];
     }

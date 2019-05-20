@@ -127,7 +127,7 @@
 @implementation MTHNetworkTaskInspectionWithResult
 
 - (instancetype)initWithInspection:(MTHNetworkTaskInspection *)inspection {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _inspection = inspection;
         _name = inspection.name;
     }

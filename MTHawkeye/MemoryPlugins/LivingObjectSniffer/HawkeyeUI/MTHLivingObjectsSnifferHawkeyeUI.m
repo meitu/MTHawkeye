@@ -34,7 +34,7 @@
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         [[MTHLivingObjectSniffService shared].sniffer addDelegate:self];
     }
     return self;

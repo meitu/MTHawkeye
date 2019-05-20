@@ -29,7 +29,7 @@
 
 - (instancetype)initWithSettingPlugins:(NSArray<id<MTHawkeyeSettingUIPlugin>> *)settingPlugins
                floatingWidgetSwitchers:(NSArray<id<MTHawkeyeFloatingWidgetDisplaySwitcherPlugin>> *)floatingWidgetSwitchers {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         self.plugins = settingPlugins.mutableCopy;
         self.floatingWidgetCells = floatingWidgetSwitchers.mutableCopy;
     }

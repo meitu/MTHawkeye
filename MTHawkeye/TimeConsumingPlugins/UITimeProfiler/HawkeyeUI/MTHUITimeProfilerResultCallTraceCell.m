@@ -40,7 +40,7 @@ static CGFloat kMarginHorz = 20.f;
 @implementation MTHUITimeProfilerResultCallTraceCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+    if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
         [self.contentView addSubview:self.timeCostLabel];
 
         [self.contentView addSubview:self.scrollView];

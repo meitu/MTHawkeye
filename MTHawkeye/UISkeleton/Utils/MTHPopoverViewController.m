@@ -21,7 +21,7 @@
 @implementation MTHPopoverViewController
 
 - (instancetype)initWithContentViewController:(UIViewController *)contentViewController fromSourceView:(UIView *)sourceView {
-    if (self = [super initWithRootViewController:contentViewController]) {
+    if ((self = [super initWithRootViewController:contentViewController])) {
         _contentViewController = contentViewController;
         self.modalPresentationStyle = UIModalPresentationPopover;
         self.popoverPresentationController.delegate = self;

@@ -81,7 +81,7 @@
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         self.checkIntervalIdle = 1;
         self.checkIntervalBusy = 0.3;
         self.highLoadLastingLimit = 60;

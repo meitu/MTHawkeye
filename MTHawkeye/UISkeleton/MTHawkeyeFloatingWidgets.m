@@ -25,7 +25,7 @@
 @implementation MTHawkeyeFloatingWidgets
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _plugins = @[].mutableCopy;
         _cells = @[].mutableCopy;
         _visibleCells = @[].mutableCopy;
@@ -34,7 +34,7 @@
 }
 
 - (instancetype)initWithWidgets:(NSArray<id<MTHawkeyeFloatingWidgetPlugin>> *)widgets {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _plugins = @[].mutableCopy;
         _cells = @[].mutableCopy;
         _visibleCells = @[].mutableCopy;

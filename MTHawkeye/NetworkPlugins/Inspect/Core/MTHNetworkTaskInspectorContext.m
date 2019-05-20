@@ -18,7 +18,7 @@
 @implementation MTHTopLevelDomain
 
 - (instancetype)initWithString:(NSString *)domainString {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _domainString = domainString;
         _secondLevelDomains = [NSMutableSet setWithCapacity:1];
     }
@@ -56,7 +56,7 @@
 @implementation MTHNetworkTaskInspectorContext
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _transactions = @[];
         _existTransactionsKey = [NSMutableSet set];
     }

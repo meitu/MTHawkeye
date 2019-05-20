@@ -36,7 +36,7 @@
 @implementation MTHNetworkMonitorViewModel
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _requestIndexFocusOnCurrently = -1;
         _maxFollowingWhenFocusNotResponse = 10;
         _advicesDict = @{}.mutableCopy;

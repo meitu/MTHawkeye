@@ -48,7 +48,7 @@
 @implementation MTHLivingObjectSniffer
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _objectClassNameSet = [[NSMutableOrderedSet alloc] init];
         _mutableGroups = [[NSMutableArray alloc] init];
         _delegates = [NSHashTable weakObjectsHashTable];

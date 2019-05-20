@@ -38,7 +38,7 @@ static const CGFloat kNetworkHistoryTimelineCellHeight = 20.f;
 @implementation MTHNetworkWaterfallViewController
 
 - (instancetype)initWithViewModel:(id<MTHNetworkWaterfallDataSource>)dataSource {
-    if (self = [super initWithNibName:nil bundle:nil]) {
+    if ((self = [super initWithNibName:nil bundle:nil])) {
         self.dataSource = dataSource;
     }
     return self;

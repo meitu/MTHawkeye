@@ -34,7 +34,7 @@ typedef void (^MTHANRThreadResultBlock)(double roughBlockTimeInterval, MTHANRRec
 @implementation MTHAppPingThread
 
 - (instancetype)init {
-    self = [super init];
+    (self = [super init]);
     if (self) {
         self.semaphore = dispatch_semaphore_create(0);
         self.isMainThreadBlock = NO;
@@ -151,7 +151,7 @@ typedef void (^MTHANRThreadResultBlock)(double roughBlockTimeInterval, MTHANRRec
 }
 
 - (instancetype)initWithObserveResultHandler:(MTHANRObserveResultHandler)detectedHandler {
-    self = [super init];
+    (self = [super init]);
     if (self) {
         self.detectedHandler = detectedHandler;
     }

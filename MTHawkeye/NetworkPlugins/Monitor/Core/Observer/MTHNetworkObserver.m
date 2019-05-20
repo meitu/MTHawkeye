@@ -455,7 +455,7 @@ static BOOL networkObserverEnabled = NO;
 
 // MARK: - Initialization
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         self.requestStatesForRequestIDs = [[NSMutableDictionary alloc] init];
         self.queue = dispatch_queue_create("com.meitu.hawkeye.network.observer", DISPATCH_QUEUE_SERIAL);
     }
@@ -735,7 +735,7 @@ static char const *const kMTHNetworkRequestIDKey = "kMTHawkeyeNetworkRequestIDKe
     // 记录 SessionTask 相关 API 使用情况，用于后续的网络侦测建议
     MTHNetworkTaskAPIUsage *taskAPIUsage = [[MTHNetworkTaskAPIUsage alloc] init];
     taskAPIUsage.taskPriority = task.priority;
-    taskAPIUsage.taskSessionIdentify = [NSString stringWithFormat:@"%p", session];
+    taskAPIUsage.taskSessionIdentify = [NSString stringWithFormat:@"%p", (void *)session];
 
     MTHNetworkTaskSessionConfigAPIUsage *sessionCfgAPIUsage = [[MTHNetworkTaskSessionConfigAPIUsage alloc] init];
     sessionCfgAPIUsage.sessionConfigShouldUsePipeliningEnabled = session.configuration.HTTPShouldUsePipelining;

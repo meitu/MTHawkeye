@@ -37,7 +37,7 @@
 }
 
 - (instancetype)init {
-    self = [super init];
+    (self = [super init]);
     if (self) {
         self.launchRecord = [[MTHAppLaunchRecord alloc] init];
         self.launchRecord.appLaunchTime = [MTHawkeyeUtility appLaunchedTime];

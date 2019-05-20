@@ -42,7 +42,7 @@ using namespace MTHAllocation;
 }
 
 - (instancetype)initWithRecordDir:(NSString *)rootDir {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _recordDir = rootDir;
     }
     return self;

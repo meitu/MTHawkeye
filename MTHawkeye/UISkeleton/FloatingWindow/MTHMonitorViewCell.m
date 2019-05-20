@@ -33,14 +33,14 @@
 @implementation MTHMonitorViewCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+    if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
         [self setup];
     }
     return self;
 }
 
 - (instancetype)init {
-    if (self = [self initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hawkeye-monitor-cell"]) {
+    if ((self = [self initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hawkeye-monitor-cell"])) {
     }
     return self;
 }

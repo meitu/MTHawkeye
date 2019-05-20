@@ -26,7 +26,7 @@
 @implementation MTHawkeyeMainPanels
 
 - (instancetype)initWithMainPanelPlugins:(NSArray<id<MTHawkeyeMainPanelPlugin>> *)plugins {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         for (id<MTHawkeyeMainPanelPlugin> plugin in plugins)
             [self checkPluginImplement:plugin];
 

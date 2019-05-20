@@ -34,7 +34,7 @@
 @implementation MTHawkeyeMainPanelTitleView
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.font = [UIFont systemFontOfSize:17];
         _titleLabel.textColor = [UIColor colorWithRed:0.0118 green:0.0118 blue:0.0118 alpha:1];
@@ -117,7 +117,7 @@ static NSString *const kPreSelKey = @"com.meitu.hawkeye.pre-select-panel-indexpa
 - (instancetype)initWithSelectedIndexPath:(NSIndexPath *)indexPath
                                datasource:(id<MTHawkeyeMainPanelViewControllerDatasource>)datasource
                                  delegate:(id<MTHawkeyeMainPanelSwitcherDelegate>)delegate {
-    if (self = [super initWithNibName:nil bundle:nil]) {
+    if ((self = [super initWithNibName:nil bundle:nil])) {
         self.selectedIndexPath = [NSIndexPath indexPathForRow:-1 inSection:-1];
         if (indexPath.section >= 0 && indexPath.row >= 0) {
             self.selectedIndexPath = indexPath;

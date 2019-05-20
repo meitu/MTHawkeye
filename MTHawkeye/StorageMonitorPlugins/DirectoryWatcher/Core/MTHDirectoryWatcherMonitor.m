@@ -26,7 +26,7 @@
 }
 
 - (instancetype)initWithPath:(NSString *)path triggerLimitTimes:(NSInteger)triggerLimitTimes {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _path = path;
         _triggerLimitTimes = triggerLimitTimes;
         _fileSize = (NSUInteger)[MTHDirectoryWatcher fileSizeAtPath:_path];
@@ -55,7 +55,7 @@
 @implementation MTHDirectoryWatcherMonitor
 
 - (id)init {
-    self = [super init];
+    (self = [super init]);
     if (self) {
         _watchingObjects = [NSMutableArray array];
         _lock = [[NSLock alloc] init];

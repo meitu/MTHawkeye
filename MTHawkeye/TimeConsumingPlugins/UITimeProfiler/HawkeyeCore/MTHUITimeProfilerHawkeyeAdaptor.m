@@ -44,7 +44,7 @@ BOOL mthawkeye_VCTraceIgnoreSystemVC = YES;
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         __weak __typeof(self) weakSelf = self;
         [[MTHawkeyeUserDefaults shared]
             mth_addObserver:self

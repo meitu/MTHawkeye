@@ -21,7 +21,7 @@
 @implementation MTHNetworkTaskInspection
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _enabled = YES;
     }
     return self;

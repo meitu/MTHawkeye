@@ -29,7 +29,7 @@
 @implementation MTHNetworkRecorder
 
 - (instancetype)init {
-    self = [super init];
+    (self = [super init]);
     if (self) {
         self.networkTransactionsForRequestIdentifiers = [NSMutableDictionary dictionary];
         self.delegates = [NSHashTable weakObjectsHashTable];

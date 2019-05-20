@@ -70,7 +70,7 @@ NSString *const kMTHawkeyeCollectionKeyValueRecordsFileName = @"records";
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _storeDirectory = [MTHawkeyeUtility currentStorePath];
         [self rebuildHawkeyeStorageDirectoryIfNeed];
 

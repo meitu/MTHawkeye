@@ -40,7 +40,7 @@
 @implementation MTHUITImeProfilerResultEventCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+    if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
         [self.contentView addSubview:self.scrollView];
         [self.scrollView setUserInteractionEnabled:NO];
         [self.contentView addGestureRecognizer:self.scrollView.panGestureRecognizer];

@@ -17,7 +17,7 @@
 @implementation MTHNetworkTransactionsURLFilter
 
 - (instancetype)initWithParamsString:(NSString *)paramsString {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         [self parseParamsString:paramsString];
     }
     return self;

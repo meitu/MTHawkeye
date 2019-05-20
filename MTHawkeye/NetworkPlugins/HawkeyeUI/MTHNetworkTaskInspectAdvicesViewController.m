@@ -34,7 +34,7 @@
 
 - (instancetype)initWithTaskInspectionResult:(MTHNetworkTaskInspectionWithResult *)inspectionResult
                       advicesForTransactions:(NSDictionary<NSString *, NSArray<MTHNetworkTaskAdvice *> *> *)advicesDict {
-    if (self = [super initWithStyle:UITableViewStylePlain]) {
+    if ((self = [super initWithStyle:UITableViewStylePlain])) {
         _inspectionWithResult = inspectionResult;
         _advicesDict = advicesDict;
     }

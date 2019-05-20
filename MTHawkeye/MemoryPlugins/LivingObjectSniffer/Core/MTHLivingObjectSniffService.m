@@ -34,7 +34,7 @@
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _delaySniffInSeconds = 3.f;
     }
     return self;

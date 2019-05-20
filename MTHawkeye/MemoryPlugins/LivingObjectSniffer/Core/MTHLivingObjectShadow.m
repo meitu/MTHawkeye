@@ -19,7 +19,7 @@ BOOL mthawkeye_livingObjectsSnifferNSFoundationContainerEnabled = NO;
 @implementation MTHLivingObjectShadow
 
 - (instancetype)initWithTarget:(id)object {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _target = object;
         _createAt = CFAbsoluteTimeGetCurrent();
     }
@@ -62,7 +62,7 @@ BOOL mthawkeye_livingObjectsSnifferNSFoundationContainerEnabled = NO;
 @implementation MTHLivingObjectShadowTrigger
 
 - (instancetype)initWithType:(MTHLivingObjectShadowTriggerType)type {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _type = type;
     }
     return self;
@@ -78,7 +78,7 @@ BOOL mthawkeye_livingObjectsSnifferNSFoundationContainerEnabled = NO;
     else
         type = MTHLivingObjectShadowTriggerTypeUnknown;
 
-    if (self = [self initWithType:type]) {
+    if ((self = [self initWithType:type])) {
         _startTime = [dict[@"start"] doubleValue];
         _endTime = [dict[@"end"] doubleValue];
         _name = dict[@"name"] ?: @"";

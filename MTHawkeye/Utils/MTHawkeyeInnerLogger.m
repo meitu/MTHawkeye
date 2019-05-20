@@ -34,7 +34,7 @@ typedef NS_ENUM(NSInteger, MTHawkeyeInnerDDLogFormatterType) {
 @implementation MTHawkeyeInnerDDLogFormatter
 
 - (instancetype)initWithType:(MTHawkeyeInnerDDLogFormatterType)type {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _type = type;
         _dateFormatter = [[NSDateFormatter alloc] init];
         [_dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4]; // 10.4+ style
@@ -79,7 +79,7 @@ typedef NS_ENUM(NSInteger, MTHawkeyeInnerDDLogFormatterType) {
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _logPath = [MTHawkeyeUtility currentStorePath];
 
         if ([[NSFileManager defaultManager] fileExistsAtPath:_logPath]) {

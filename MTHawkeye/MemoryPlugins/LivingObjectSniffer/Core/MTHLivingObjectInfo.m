@@ -46,7 +46,7 @@
 @implementation MTHLivingObjectGroupInClass
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _instanceKeySet = [[NSMutableOrderedSet alloc] init];
         _instanceCounterDict = [NSMutableDictionary dictionary];
         _detectedCount = 0;

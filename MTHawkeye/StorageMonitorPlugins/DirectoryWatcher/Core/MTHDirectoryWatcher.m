@@ -47,7 +47,7 @@
 @implementation MTHDirectoryWatcher
 
 - (instancetype)init {
-    self = [super init];
+    (self = [super init]);
 
     dirFD = -1;
     kq = -1;

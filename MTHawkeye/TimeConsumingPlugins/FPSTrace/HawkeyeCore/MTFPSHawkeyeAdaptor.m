@@ -31,7 +31,7 @@
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _fpsMonitorOn = [self fpsMonitorSetOnDefault];
 
         __weak __typeof(self) weakSelf = self;

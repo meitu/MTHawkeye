@@ -32,7 +32,7 @@
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         [[MTHANRTrace shared] addDelegate:self];
     }
     return self;

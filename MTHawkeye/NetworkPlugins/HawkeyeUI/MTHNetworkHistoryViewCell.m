@@ -36,7 +36,7 @@ NSString *const MTNetworkHistoryViewCellIdentifier = @"kMTNetworkTransactionCell
 @implementation MTHNetworkHistoryViewCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+    if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
         self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
         self.detailBtnView = [[UIButton alloc] init];

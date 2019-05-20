@@ -38,7 +38,7 @@ static size_t _openGLESResourceMemorySize;
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         [[MTHawkeyeUserDefaults shared] mth_addObserver:self
                                                  forKey:NSStringFromSelector(@selector(openGLTraceAnalysisOn))
                                             withHandler:^(id _Nullable oldValue, id _Nullable newValue) {

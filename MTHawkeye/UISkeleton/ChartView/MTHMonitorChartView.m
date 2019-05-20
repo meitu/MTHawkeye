@@ -25,7 +25,7 @@
 @implementation MTHMonitorChartView
 
 - (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
+    if ((self = [super initWithFrame:frame])) {
         [self setupGraphView];
     }
     return self;

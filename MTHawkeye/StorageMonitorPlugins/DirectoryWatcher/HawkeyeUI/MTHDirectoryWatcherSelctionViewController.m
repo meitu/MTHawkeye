@@ -28,7 +28,7 @@
 @implementation MTHDirectoryWatcherSelctionViewController
 
 - (instancetype)initWithRootData:(NSArray *)dataSource showWatching:(BOOL)showWatching {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _dataSource = dataSource;
         _showWatching = showWatching;
         NSString *title = [[_dataSource firstObject].relativePath stringByDeletingLastPathComponent];

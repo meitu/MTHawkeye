@@ -30,7 +30,7 @@
 @implementation MTHLivingObjectGroupInTriggerCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+    if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
         [self.contentView addSubview:self.timeLabel];
 
         [self.contentView addSubview:self.scrollView];

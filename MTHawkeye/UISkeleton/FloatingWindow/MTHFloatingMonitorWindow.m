@@ -27,7 +27,7 @@
 }
 
 - (instancetype)initWithRootViewController:(UIViewController *)rootViewController {
-    if (self = [super initWithFrame:[UIScreen mainScreen].bounds]) {
+    if ((self = [super initWithFrame:[UIScreen mainScreen].bounds])) {
         self.backgroundColor = [UIColor clearColor];
         self.windowLevel = UIWindowLevelStatusBar - 1;
         self.rootViewController = rootViewController;

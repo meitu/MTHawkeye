@@ -45,7 +45,7 @@
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
     }
     return self;
 }

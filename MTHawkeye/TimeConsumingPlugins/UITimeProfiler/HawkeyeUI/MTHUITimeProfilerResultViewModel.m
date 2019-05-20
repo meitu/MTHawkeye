@@ -74,7 +74,7 @@
 - (instancetype)initWithVCAppearRecords:(NSArray<MTHViewControllerAppearRecord *> *)vcAppearRecords
                       detailCostRecords:(NSArray<MTHCallTraceTimeCostModel *> *)detailCostRecords
                      customEventRecords:(NSArray<MTHTimeIntervalCustomEventRecord *> *)customEventRecords {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         [self setupWithVCAppearRecords:vcAppearRecords detailCostRecords:detailCostRecords customEventRecords:customEventRecords];
     }
     return self;

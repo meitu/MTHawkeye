@@ -23,7 +23,7 @@
 @implementation MTHDirectoryTree
 
 - (instancetype)initWithRelativePath:(NSString *)path {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _relativePath = path ? path : @"";
     }
     return self;

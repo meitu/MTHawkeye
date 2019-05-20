@@ -81,7 +81,7 @@ static NSString *calculateSize(uint64_t size) {
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         self.glTracer = [[MTHawkeyeClient shared] pluginFromID:[MTHOpenGLTraceHawkeyeAdaptor pluginID]];
         [self.glTracer addDelegate:self];
 

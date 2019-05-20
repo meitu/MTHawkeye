@@ -43,7 +43,7 @@ typedef NS_ENUM(NSUInteger, MTHNetworkMonitorFilterViewSectionType) {
 @implementation MTHNetworkMonitorFilterViewRow
 
 - (instancetype)init {
-    self = [super init];
+    (self = [super init]);
     if (self) {
         _isSelected = YES;
     }

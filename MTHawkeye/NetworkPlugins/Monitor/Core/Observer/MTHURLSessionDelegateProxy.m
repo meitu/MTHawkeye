@@ -38,7 +38,7 @@
 @implementation MTHURLSessionDelegateProxy
 
 - (instancetype)initWithOriginalDelegate:(nullable id)delegate observer:(MTHNetworkObserver *)observer {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         self.originalDelegate = delegate;
         self.observer = observer;
     }

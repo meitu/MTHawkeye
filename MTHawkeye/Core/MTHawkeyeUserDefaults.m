@@ -44,7 +44,7 @@
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:[self cachePath]];
         _defaults = defaults ? defaults.mutableCopy : @{}.mutableCopy;
         _observerHandlers = [NSMapTable strongToStrongObjectsMapTable];
@@ -138,7 +138,7 @@
     @synchronized(self.observerHandlers) {
         NSEnumerator *keyEnumerator = [self.observerHandlers keyEnumerator];
         NSString *key;
-        while (key = [keyEnumerator nextObject]) {
+        while ((key = [keyEnumerator nextObject])) {
             if ([key isEqualToString:defaultName]) {
                 NSMutableArray<MTHUserDefaultsObserverInfo *> *handlers = [self.observerHandlers objectForKey:defaultName];
                 [handlers enumerateObjectsUsingBlock:^(MTHUserDefaultsObserverInfo *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
