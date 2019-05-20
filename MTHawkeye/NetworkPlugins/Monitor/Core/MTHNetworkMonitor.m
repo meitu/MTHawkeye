@@ -72,10 +72,12 @@
 
                 // 现有 api 无法准确获取到开始下发的时间，只能采用估算方式
                 // (response.start - request.end) * 2 / 3 ~ response.end
-                NSTimeInterval rspStart2RspEnd = [metrics.responseEndDate timeIntervalSinceDate:metrics.responseStartDate];
-                NSTimeInterval reqEnd2RspStart = [metrics.responseStartDate timeIntervalSinceDate:metrics.requestEndDate];
-                NSTimeInterval duration = reqEnd2RspStart * 2.f / 3.f + rspStart2RspEnd;
-                [[MTHNetworkStat shared] addBandwidthWithBytes:bytes duration:duration * 1000];
+                if (metrics.responseEndDate && metrics.responseStartDate && metrics.responseStartDate && metrics.requestEndDate) {
+                    NSTimeInterval rspStart2RspEnd = [metrics.responseEndDate timeIntervalSinceDate:metrics.responseStartDate];
+                    NSTimeInterval reqEnd2RspStart = [metrics.responseStartDate timeIntervalSinceDate:metrics.requestEndDate];
+                    NSTimeInterval duration = reqEnd2RspStart * 2.f / 3.f + rspStart2RspEnd;
+                    [[MTHNetworkStat shared] addBandwidthWithBytes:bytes duration:duration * 1000];
+                }
             }
         }
 

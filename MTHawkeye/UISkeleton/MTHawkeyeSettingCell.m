@@ -63,10 +63,10 @@
     self.selectionStyle = UITableViewCellSelectionStyleDefault;
 
     if ([self.model isKindOfClass:[MTHawkeyeSettingEditorCellEntity class]]) {
-        __auto_type editorEntity = (MTHawkeyeSettingEditorCellEntity *)self.model;
+        MTHawkeyeSettingEditorCellEntity *editorEntity = (MTHawkeyeSettingEditorCellEntity *)self.model;
         NSString *valueText = editorEntity.setupValueHandler();
         if (editorEntity.valueUnits.length > 0)
-            valueText = [valueText stringByAppendingString:editorEntity.valueUnits];
+            valueText = [valueText stringByAppendingString:editorEntity.valueUnits ?: @""];
         self.valueLabel.text = valueText;
     } else if ([self.model isKindOfClass:[MTHawkeyeSettingSwitcherCellEntity class]]) {
         self.switchCtrl.hidden = NO;
@@ -76,7 +76,7 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         [self.contentView addSubview:self.switchCtrl];
     } else if ([self.model isKindOfClass:[MTHawkeyeSettingSelectorCellEntity class]]) {
-        __auto_type selector = (MTHawkeyeSettingSelectorCellEntity *)self.model;
+        MTHawkeyeSettingSelectorCellEntity *selector = (MTHawkeyeSettingSelectorCellEntity *)self.model;
         NSUInteger selectedIndex = selector.setupSelectedIndexHandler();
         if (selectedIndex < selector.options.count)
             self.valueLabel.text = [selector.options objectAtIndex:selectedIndex];

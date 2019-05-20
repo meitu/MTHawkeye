@@ -116,14 +116,14 @@
 - (void)registerWatcherMonitorTriggerEvent {
     [MTHDirectoryWatcherMonitor shared].watcherChangeCallback = ^(NSString *path, NSUInteger folderSize) {
         NSArray *relativePath = [path componentsSeparatedByString:[NSString stringWithFormat:@"%@/", NSHomeDirectory()]];
-        NSNumber *limit = [[MTHawkeyeUserDefaults shared].directoryWatcherFoldersLimitInMB objectForKey:[relativePath lastObject]];
+        NSNumber *limit = [[MTHawkeyeUserDefaults shared].directoryWatcherFoldersLimitInMB objectForKey:[relativePath lastObject] ?: @""];
         if (folderSize > (limit.floatValue * 1024 * 1024)) {
             [[MTHDirectoryWatcherMonitor shared] removePath:path]; // stop watch this path
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:kMTHDirectoryWatcherWarningNotification
                                                                     object:nil
                                                                   userInfo:@{
-                                                                      @"folderPath" : [relativePath lastObject],
+                                                                      @"folderPath" : [relativePath lastObject] ?: @"",
                                                                       @"sizeInMB" : @(folderSize / 1024.0 / 1024.0)
                                                                   }];
             });
@@ -137,8 +137,10 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [[NSNotificationCenter defaultCenter] postNotificationName:kMTHDirectoryWatcherTriggerLimitNotification
                                                                 object:nil
-                                                              userInfo:@{@"folderPath" : [relativePath lastObject],
-                                                                  @"remainWathingPath" : remainWatchingPath}];
+                                                              userInfo:@{
+                                                                  @"folderPath" : [relativePath lastObject] ?: @"",
+                                                                  @"remainWathingPath" : remainWatchingPath
+                                                              }];
         });
     };
 }

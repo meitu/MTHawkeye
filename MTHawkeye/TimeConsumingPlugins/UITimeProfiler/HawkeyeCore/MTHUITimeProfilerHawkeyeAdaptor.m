@@ -110,7 +110,7 @@ BOOL mthawkeye_VCTraceIgnoreSystemVC = YES;
             return;
 
         MTHViewControllerAppearRecord *aRecord = [[MTHViewControllerAppearRecord alloc] init];
-        aRecord.className = recordDict[@"name"];
+        aRecord.className = recordDict[@"name"] ?: @"";
 
         aRecord.initExitTime = [recordDict[@"initExit"] doubleValue];
         aRecord.loadViewEnterTime = [recordDict[@"loadViewEnter"] doubleValue];
@@ -141,8 +141,8 @@ BOOL mthawkeye_VCTraceIgnoreSystemVC = YES;
 
         MTHTimeIntervalCustomEventRecord *record = [[MTHTimeIntervalCustomEventRecord alloc] init];
         record.timeStamp = [recordDict[@"time"] doubleValue];
-        record.event = recordDict[@"event"];
-        record.extra = recordDict[@"extra"];
+        record.event = recordDict[@"event"] ?: @"";
+        record.extra = recordDict[@"extra"] ?: @"";
         [records addObject:record];
     }];
     return [records copy];

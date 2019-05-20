@@ -258,10 +258,10 @@ typedef CFHTTPMessageRef (*MTHURLResponseGetHTTPResponse)(CFURLRef response);
     transation.transactionState = [dictionary[@"state"] integerValue];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    NSURL *url = [NSURL URLWithString:requestDictionary[@"url"]];
+    NSURL *url = [NSURL URLWithString:requestDictionary[@"url"] ?: @""];
     request.URL = url;
     request.timeoutInterval = [requestDictionary[@"timeout"] doubleValue];
-    request.HTTPMethod = requestDictionary[@"http_method"];
+    request.HTTPMethod = requestDictionary[@"http_method"] ?: @"GET";
     request.allHTTPHeaderFields = [requestDictionary[@"headers"] copy];
     request.HTTPBody = [requestDictionary[@"body"] dataUsingEncoding:NSUTF8StringEncoding];
     transation.request = [request copy];

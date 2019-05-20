@@ -187,10 +187,13 @@
                 [content writeToFile:path atomically:NO encoding:NSUTF8StringEncoding error:nil];
                 return;
             }
-            NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:path];
-            [fileHandle seekToEndOfFile];
-            [fileHandle writeData:[content dataUsingEncoding:NSUTF8StringEncoding]];
-            [fileHandle closeFile];
+            NSData *data = [content dataUsingEncoding:NSUTF8StringEncoding];
+            if (data) {
+                NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:path];
+                [fileHandle seekToEndOfFile];
+                [fileHandle writeData:data];
+                [fileHandle closeFile];
+            }
         }
     });
 }

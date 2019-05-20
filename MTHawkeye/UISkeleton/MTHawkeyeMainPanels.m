@@ -140,7 +140,7 @@
         return nil;
 
     if ([plugin respondsToSelector:@selector(mainPanelTitle)]) {
-        return [plugin mainPanelTitle];
+        return [plugin mainPanelTitle] ?: @"";
     } else {
         return nil;
     }

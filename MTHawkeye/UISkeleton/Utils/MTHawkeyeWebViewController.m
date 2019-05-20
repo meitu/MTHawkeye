@@ -93,11 +93,14 @@
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     if (!navigationAction.targetFrame) {
-        MTHawkeyeWebViewController *webVC = [[[self class] alloc] initWithURL:navigationAction.request.URL];
-        [self.navigationController pushViewController:webVC animated:YES];
+        NSURL *url = navigationAction.request.URL;
+        if (url) {
+            MTHawkeyeWebViewController *webVC = [[[self class] alloc] initWithURL:url];
+            [self.navigationController pushViewController:webVC animated:YES];
 
-        decisionHandler(WKNavigationActionPolicyCancel);
-        return;
+            decisionHandler(WKNavigationActionPolicyCancel);
+            return;
+        }
     }
 
     decisionHandler(WKNavigationActionPolicyAllow);

@@ -81,8 +81,8 @@ BOOL mthawkeye_livingObjectsSnifferNSFoundationContainerEnabled = NO;
     if (self = [self initWithType:type]) {
         _startTime = [dict[@"start"] doubleValue];
         _endTime = [dict[@"end"] doubleValue];
-        _name = dict[@"name"];
-        _nameExtra = dict[@"name_extra"];
+        _name = dict[@"name"] ?: @"";
+        _nameExtra = dict[@"name_extra"] ?: @"";
     }
     return self;
 }

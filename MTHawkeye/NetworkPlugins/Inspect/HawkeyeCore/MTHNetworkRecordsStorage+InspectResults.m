@@ -67,9 +67,9 @@ static NSString *const kNetworkInspectResultsFileName = @"network-inspectResults
                         @"typeId" : obj.typeId ?: @"",
                         @"level" : @(obj.level),
                         @"requestIndex" : @(obj.requestIndex),
-                        @"adviceTitleText" : obj.adviceTitleText,
-                        @"adviceDescText" : obj.adviceDescText,
-                        @"suggestDescText" : obj.suggestDescText,
+                        @"adviceTitleText" : obj.adviceTitleText ?: @"",
+                        @"adviceDescText" : obj.adviceDescText ?: @"",
+                        @"suggestDescText" : obj.suggestDescText ?: @"",
                         @"userInfo" : userInfoDic ?: @"" // userInfoDic
                     };
                     [advicesArray addObject:dict];
@@ -128,7 +128,7 @@ static NSString *const kNetworkInspectResultsFileName = @"network-inspectResults
                         NSMutableArray *advices = @[].mutableCopy;
                         [obj1 enumerateObjectsUsingBlock:^(id _Nonnull obj3, NSUInteger idx, BOOL *_Nonnull stop) {
                             MTHNetworkTaskAdvice *tmp = [MTHNetworkTaskAdvice new];
-                            tmp.typeId = [obj3 objectForKey:@"typeId"];
+                            tmp.typeId = [obj3 objectForKey:@"typeId"] ?: @"";
                             tmp.level = [[obj3 objectForKey:@"level"] integerValue];
                             tmp.requestIndex = [[obj3 objectForKey:@"requestIndex"] integerValue];
                             tmp.adviceTitleText = [obj3 objectForKey:@"adviceTitleText"];

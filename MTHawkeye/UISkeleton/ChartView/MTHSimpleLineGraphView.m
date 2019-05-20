@@ -1092,10 +1092,13 @@ typedef NS_ENUM(NSInteger, MTHInternalTags) {
 - (UIImage *)graphSnapshotImageRenderedWhileInBackground:(BOOL)appIsInBackground {
     UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, [UIScreen mainScreen].scale);
 
-    if (appIsInBackground == NO)
+    if (appIsInBackground == NO) {
         [self drawViewHierarchyInRect:self.bounds afterScreenUpdates:YES];
-    else
-        [self.layer renderInContext:UIGraphicsGetCurrentContext()];
+    } else {
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        if (context)
+            [self.layer renderInContext:context];
+    }
 
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();

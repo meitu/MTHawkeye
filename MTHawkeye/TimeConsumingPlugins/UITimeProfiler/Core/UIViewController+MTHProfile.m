@@ -31,11 +31,11 @@ static NSString *const kUniqueFakeKeyPath = @"mth_useless_key_path";
 static void mth_loadView(UIViewController *kvo_self, SEL _sel) {
     Class kvo_cls = object_getClass(kvo_self);
     Class origin_cls = class_getSuperclass(kvo_cls);
-    IMP origin_imp = method_getImplementation(class_getInstanceMethod(origin_cls, _sel));
-    if (!origin_imp) {
+    Method method = class_getInstanceMethod(origin_cls, _sel);
+    if (!method)
         return;
-    }
 
+    IMP origin_imp = method_getImplementation(method);
     void (*func)(UIViewController *, SEL) = (void (*)(UIViewController *, SEL))origin_imp;
 
     [[MTHTimeIntervalRecorder shared] recordViewController:kvo_self processInStep:MTHViewControllerLifeCycleStepLoadViewEnter];
@@ -46,11 +46,11 @@ static void mth_loadView(UIViewController *kvo_self, SEL _sel) {
 static void mth_viewDidLoad(UIViewController *kvo_self, SEL _sel) {
     Class kvo_cls = object_getClass(kvo_self);
     Class origin_cls = class_getSuperclass(kvo_cls);
-    IMP origin_imp = method_getImplementation(class_getInstanceMethod(origin_cls, _sel));
-    if (!origin_imp) {
+    Method method = class_getInstanceMethod(origin_cls, _sel);
+    if (!method)
         return;
-    }
 
+    IMP origin_imp = method_getImplementation(method);
     void (*func)(UIViewController *, SEL) = (void (*)(UIViewController *, SEL))origin_imp;
 
     [[MTHTimeIntervalRecorder shared] recordViewController:kvo_self processInStep:MTHViewControllerLifeCycleStepViewDidLoadEnter];
@@ -61,12 +61,11 @@ static void mth_viewDidLoad(UIViewController *kvo_self, SEL _sel) {
 static void mth_viewWillAppear(UIViewController *kvo_self, SEL _sel, BOOL animated) {
     Class kvo_cls = object_getClass(kvo_self);
     Class origin_cls = class_getSuperclass(kvo_cls);
-
-    IMP origin_imp = method_getImplementation(class_getInstanceMethod(origin_cls, _sel));
-    if (!origin_imp) {
+    Method method = class_getInstanceMethod(origin_cls, _sel);
+    if (!method)
         return;
-    }
 
+    IMP origin_imp = method_getImplementation(method);
     void (*func)(UIViewController *, SEL, BOOL) = (void (*)(UIViewController *, SEL, BOOL))origin_imp;
 
     [[MTHTimeIntervalRecorder shared] recordViewController:kvo_self processInStep:MTHViewControllerLifeCycleStepViewWillAppearEnter];
@@ -77,11 +76,11 @@ static void mth_viewWillAppear(UIViewController *kvo_self, SEL _sel, BOOL animat
 static void mth_viewDidAppear(UIViewController *kvo_self, SEL _sel, BOOL animated) {
     Class kvo_cls = object_getClass(kvo_self);
     Class origin_cls = class_getSuperclass(kvo_cls);
-    IMP origin_imp = method_getImplementation(class_getInstanceMethod(origin_cls, _sel));
-    if (!origin_imp) {
+    Method method = class_getInstanceMethod(origin_cls, _sel);
+    if (!method)
         return;
-    }
 
+    IMP origin_imp = method_getImplementation(method);
     void (*func)(UIViewController *, SEL, BOOL) = (void (*)(UIViewController *, SEL, BOOL))origin_imp;
 
     [[MTHTimeIntervalRecorder shared] recordViewController:kvo_self processInStep:MTHViewControllerLifeCycleStepViewDidAppearEnter];
@@ -191,15 +190,29 @@ static void mth_viewDidAppear(UIViewController *kvo_self, SEL _sel, BOOL animate
     // ViewController
     Class originCls = class_getSuperclass(kvoCls);
 
-    const char *originLoadViewEncoding = method_getTypeEncoding(class_getInstanceMethod(originCls, @selector(loadView)));
-    const char *originViewDidLoadEncoding = method_getTypeEncoding(class_getInstanceMethod(originCls, @selector(viewDidLoad)));
-    const char *originViewDidAppearEncoding = method_getTypeEncoding(class_getInstanceMethod(originCls, @selector(viewDidAppear:)));
-    const char *originViewWillAppearEncoding = method_getTypeEncoding(class_getInstanceMethod(originCls, @selector(viewWillAppear:)));
+    Method loadViewMethod = class_getInstanceMethod(originCls, @selector(loadView));
+    if (loadViewMethod) {
+        const char *originLoadViewEncoding = method_getTypeEncoding(loadViewMethod);
+        class_addMethod(kvoCls, @selector(loadView), (IMP)mth_loadView, originLoadViewEncoding);
+    }
 
-    class_addMethod(kvoCls, @selector(loadView), (IMP)mth_loadView, originLoadViewEncoding);
-    class_addMethod(kvoCls, @selector(viewDidLoad), (IMP)mth_viewDidLoad, originViewDidLoadEncoding);
-    class_addMethod(kvoCls, @selector(viewDidAppear:), (IMP)mth_viewDidAppear, originViewDidAppearEncoding);
-    class_addMethod(kvoCls, @selector(viewWillAppear:), (IMP)mth_viewWillAppear, originViewWillAppearEncoding);
+    Method viewDidloadMethod = class_getInstanceMethod(originCls, @selector(viewDidLoad));
+    if (viewDidloadMethod) {
+        const char *originViewDidLoadEncoding = method_getTypeEncoding(viewDidloadMethod);
+        class_addMethod(kvoCls, @selector(viewDidLoad), (IMP)mth_viewDidLoad, originViewDidLoadEncoding);
+    }
+
+    Method willAppearMethod = class_getInstanceMethod(originCls, @selector(viewWillAppear:));
+    if (willAppearMethod) {
+        const char *originViewWillAppearEncoding = method_getTypeEncoding(willAppearMethod);
+        class_addMethod(kvoCls, @selector(viewWillAppear:), (IMP)mth_viewWillAppear, originViewWillAppearEncoding);
+    }
+
+    Method didAppearMethod = class_getInstanceMethod(originCls, @selector(viewDidAppear:));
+    if (didAppearMethod) {
+        const char *originViewDidAppearEncoding = method_getTypeEncoding(didAppearMethod);
+        class_addMethod(kvoCls, @selector(viewDidAppear:), (IMP)mth_viewDidAppear, originViewDidAppearEncoding);
+    }
 }
 
 @end

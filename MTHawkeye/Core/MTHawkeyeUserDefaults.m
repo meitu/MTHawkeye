@@ -127,7 +127,11 @@
         return;
 
     @synchronized(self.defaults) {
-        [self.defaults setObject:value forKey:defaultName];
+        if (value)
+            [self.defaults setObject:value forKey:defaultName];
+        else
+            [self.defaults removeObjectForKey:defaultName];
+
         [self.defaults writeToFile:[self cachePath] atomically:NO];
     }
 

@@ -168,10 +168,13 @@
                 record->stackframes[i] = (uintptr_t)frame;
             }
             unsigned long long titleframe = 0;
-            NSScanner *scanner = [NSScanner scannerWithString:dict[@"titleframe"]];
-            [scanner setScanLocation:2];
-            [scanner scanHexLongLong:&titleframe];
-            record->titleFrame = (uintptr_t)titleframe;
+            NSString *titleFrame = dict[@"titleframe"];
+            if (titleFrame.length > 0) {
+                NSScanner *scanner = [NSScanner scannerWithString:titleFrame];
+                [scanner setScanLocation:2];
+                [scanner scanHexLongLong:&titleframe];
+                record->titleFrame = (uintptr_t)titleframe;
+            }
             [anrRecords addObject:record];
         } else {
             MTHLogWarn(@"[storage] read anr record failed, %@", error);

@@ -260,14 +260,14 @@ void mtha_cfobject_alloc_set_last_alloc_event_name_function(void *ptr, const cha
     NSString *path = [self.logDir stringByAppendingPathComponent:kMTHAllocationsMallocReportFileName];
     NSError *error;
     NSStringEncoding encoding;
-    return [NSString stringWithContentsOfFile:path usedEncoding:&encoding error:&error];
+    return [NSString stringWithContentsOfFile:path usedEncoding:&encoding error:&error] ?: @"";
 }
 
 - (NSString *)vmReportFileContent {
     NSString *path = [self.logDir stringByAppendingPathComponent:kMTHAllocationsVMReportFileName];
     NSError *error;
     NSStringEncoding encoding;
-    return [NSString stringWithContentsOfFile:path usedEncoding:&encoding error:&error];
+    return [NSString stringWithContentsOfFile:path usedEncoding:&encoding error:&error] ?: @"";
 }
 
 - (NSString *)dyldImagesContent {

@@ -309,7 +309,14 @@ static BOOL needDoSymbolicsRemote = NO;
     if (stackFramesSample.length == 0) {
         [result appendString:@" --- reenter main panel to load --- "];
     } else {
-        NSArray *sampleDicts = [NSJSONSerialization JSONObjectWithData:[stackFramesSample dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+        NSData *data = [stackFramesSample dataUsingEncoding:NSUTF8StringEncoding];
+        if (!data) {
+            [result appendString:@" error data "];
+            completion(result.copy);
+            return;
+        }
+
+        NSArray *sampleDicts = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         if ([sampleDicts isKindOfClass:[NSArray class]]) {
             if (needDoSymbolicsRemote) {
                 NSSet<NSString *> *frames = [self stackFramesSetFromSample:sampleDicts];

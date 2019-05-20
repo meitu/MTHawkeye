@@ -90,7 +90,11 @@
     NSMutableArray<MTHNetworkTransaction *> *transactions = [NSMutableArray array];
     NSMutableIndexSet *transactionIndexSet = [NSMutableIndexSet indexSet];
     [fileContent enumerateLinesUsingBlock:^(NSString *_Nonnull line, BOOL *_Nonnull stop) {
-        NSDictionary *transactionDict = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+        NSData *data = [line dataUsingEncoding:NSUTF8StringEncoding];
+        if (!data)
+            return;
+
+        NSDictionary *transactionDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         if (!transactionDict || !transactionDict.count) {
             return;
         }
@@ -104,7 +108,11 @@
     // 这里是对大于 16kb 的请求数据的处理
     NSArray *hugeTransactions = [self hugeNetworkRecords];
     for (NSString *transcationString in hugeTransactions) {
-        NSDictionary *transactionDict = [NSJSONSerialization JSONObjectWithData:[transcationString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+        NSData *data = [transcationString dataUsingEncoding:NSUTF8StringEncoding];
+        if (!data)
+            continue;
+
+        NSDictionary *transactionDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         if (transactionDict && transactionDict.count > 0) {
             MTHNetworkTransaction *transaction = [MTHNetworkTransaction transactionFromPropertyDictionary:transactionDict];
             if (transaction && ![transactionIndexSet containsIndex:transaction.requestIndex]) {
@@ -145,10 +153,13 @@
                 [appendStr writeToFile:path atomically:NO encoding:NSUTF8StringEncoding error:nil];
                 return;
             }
-            NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:path];
-            [fileHandle seekToEndOfFile];
-            [fileHandle writeData:[appendStr dataUsingEncoding:NSUTF8StringEncoding]];
-            [fileHandle closeFile];
+            NSData *data = [appendStr dataUsingEncoding:NSUTF8StringEncoding];
+            if (data) {
+                NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:path];
+                [fileHandle seekToEndOfFile];
+                [fileHandle writeData:data];
+                [fileHandle closeFile];
+            }
         }
     });
 }
@@ -227,7 +238,9 @@
         }
     }
     [fileHandle truncateFileAtOffset:0];
-    [fileHandle writeData:[remainStr dataUsingEncoding:NSUTF8StringEncoding]];
+    NSData *remainData = [remainStr dataUsingEncoding:NSUTF8StringEncoding];
+    if (remainData)
+        [fileHandle writeData:remainData];
     [fileHandle closeFile];
 
     return cleanSize;

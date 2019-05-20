@@ -99,7 +99,10 @@
         MTHLivingObjectShadow *shadow = [self mth_livingObjectShadow];
         if (shadow.light == nil && light != nil) {
             shadow.light = light;
-            shadow.lightName = NSStringFromClass([light class]);
+            Class cls = [light class];
+            if (cls) {
+                shadow.lightName = NSStringFromClass(cls);
+            }
         }
         return shadow;
     }

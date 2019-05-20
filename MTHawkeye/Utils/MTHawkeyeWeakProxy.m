@@ -77,11 +77,11 @@
 }
 
 - (NSString *)description {
-    return [_target description];
+    return [_target description] ?: @"";
 }
 
 - (NSString *)debugDescription {
-    return [_target debugDescription];
+    return [_target debugDescription] ?: @"";
 }
 
 @end

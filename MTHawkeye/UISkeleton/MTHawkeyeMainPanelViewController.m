@@ -354,11 +354,11 @@ static NSString *const kPreSelKey = @"com.meitu.hawkeye.pre-select-panel-indexpa
 }
 
 - (NSString *)switcherOptionsSectionTitleAtIndex:(NSInteger)index {
-    return [self.delegate switcherOptionsSectionTitleAtIndex:index];
+    return [self.delegate switcherOptionsSectionTitleAtIndex:index] ?: @"";
 }
 
 - (NSString *)switcherOptionsTitleAtIndexPath:(NSIndexPath *)indexPath {
-    return [self.delegate switcherOptionsTitleAtIndexPath:indexPath];
+    return [self.delegate switcherOptionsTitleAtIndexPath:indexPath] ?: @"";
 }
 
 - (BOOL)shouldChangeSelectStatusToNew:(NSIndexPath *)newSelectIndexPath fromOld:(NSIndexPath *)oldSelectIndexPath {
