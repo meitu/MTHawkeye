@@ -13,6 +13,7 @@
 #import "MTHAppLaunchStepTracer.h"
 #import "MTHTimeIntervalRecorder.h"
 
+#import <MTHawkeye/MTH_RSSwizzle.h>
 #import <MTHawkeye/MTHawkeyeHooking.h>
 #import <sys/time.h>
 
@@ -56,21 +57,24 @@
     Class appDelegateClass = NSClassFromString(@"AppDelegate");
     if (appDelegateClass) {
         SEL originalSelector = @selector(application:didFinishLaunchingWithOptions:);
-        SEL swizzledSelector = [MTHawkeyeHooking swizzledSelectorForSelectorConstant:originalSelector];
-        void (^appDidFinishLaunch)(id, UIApplication *, NSDictionary *) = ^void(id obj, UIApplication *application, NSDictionary *launchOptions) {
-            // before app did launch
+        static const void *key = &key;
+        MTH_RSSwizzleInstanceMethod(appDelegateClass,
+            originalSelector,
+            MTH_RSSWReturnType(BOOL),
+            MTH_RSSWArguments(UIApplication * app, NSDictionary * opt),
+            MTH_RSSWReplacement(
+                // before app did launch
+                [[MTHTimeIntervalRecorder shared] recordAppLaunchStep:MTHAppLaunchStepAppDidLaunchEnter];
 
-            [[MTHTimeIntervalRecorder shared] recordAppLaunchStep:MTHAppLaunchStepAppDidLaunchEnter];
+                BOOL res = MTH_RSSWCallOriginal(app, opt);
 
-            ((void (*)(id, SEL, UIApplication *, NSDictionary *))objc_msgSend)(obj, swizzledSelector, application, launchOptions);
+                // after app did launch
+                [[MTHTimeIntervalRecorder shared] recordAppLaunchStep:MTHAppLaunchStepAppDidLaunchExit];
 
-            // after app did launch
-            [[MTHTimeIntervalRecorder shared] recordAppLaunchStep:MTHAppLaunchStepAppDidLaunchExit];
-        };
-        [MTHawkeyeHooking replaceImplementationOfKnownSelector:originalSelector
-                                                       onClass:appDelegateClass
-                                                     withBlock:appDidFinishLaunch
-                                              swizzledSelector:swizzledSelector];
+                return res;
+
+                ),
+            MTH_RSSwizzleModeOncePerClassAndSuperclasses, key);
     }
 }
 
