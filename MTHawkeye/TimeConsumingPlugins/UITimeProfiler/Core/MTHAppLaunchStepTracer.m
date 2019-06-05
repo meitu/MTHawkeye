@@ -28,7 +28,6 @@
         [self traceObjcLoadFired];
 
         [self traceUIApplicationInit];
-        [self traceAppDidLaunched];
 
         [self traceBackFrontSwitch];
     });
@@ -40,41 +39,50 @@
 
 + (void)traceUIApplicationInit {
     // Hook init method of UIApplication
-    SEL originalApplicationInitMethod = @selector(init);
-    SEL swizzledApplicationInitMethod = [MTHawkeyeHooking swizzledSelectorForSelectorConstant:originalApplicationInitMethod];
-    UIApplication * (^applicationInitBlock)(Class) = ^UIApplication *(Class class) {
-        [[MTHTimeIntervalRecorder shared] recordAppLaunchStep:MTHAppLaunchStepApplicationInit];
-        return ((UIApplication * (*)(Class, SEL)) objc_msgSend)(class, swizzledApplicationInitMethod);
-    };
-    [MTHawkeyeHooking replaceImplementationOfKnownSelector:originalApplicationInitMethod
-                                                   onClass:UIApplication.class
-                                                 withBlock:applicationInitBlock
-                                          swizzledSelector:swizzledApplicationInitMethod];
+    Class appCls = UIApplication.class;
+    MTH_RSSwizzleInstanceMethod(appCls,
+        @selector(init),
+        MTH_RSSWReturnType(UIApplication *),
+        MTH_RSSWArguments(),
+        MTH_RSSWReplacement(
+            [[MTHTimeIntervalRecorder shared] recordAppLaunchStep:MTHAppLaunchStepApplicationInit];
+            return MTH_RSSWCallOriginal();),
+        MTH_RSSwizzleModeAlways, NULL);
+
+
+    MTH_RSSwizzleInstanceMethod(appCls,
+        @selector(setDelegate:),
+        MTH_RSSWReturnType(void),
+        MTH_RSSWArguments(id<UIApplicationDelegate> delegate),
+        MTH_RSSWReplacement(
+            Class delCls = [delegate class];
+            [MTHAppLaunchStepTracer traceAppDidLaunching:delCls];
+            MTH_RSSWCallOriginal(delegate);),
+        MTH_RSSwizzleModeAlways, NULL)
 }
 
-+ (void)traceAppDidLaunched {
-    // Hook appDidLaunch method
-    Class appDelegateClass = NSClassFromString(@"AppDelegate");
++ (void)traceAppDidLaunching:(Class)appDelegateClass {
     if (appDelegateClass) {
         SEL originalSelector = @selector(application:didFinishLaunchingWithOptions:);
-        static const void *key = &key;
+        if (!originalSelector)
+            return;
+
+        static const void *didLaunchingSwizzlingkey = &didLaunchingSwizzlingkey;
         MTH_RSSwizzleInstanceMethod(appDelegateClass,
             originalSelector,
             MTH_RSSWReturnType(BOOL),
             MTH_RSSWArguments(UIApplication * app, NSDictionary * opt),
             MTH_RSSWReplacement(
-                // before app did launch
                 [[MTHTimeIntervalRecorder shared] recordAppLaunchStep:MTHAppLaunchStepAppDidLaunchEnter];
 
                 BOOL res = MTH_RSSWCallOriginal(app, opt);
 
-                // after app did launch
                 [[MTHTimeIntervalRecorder shared] recordAppLaunchStep:MTHAppLaunchStepAppDidLaunchExit];
 
                 return res;
 
                 ),
-            MTH_RSSwizzleModeOncePerClassAndSuperclasses, key);
+            MTH_RSSwizzleModeOncePerClassAndSuperclasses, didLaunchingSwizzlingkey);
     }
 }
 
