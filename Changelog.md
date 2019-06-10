@@ -1,5 +1,15 @@
 # MTHawkeye
 
+## 0.11.3
+
+### bugfix
+- fix missing ViewController method invoking while work with RAC or Aspects.
+
+### improve
+- improve App Launch tracing, remove hardcode.
+- use file instead of custom NSUserDefaults, improve robust.
+- warning fix.
+
 ## 0.11.2
 
 ### improve
