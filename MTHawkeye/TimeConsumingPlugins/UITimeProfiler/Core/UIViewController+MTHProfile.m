@@ -28,10 +28,20 @@ static NSString *const kUniqueFakeKeyPath = @"mth_useless_key_path";
 
 #pragma mark - IMP of Key Method
 
+/*
+ while using VC Trace with ReactCocoa or Aspects, their implementation will change the _sel
+ so we need to use hard code @selector to get the default while failed.
+ */
 static void mth_loadView(UIViewController *kvo_self, SEL _sel) {
     Class kvo_cls = object_getClass(kvo_self);
     Class origin_cls = class_getSuperclass(kvo_cls);
-    Method method = class_getInstanceMethod(origin_cls, _sel);
+    SEL theSel = _sel;
+
+    Method method = class_getInstanceMethod(origin_cls, theSel);
+    if (!method) {
+        theSel = @selector(loadView); // fallback to default Method.
+        method = class_getInstanceMethod(origin_cls, theSel);
+    }
     if (!method)
         return;
 
@@ -39,14 +49,19 @@ static void mth_loadView(UIViewController *kvo_self, SEL _sel) {
     void (*func)(UIViewController *, SEL) = (void (*)(UIViewController *, SEL))origin_imp;
 
     [[MTHTimeIntervalRecorder shared] recordViewController:kvo_self processInStep:MTHViewControllerLifeCycleStepLoadViewEnter];
-    func(kvo_self, _sel);
+    func(kvo_self, theSel);
     [[MTHTimeIntervalRecorder shared] recordViewController:kvo_self processInStep:MTHViewControllerLifeCycleStepLoadViewExit];
 }
 
 static void mth_viewDidLoad(UIViewController *kvo_self, SEL _sel) {
     Class kvo_cls = object_getClass(kvo_self);
     Class origin_cls = class_getSuperclass(kvo_cls);
-    Method method = class_getInstanceMethod(origin_cls, _sel);
+    SEL theSel = _sel;
+    Method method = class_getInstanceMethod(origin_cls, theSel);
+    if (!method) {
+        theSel = @selector(viewDidLoad); // fallback to default Method.
+        method = class_getInstanceMethod(origin_cls, theSel);
+    }
     if (!method)
         return;
 
@@ -54,14 +69,21 @@ static void mth_viewDidLoad(UIViewController *kvo_self, SEL _sel) {
     void (*func)(UIViewController *, SEL) = (void (*)(UIViewController *, SEL))origin_imp;
 
     [[MTHTimeIntervalRecorder shared] recordViewController:kvo_self processInStep:MTHViewControllerLifeCycleStepViewDidLoadEnter];
-    func(kvo_self, _sel);
+    func(kvo_self, theSel);
     [[MTHTimeIntervalRecorder shared] recordViewController:kvo_self processInStep:MTHViewControllerLifeCycleStepViewDidLoadExit];
 }
 
 static void mth_viewWillAppear(UIViewController *kvo_self, SEL _sel, BOOL animated) {
     Class kvo_cls = object_getClass(kvo_self);
     Class origin_cls = class_getSuperclass(kvo_cls);
-    Method method = class_getInstanceMethod(origin_cls, _sel);
+
+    SEL theSel = _sel;
+    Method method = class_getInstanceMethod(origin_cls, theSel);
+    if (!method) {
+        theSel = @selector(viewWillAppear:); // fallback to default Method.
+        method = class_getInstanceMethod(origin_cls, theSel);
+    }
+
     if (!method)
         return;
 
@@ -69,25 +91,30 @@ static void mth_viewWillAppear(UIViewController *kvo_self, SEL _sel, BOOL animat
     void (*func)(UIViewController *, SEL, BOOL) = (void (*)(UIViewController *, SEL, BOOL))origin_imp;
 
     [[MTHTimeIntervalRecorder shared] recordViewController:kvo_self processInStep:MTHViewControllerLifeCycleStepViewWillAppearEnter];
-    func(kvo_self, _sel, animated);
+    func(kvo_self, theSel, animated);
     [[MTHTimeIntervalRecorder shared] recordViewController:kvo_self processInStep:MTHViewControllerLifeCycleStepViewWillAppearExit];
 }
 
 static void mth_viewDidAppear(UIViewController *kvo_self, SEL _sel, BOOL animated) {
     Class kvo_cls = object_getClass(kvo_self);
     Class origin_cls = class_getSuperclass(kvo_cls);
-    Method method = class_getInstanceMethod(origin_cls, _sel);
-    if (!method)
+    SEL theSel = _sel;
+    Method method = class_getInstanceMethod(origin_cls, theSel);
+    if (!method) {
+        theSel = @selector(viewDidAppear:); // fallback to default Method.
+        method = class_getInstanceMethod(origin_cls, theSel);
+    }
+    if (!method) {
         return;
+    }
 
     IMP origin_imp = method_getImplementation(method);
     void (*func)(UIViewController *, SEL, BOOL) = (void (*)(UIViewController *, SEL, BOOL))origin_imp;
 
     [[MTHTimeIntervalRecorder shared] recordViewController:kvo_self processInStep:MTHViewControllerLifeCycleStepViewDidAppearEnter];
-    func(kvo_self, _sel, animated);
+    func(kvo_self, theSel, animated);
     [[MTHTimeIntervalRecorder shared] recordViewController:kvo_self processInStep:MTHViewControllerLifeCycleStepViewDidAppearExit];
 }
-
 
 #pragma mark -
 
