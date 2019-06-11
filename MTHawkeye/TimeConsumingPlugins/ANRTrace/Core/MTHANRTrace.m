@@ -70,7 +70,7 @@
 }
 
 - (void)setThresholdInSeconds:(CGFloat)thresholdInSeconds {
-    if (fabs(_thresholdInSeconds - thresholdInSeconds) < DBL_EPSILON) {
+    if (fabs(_thresholdInSeconds - thresholdInSeconds) > DBL_EPSILON) {
         _thresholdInSeconds = thresholdInSeconds;
 
         if (self.observer.isRunning) {

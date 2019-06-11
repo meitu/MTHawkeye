@@ -145,7 +145,7 @@
     };
     editor.valueChangedHandler = ^BOOL(NSString *_Nonnull newValue) {
         NSTimeInterval value = newValue.doubleValue;
-        if (fabs(value - [MTHawkeyeUserDefaults shared].directoryWatcherStartDelay) < DBL_EPSILON)
+        if (fabs(value - [MTHawkeyeUserDefaults shared].directoryWatcherStartDelay) > DBL_EPSILON)
             [MTHawkeyeUserDefaults shared].directoryWatcherStartDelay = value;
         return YES;
     };
@@ -220,7 +220,7 @@
     };
     editor.valueChangedHandler = ^BOOL(NSString *_Nonnull newValue) {
         NSTimeInterval value = newValue.doubleValue;
-        if (fabs(value - [MTHawkeyeUserDefaults shared].directoryWatcherReportMinInterval) < DBL_EPSILON) {
+        if (fabs(value - [MTHawkeyeUserDefaults shared].directoryWatcherReportMinInterval) > DBL_EPSILON) {
             [MTHawkeyeUserDefaults shared].directoryWatcherReportMinInterval = value;
         }
         return YES;

@@ -105,7 +105,7 @@
 }
 
 - (void)setDetectInterval:(NSTimeInterval)detectInterval {
-    if (fabs(_detectInterval - detectInterval) < DBL_EPSILON) {
+    if (fabs(_detectInterval - detectInterval) > DBL_EPSILON) {
         _detectInterval = detectInterval;
 
         if (_detectTimer) {

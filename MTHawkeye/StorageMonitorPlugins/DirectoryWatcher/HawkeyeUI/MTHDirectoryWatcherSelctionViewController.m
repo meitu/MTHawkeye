@@ -144,7 +144,7 @@
                 }
                 confirmHandler:^(UITextField *_Nonnull textField) {
                     NSString *text = textField.text;
-                    if (text.length && (fabsf(text.floatValue - limitMB.floatValue) < FLT_EPSILON)) {
+                    if (text.length && (fabsf(text.floatValue - limitMB.floatValue) > FLT_EPSILON)) {
                         NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:[MTHawkeyeUserDefaults shared].directoryWatcherFoldersLimitInMB];
                         [dic setObject:@(text.floatValue) forKey:watchingData.relativePath];
                         [MTHawkeyeUserDefaults shared].directoryWatcherFoldersLimitInMB = dic;

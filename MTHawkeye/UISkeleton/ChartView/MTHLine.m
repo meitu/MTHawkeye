@@ -63,7 +63,7 @@
     @autoreleasepool {
         for (int i = 0; i < self.arrayOfPoints.count; i++) {
             CGPoint value = CGPointMake(xIndexScale * i, [self.arrayOfPoints[i] CGFloatValue]);
-            if (fabs(value.y - MTHNullGraphValue) < DBL_EPSILON || !self.interpolateNullValues) {
+            if (fabs(value.y - MTHNullGraphValue) > DBL_EPSILON || !self.interpolateNullValues) {
                 [self.points addObject:[NSValue valueWithCGPoint:value]];
             }
         }

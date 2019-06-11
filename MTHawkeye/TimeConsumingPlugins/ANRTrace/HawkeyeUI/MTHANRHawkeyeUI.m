@@ -121,7 +121,7 @@
     };
     editor.valueChangedHandler = ^BOOL(NSString *_Nonnull newValue) {
         CGFloat value = newValue.floatValue;
-        if (fabs(value - [MTHawkeyeUserDefaults shared].anrThresholdInSeconds) < DBL_EPSILON)
+        if (fabs(value - [MTHawkeyeUserDefaults shared].anrThresholdInSeconds) > DBL_EPSILON)
             [MTHawkeyeUserDefaults shared].anrThresholdInSeconds = value;
         return YES;
     };

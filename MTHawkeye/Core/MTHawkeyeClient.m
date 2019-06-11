@@ -202,7 +202,7 @@
         static CGFloat preMemFootprint = 0.f;
         CGFloat resident = MTHawkeyeAppStat.memoryAppUsed / 1024.f / 1024.f;
         CGFloat memFootprint = MTHawkeyeAppStat.memoryFootprint / 1024.f / 1024.f;
-        if (forceFlush || (fabs(resident - preResident) < DBL_EPSILON) || (fabs(memFootprint - preMemFootprint) < DBL_EPSILON)) {
+        if (forceFlush || (fabs(resident - preResident) > DBL_EPSILON) || (fabs(memFootprint - preMemFootprint) > DBL_EPSILON)) {
             preResident = resident;
             preMemFootprint = memFootprint;
 
@@ -218,7 +218,7 @@
     if ([MTHawkeyeUserDefaults shared].recordCPUUsage) {
         static double preCPUUsage = 0.f;
         double cpuUsage = MTHawkeyeAppStat.cpuUsedByAllThreads;
-        if (forceFlush || (fabs(cpuUsage - preCPUUsage) < DBL_EPSILON)) {
+        if (forceFlush || (fabs(cpuUsage - preCPUUsage) > DBL_EPSILON)) {
             preCPUUsage = cpuUsage;
 
             NSString *cpuUsageStr = [NSString stringWithFormat:@"%.1f", cpuUsage * 100.f];
