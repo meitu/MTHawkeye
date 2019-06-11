@@ -1,5 +1,10 @@
 # MTHawkeye
 
+## 0.11.4
+
+### bugfix
+- fix an stupid bug while try to fix unsafe floating value compare on 0.11.3. 
+
 ## 0.11.3
 
 ### bugfix
