@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A2D09FD8EF76F677B64B893 /* libPods-MTHawkeyeDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29A278FF402A9545DF834D1E /* libPods-MTHawkeyeDemo.a */; };
 		203AA50C1F53A924006790E2 /* NetworkURLConnectionDelegateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 203AA50B1F53A924006790E2 /* NetworkURLConnectionDelegateTests.m */; };
 		203AA5131F53F46C006790E2 /* MTURLConnectionInjectTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 203AA5121F53F46C006790E2 /* MTURLConnectionInjectTestViewController.m */; };
 		204BBD801F43DE7800A1E419 /* ALeakingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 204BBD5F1F43DE7800A1E419 /* ALeakingViewController.m */; };
@@ -60,10 +59,11 @@
 		20E24CF11FBA8CE700C9D9A5 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 20E24CF01FBA8CE700C9D9A5 /* Settings.bundle */; };
 		20E671482189D17C0078DAAF /* mtha_backtrace_uniquing_table_test.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E671472189D17C0078DAAF /* mtha_backtrace_uniquing_table_test.m */; };
 		20E6714A218ACEC90078DAAF /* mtha_splay_tree_test.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E67149218ACEC90078DAAF /* mtha_splay_tree_test.m */; };
+		26005FF0B1C6CE95CDBD3885 /* libPods-MTHawkeyeDemo-MTHawkeyeDemoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA4D2EF447D912F6B056F1BF /* libPods-MTHawkeyeDemo-MTHawkeyeDemoTests.a */; };
+		458D24358C1002952345328E /* libPods-MTHawkeyeDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7747057BC1D56BFA9DF99C /* libPods-MTHawkeyeDemo.a */; };
 		64E17F8620612139004B1227 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 64E17F8520612139004B1227 /* libz.tbd */; };
 		95E412A722421D9500DAC583 /* GLESTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 95E412A622421D9500DAC583 /* GLESTool.m */; };
 		95E412AA2242432100DAC583 /* GraphicsTextureGLKView.m in Sources */ = {isa = PBXBuildFile; fileRef = 95E412A92242432100DAC583 /* GraphicsTextureGLKView.m */; };
-		C07DC9251E6396C05095D567 /* libPods-MTHawkeyeDemo-MTHawkeyeDemoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4039DDC568650ADA89D98650 /* libPods-MTHawkeyeDemo-MTHawkeyeDemoTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +77,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0D7747057BC1D56BFA9DF99C /* libPods-MTHawkeyeDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MTHawkeyeDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1134333053ECC65A8DF89290 /* Pods-MTHawkeyeDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MTHawkeyeDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-MTHawkeyeDemo/Pods-MTHawkeyeDemo.release.xcconfig"; sourceTree = "<group>"; };
 		203AA50B1F53A924006790E2 /* NetworkURLConnectionDelegateTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NetworkURLConnectionDelegateTests.m; sourceTree = "<group>"; };
 		203AA5111F53F46C006790E2 /* MTURLConnectionInjectTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MTURLConnectionInjectTestViewController.h; sourceTree = "<group>"; };
@@ -244,8 +245,6 @@
 		20E24CF01FBA8CE700C9D9A5 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		20E671472189D17C0078DAAF /* mtha_backtrace_uniquing_table_test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = mtha_backtrace_uniquing_table_test.m; sourceTree = "<group>"; };
 		20E67149218ACEC90078DAAF /* mtha_splay_tree_test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = mtha_splay_tree_test.m; sourceTree = "<group>"; };
-		29A278FF402A9545DF834D1E /* libPods-MTHawkeyeDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MTHawkeyeDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4039DDC568650ADA89D98650 /* libPods-MTHawkeyeDemo-MTHawkeyeDemoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MTHawkeyeDemo-MTHawkeyeDemoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		64E17F8520612139004B1227 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		8C058A273E14786B71715136 /* Pods-MTHawkeyeDemo-MTHawkeyeDemoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MTHawkeyeDemo-MTHawkeyeDemoTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MTHawkeyeDemo-MTHawkeyeDemoTests/Pods-MTHawkeyeDemo-MTHawkeyeDemoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		95E412A522421D9500DAC583 /* GLESTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLESTool.h; sourceTree = "<group>"; };
@@ -254,6 +253,7 @@
 		95E412A92242432100DAC583 /* GraphicsTextureGLKView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GraphicsTextureGLKView.m; sourceTree = "<group>"; };
 		CAB802545212FBCE4C25527B /* Pods-MTHawkeyeDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MTHawkeyeDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MTHawkeyeDemo/Pods-MTHawkeyeDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		D8EDDBEBD6271B7BA2582197 /* Pods-MTHawkeyeDemo-MTHawkeyeDemoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MTHawkeyeDemo-MTHawkeyeDemoTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-MTHawkeyeDemo-MTHawkeyeDemoTests/Pods-MTHawkeyeDemo-MTHawkeyeDemoTests.release.xcconfig"; sourceTree = "<group>"; };
+		DA4D2EF447D912F6B056F1BF /* libPods-MTHawkeyeDemo-MTHawkeyeDemoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MTHawkeyeDemo-MTHawkeyeDemoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -262,7 +262,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				64E17F8620612139004B1227 /* libz.tbd in Frameworks */,
-				0A2D09FD8EF76F677B64B893 /* libPods-MTHawkeyeDemo.a in Frameworks */,
+				458D24358C1002952345328E /* libPods-MTHawkeyeDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,7 +271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				20BCE4242202F96A009E5CCF /* XCTest.framework in Frameworks */,
-				C07DC9251E6396C05095D567 /* libPods-MTHawkeyeDemo-MTHawkeyeDemoTests.a in Frameworks */,
+				26005FF0B1C6CE95CDBD3885 /* libPods-MTHawkeyeDemo-MTHawkeyeDemoTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,8 +283,8 @@
 			children = (
 				20BCE4232202F96A009E5CCF /* XCTest.framework */,
 				64E17F8520612139004B1227 /* libz.tbd */,
-				29A278FF402A9545DF834D1E /* libPods-MTHawkeyeDemo.a */,
-				4039DDC568650ADA89D98650 /* libPods-MTHawkeyeDemo-MTHawkeyeDemoTests.a */,
+				0D7747057BC1D56BFA9DF99C /* libPods-MTHawkeyeDemo.a */,
+				DA4D2EF447D912F6B056F1BF /* libPods-MTHawkeyeDemo-MTHawkeyeDemoTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
