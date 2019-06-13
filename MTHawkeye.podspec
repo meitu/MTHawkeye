@@ -383,7 +383,7 @@ Pod::Spec.new do |s|
   s.subspec 'FLEXExtension' do |flex|
       flex.public_header_files = 'MTHawkeye/FLEXExtension/**/*.{h}'
       flex.source_files = 'MTHawkeye/FLEXExtension/**/*.{h,m}'
-      flex.dependency 'FLEX'
+      flex.dependency 'FLEX', '3.0.0'
       flex.dependency 'MTHawkeye/UISkeleton'
       flex.libraries = "sqlite3"
   end

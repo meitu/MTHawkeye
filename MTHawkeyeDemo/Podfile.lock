@@ -68,7 +68,7 @@ PODS:
     - MTHawkeye/EnergyPlugins/CPUTrace/HawkeyeCore
     - MTHawkeye/UISkeleton
   - MTHawkeye/FLEXExtension (0.11.4):
-    - FLEX
+    - FLEX (= 3.0.0)
     - MTHawkeye/UISkeleton
   - MTHawkeye/GraphicsPlugins (0.11.4):
     - MTHawkeye/GraphicsPlugins/OpenGLTrace (= 0.11.4)
@@ -254,7 +254,7 @@ SPEC CHECKSUMS:
   GYHttpMock: ad08e55ce8bde4e7f7b4d0cbc79ff23c1311658b
   MTAppenderFile: bf01581e34bd597267ddbb2b624060203fa2e68e
   MTGLDebug: 00dd831397c86bfd06cd977eae8e46b82cf5e502
-  MTHawkeye: 4249ed3b9f679bf9bfe2701f8312586fcfff5eab
+  MTHawkeye: e86129cf18d03129602977aec7fabaa8d9444c42
 
 PODFILE CHECKSUM: c1db26b9347b9402331d94c039af43561826d490
 
