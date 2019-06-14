@@ -51,6 +51,8 @@ typedef void (^MTHANRThreadResultBlock)(double roughBlockTimeInterval, MTHANRRec
     [self start];
 }
 
+#define MTHANRTRACE_MAXSTACKCOUNT 50
+
 - (void)main {
     __block thread_t main_thread;
     dispatch_sync(dispatch_get_main_queue(), ^(void) {
@@ -83,7 +85,7 @@ typedef void (^MTHANRThreadResultBlock)(double roughBlockTimeInterval, MTHANRRec
                 threadStack = [[MTHANRRecordRaw alloc] init];
                 mth_stack_backtrace *stackframes = mth_malloc_stack_backtrace();
                 if (stackframes) {
-                    mth_stack_backtrace_of_thread(main_thread, stackframes, sizeof(mth_stack_backtrace), 0);
+                    mth_stack_backtrace_of_thread(main_thread, stackframes, MTHANRTRACE_MAXSTACKCOUNT, 0);
                     threadStack->stackframesSize = stackframes->frames_size;
                     threadStack->stackframes = (uintptr_t *)malloc(sizeof(uintptr_t) * stackframes->frames_size);
                     memcpy(threadStack->stackframes, stackframes->frames, sizeof(uintptr_t) * stackframes->frames_size);
