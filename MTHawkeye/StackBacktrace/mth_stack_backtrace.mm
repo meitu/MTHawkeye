@@ -63,7 +63,7 @@ typedef struct _mth_stackframe_entity {
     const uintptr_t return_address;
 } mth_stackframe_entity;
 
-static kern_return_t mach_copy_mem(const void *const src, void *const dst, const size_t num_bytes) {
+static kern_return_t mth_mach_copy_mem(const void *const src, void *const dst, const size_t num_bytes) {
     vm_size_t bytes_copied = 0;
     return vm_read_overwrite(mach_task_self(), (vm_address_t)src, (vm_size_t)num_bytes, (vm_address_t)dst, &bytes_copied);
 }
@@ -133,11 +133,7 @@ bool mth_stack_backtrace_of_thread(thread_t thread, mth_stack_backtrace *out_sta
     // get frame point
     mth_stackframe_entity frame = {NULL, 0};
     const uintptr_t frame_ptr = machine_context.__ss.MT_FRAME_POINTER;
-    if (frame_ptr <= top_frames_to_skip) {
-        out_stack_backtrace->frames_size = frames_size;
-        return false;
-    }
-    if (frame_ptr == 0 || mach_copy_mem((void *)frame_ptr, &frame, sizeof(frame)) != KERN_SUCCESS) {
+    if (frame_ptr == 0 || mth_mach_copy_mem((void *)frame_ptr, &frame, sizeof(frame)) != KERN_SUCCESS) {
         out_stack_backtrace->frames_size = frames_size;
         return false;
     }
@@ -148,14 +144,21 @@ bool mth_stack_backtrace_of_thread(thread_t thread, mth_stack_backtrace *out_sta
 
     for (; frames_size < backtrace_depth_max; frames_size++) {
         backtrace_frames[frames_size] = CALL_INSTRUCTION_FROM_RETURN_ADDRESS(frame.return_address);
-        if (backtrace_frames[frames_size] == 0 || frame.previous == 0 || mach_copy_mem(frame.previous, &frame, sizeof(frame)) != KERN_SUCCESS) {
+        if (backtrace_frames[frames_size] == 0 || frame.previous == 0 || mth_mach_copy_mem(frame.previous, &frame, sizeof(frame)) != KERN_SUCCESS) {
             break;
         }
     }
 
-    out_stack_backtrace->frames_size = frames_size;
-    out_stack_backtrace->frames = (uintptr_t *)malloc(sizeof(uintptr_t) * frames_size);
-    memcpy(out_stack_backtrace->frames, backtrace_frames, sizeof(uintptr_t) * frames_size);
+    if (top_frames_to_skip >= frames_size) {
+        out_stack_backtrace->frames_size = 0;
+        out_stack_backtrace->frames = NULL;
+        return false;
+    }
+
+    size_t output_frames_size = frames_size - top_frames_to_skip;
+    out_stack_backtrace->frames_size = output_frames_size;
+    out_stack_backtrace->frames = (uintptr_t *)malloc(sizeof(uintptr_t) * output_frames_size);
+    memcpy(out_stack_backtrace->frames, backtrace_frames + top_frames_to_skip, sizeof(uintptr_t) * output_frames_size);
 
 #if _InternalMTHStackBacktracePerformanceTestEnabled
     uint64_t t2 = mach_absolute_time() * timeinfo_.numer / timeinfo_.denom;
