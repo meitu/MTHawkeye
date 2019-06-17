@@ -133,7 +133,8 @@
         }
     }
 
-    if (self.hostFilter && matched) {
+    // while the host filter is empty, match all.
+    if (self.hostFilter.count > 0 && matched) {
         NSString *host = [transaction.request.URL host];
         // 长度为 0 的 url 先匹配到任意 domain 下
         if (host.length == 0) {
