@@ -43,6 +43,8 @@
 
 - (CGSize)preferredContentSize {
     CGSize preferedSize = self.contentViewController.preferredContentSize;
+    preferedSize.height += CGRectGetHeight(self.navigationBar.bounds);
+
     CGSize restrictedSize = CGSizeApplyAffineTransform([UIScreen mainScreen].bounds.size, CGAffineTransformMakeScale(0.95, 0.8));
     CGSize actualSize;
     if (preferedSize.height < DBL_EPSILON || preferedSize.width < DBL_EPSILON) {

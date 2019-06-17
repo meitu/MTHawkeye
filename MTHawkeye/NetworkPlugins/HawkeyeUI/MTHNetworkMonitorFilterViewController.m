@@ -74,6 +74,13 @@ typedef NS_ENUM(NSUInteger, MTHNetworkMonitorFilterViewSectionType) {
 @property (nonatomic, copy) NSArray<MTHNetworkTaskInspection *> *inspections; /**< inspection 过滤 **/
 @property (nonatomic, copy) NSArray<NSString *> *hosts;                       /**< 一级域名过滤 **/
 
+@property (nonatomic, assign) BOOL isDataSetup;
+@property (nonatomic, assign) CGFloat contentHeight;
+
+@property (nonatomic, strong, nullable) MTHNetworkMonitorFilterViewSection *hostFilterSection;
+@property (nonatomic, strong, nullable) MTHNetworkMonitorFilterViewSection *statusFilterSection;
+@property (nonatomic, strong, nullable) MTHNetworkMonitorFilterViewSection *inspectionFilterSection;
+
 @end
 
 @implementation MTHNetworkMonitorFilterViewController
@@ -89,7 +96,15 @@ typedef NS_ENUM(NSUInteger, MTHNetworkMonitorFilterViewSectionType) {
     [self.tableView registerClass:[UITableViewCell class]
            forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
 
-    [self setupData];
+    [self setupDataIfNeed];
+}
+
+- (CGSize)preferredContentSize {
+    [self setupDataIfNeed];
+
+    CGFloat contentHeight = self.contentHeight > 0 ? self.contentHeight : 250;
+
+    return CGSizeMake(ceil(CGRectGetWidth([UIScreen mainScreen].bounds) * 0.9), contentHeight);
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -98,35 +113,42 @@ typedef NS_ENUM(NSUInteger, MTHNetworkMonitorFilterViewSectionType) {
     [self feedbackSelectedOptions];
 }
 
-- (void)setupData {
+- (void)setupDataIfNeed {
+    if (self.isDataSetup) {
+        return;
+    }
+
+    self.isDataSetup = YES;
+
     NSMutableArray<MTHNetworkMonitorFilterViewSection *> *sections = [NSMutableArray arrayWithCapacity:3];
 
     // Domains Section
     NSSet<MTHTopLevelDomain *> *topLevelDomains = [MTHNetworkTaskInspector shared].context.topLevelDomains;
-    NSMutableArray<NSString *> *topLevelDomainStrings = [NSMutableArray array];
-    for (MTHTopLevelDomain *domain in topLevelDomains) {
-        if (domain.domainString) {
-            [topLevelDomainStrings addObject:domain.domainString];
+    if (topLevelDomains.count > 0) {
+        NSMutableArray<NSString *> *topLevelDomainStrings = [NSMutableArray array];
+        for (MTHTopLevelDomain *domain in topLevelDomains) {
+            if (domain.domainString) {
+                [topLevelDomainStrings addObject:domain.domainString];
+            }
         }
+        self.hosts = [topLevelDomainStrings copy];
+
+        self.hostFilterSection = [[MTHNetworkMonitorFilterViewSection alloc] init];
+        NSMutableArray<MTHNetworkMonitorFilterViewRow *> *domainsRows = [NSMutableArray arrayWithCapacity:3];
+
+        for (NSString *domain in self.hosts) {
+            MTHNetworkMonitorFilterViewRow *row = [[MTHNetworkMonitorFilterViewRow alloc] init];
+            row.title = domain;
+            [domainsRows addObject:row];
+        }
+        self.hostFilterSection.rows = [domainsRows copy];
+        self.hostFilterSection.title = @"Domains";
+        self.hostFilterSection.type = MTHNetworkMonitorFilterViewSectionTypeHostList;
+        [sections addObject:self.hostFilterSection];
     }
-    self.hosts = [topLevelDomainStrings copy];
-
-    MTHNetworkMonitorFilterViewSection *domainsSection = [[MTHNetworkMonitorFilterViewSection alloc] init];
-    NSMutableArray<MTHNetworkMonitorFilterViewRow *> *domainsRows = [NSMutableArray arrayWithCapacity:3];
-
-    for (NSString *domain in self.hosts) {
-        MTHNetworkMonitorFilterViewRow *row = [[MTHNetworkMonitorFilterViewRow alloc] init];
-        row.title = domain;
-        [domainsRows addObject:row];
-    }
-    domainsSection.rows = [domainsRows copy];
-    domainsSection.title = @"Domains";
-    domainsSection.type = MTHNetworkMonitorFilterViewSectionTypeHostList;
-    [sections addObject:domainsSection];
-
 
     // Status Code Section
-    MTHNetworkMonitorFilterViewSection *statusCodeSection = [[MTHNetworkMonitorFilterViewSection alloc] init];
+    self.statusFilterSection = [[MTHNetworkMonitorFilterViewSection alloc] init];
     NSMutableArray<MTHNetworkMonitorFilterViewRow *> *statusCodeRows = [NSMutableArray arrayWithCapacity:6];
     for (NSInteger i = 0; i < 6; i++) {
         MTHNetworkMonitorFilterViewRow *row = [[MTHNetworkMonitorFilterViewRow alloc] init];
@@ -137,34 +159,42 @@ typedef NS_ENUM(NSUInteger, MTHNetworkMonitorFilterViewSectionType) {
         }
         [statusCodeRows addObject:row];
     }
-    statusCodeSection.rows = [statusCodeRows copy];
-    statusCodeSection.title = @"Status Codes";
-    statusCodeSection.type = MTHNetworkMonitorFilterViewSectionTypeStatusCode;
-    [sections addObject:statusCodeSection];
-
+    self.statusFilterSection.rows = [statusCodeRows copy];
+    self.statusFilterSection.title = @"Status Codes";
+    self.statusFilterSection.type = MTHNetworkMonitorFilterViewSectionTypeStatusCode;
+    [sections addObject:self.statusFilterSection];
 
     // Inspections Section
-    NSArray<MTHNetworkTaskInspectionsGroup *> *inspectionGroups = [MTHNetworkTaskInspector shared].inspectResults.groups;
-    NSMutableArray<MTHNetworkTaskInspectionWithResult *> *inspections = [NSMutableArray array];
-    for (MTHNetworkTaskInspectionsGroup *group in inspectionGroups) {
-        if (group.inspections) {
-            [inspections addObjectsFromArray:group.inspections];
+    if ([MTHNetworkTaskInspector isEnabled]) {
+        NSArray<MTHNetworkTaskInspectionsGroup *> *inspectionGroups = [MTHNetworkTaskInspector shared].inspectResults.groups;
+        NSMutableArray<MTHNetworkTaskInspectionWithResult *> *inspections = [NSMutableArray array];
+        for (MTHNetworkTaskInspectionsGroup *group in inspectionGroups) {
+            if (group.inspections) {
+                [inspections addObjectsFromArray:group.inspections];
+            }
         }
-    }
-    self.inspections = [inspections copy];
+        self.inspections = [inspections copy];
 
-    MTHNetworkMonitorFilterViewSection *inspectionsSection = [[MTHNetworkMonitorFilterViewSection alloc] init];
-    NSMutableArray<MTHNetworkMonitorFilterViewRow *> *inspectionsRows = [NSMutableArray arrayWithCapacity:3];
+        self.inspectionFilterSection = [[MTHNetworkMonitorFilterViewSection alloc] init];
+        NSMutableArray<MTHNetworkMonitorFilterViewRow *> *inspectionsRows = [NSMutableArray arrayWithCapacity:3];
 
-    for (MTHNetworkTaskInspectionWithResult *inspection in self.inspections) {
-        MTHNetworkMonitorFilterViewRow *row = [[MTHNetworkMonitorFilterViewRow alloc] init];
-        row.title = inspection.inspection.displayName;
-        [inspectionsRows addObject:row];
+        for (MTHNetworkTaskInspectionWithResult *inspection in self.inspections) {
+            MTHNetworkMonitorFilterViewRow *row = [[MTHNetworkMonitorFilterViewRow alloc] init];
+            row.title = inspection.inspection.displayName;
+            [inspectionsRows addObject:row];
+        }
+        self.inspectionFilterSection.rows = [inspectionsRows copy];
+        self.inspectionFilterSection.title = @"Inspections";
+        self.inspectionFilterSection.type = MTHNetworkMonitorFilterViewSectionTypeInspectionList;
+        [sections addObject:self.inspectionFilterSection];
     }
-    inspectionsSection.rows = [inspectionsRows copy];
-    inspectionsSection.title = @"Inspections";
-    inspectionsSection.type = MTHNetworkMonitorFilterViewSectionTypeInspectionList;
-    [sections addObject:inspectionsSection];
+
+    __block CGFloat contentHeight = 0.f;
+    [sections enumerateObjectsUsingBlock:^(MTHNetworkMonitorFilterViewSection *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+        contentHeight += [self tableView:self.tableView heightForHeaderInSection:idx];
+        contentHeight += ([self tableView:self.tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:idx]] * obj.rows.count);
+    }];
+    self.contentHeight = contentHeight;
 
     self.sections = [sections copy];
     [self loadFilterSettingFromCache];
@@ -180,19 +210,19 @@ typedef NS_ENUM(NSUInteger, MTHNetworkMonitorFilterViewSectionType) {
     MTHNetworkTransactionStatusCode selectedStatusCodes = MTHNetworkTransactionStatusCodeNone;
 
     for (NSInteger i = 0; i < self.inspections.count; i++) {
-        if (self.sections[MTHNetworkMonitorFilterViewSectionTypeInspectionList].rows[i].isSelected) {
+        if (self.inspectionFilterSection.rows[i].isSelected) {
             [selectedInspections addObject:self.inspections[i]];
         }
     }
 
     for (NSInteger i = 0; i < self.hosts.count; i++) {
-        if (self.sections[MTHNetworkMonitorFilterViewSectionTypeHostList].rows[i].isSelected) {
+        if (self.hostFilterSection.rows[i].isSelected) {
             [selectedHosts addObject:self.hosts[i]];
         }
     }
 
     for (NSInteger i = 0; i < 6; i++) {
-        BOOL isSelected = self.sections[MTHNetworkMonitorFilterViewSectionTypeStatusCode].rows[i].isSelected;
+        BOOL isSelected = self.statusFilterSection.rows[i].isSelected;
         if (i < 5) {
             selectedStatusCodes |= (isSelected ? 1 << i : MTHNetworkTransactionStatusCodeNone);
         } else {
@@ -238,17 +268,17 @@ typedef NS_ENUM(NSUInteger, MTHNetworkMonitorFilterViewSectionType) {
 
     // 恢复之前被取消选中的，确保新增的不会默认被过滤掉
     if (deselectedHostSet && deselectedHostSet.count) {
-        for (NSInteger i = 0; i < self.sections[MTHNetworkMonitorFilterViewSectionTypeHostList].rows.count; i++) {
+        for (NSInteger i = 0; i < self.hostFilterSection.rows.count; i++) {
             if ([deselectedHostSet containsObject:self.hosts[i]]) {
-                self.sections[MTHNetworkMonitorFilterViewSectionTypeHostList].rows[i].isSelected = NO;
+                self.hostFilterSection.rows[i].isSelected = NO;
             }
         }
     }
 
     if (deselectedInspectionNameSet && deselectedInspectionNameSet.count) {
-        for (NSInteger i = 0; i < self.sections[MTHNetworkMonitorFilterViewSectionTypeInspectionList].rows.count; i++) {
+        for (NSInteger i = 0; i < self.inspectionFilterSection.rows.count; i++) {
             if ([deselectedInspectionNameSet containsObject:self.inspections[i].name]) {
-                self.sections[MTHNetworkMonitorFilterViewSectionTypeInspectionList].rows[i].isSelected = NO;
+                self.inspectionFilterSection.rows[i].isSelected = NO;
             }
         }
     }
@@ -256,9 +286,9 @@ typedef NS_ENUM(NSUInteger, MTHNetworkMonitorFilterViewSectionType) {
     if (statusCodes) {
         for (NSInteger i = 0; i < 6; i++) {
             if (i < 5) {
-                self.sections[MTHNetworkMonitorFilterViewSectionTypeStatusCode].rows[i].isSelected = statusCodes & (1 << i);
+                self.statusFilterSection.rows[i].isSelected = statusCodes & (1 << i);
             } else {
-                self.sections[MTHNetworkMonitorFilterViewSectionTypeStatusCode].rows[i].isSelected
+                self.statusFilterSection.rows[i].isSelected
                     = !((statusCodes & MTHNetworkTransactionStatusCodeFailed) ^ MTHNetworkTransactionStatusCodeFailed);
             }
         }
