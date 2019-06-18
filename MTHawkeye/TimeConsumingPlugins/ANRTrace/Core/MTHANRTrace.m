@@ -43,13 +43,13 @@
 - (void)start {
     if (!self.observer.isRunning) {
         __weak typeof(self) weakSelf = self;
-        self.observer = [[MTHANRObserver alloc] initWithObserveResultHandler:^(MTHANRObserver *anrMonitor, MTHANRRecordRaw *recordRaw) {
-            if (!recordRaw)
+        self.observer = [[MTHANRObserver alloc] initWithObserveResultHandler:^(MTHANRObserver *anrMonitor, NSArray<MTHANRRecordRaw *> *detectedANRRecord) {
+            if (!detectedANRRecord.count)
                 return;
 
             [weakSelf.delegates.allObjects enumerateObjectsUsingBlock:^(id<MTHANRTraceDelegate> _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
                 if ([obj respondsToSelector:@selector(mth_anrMonitor:didDetectANR:)]) {
-                    [obj mth_anrMonitor:weakSelf didDetectANR:recordRaw];
+                    [obj mth_anrMonitor:weakSelf didDetectANR:[detectedANRRecord firstObject]];
                 }
             }];
         }];

@@ -15,7 +15,7 @@
 @class MTHANRObserver;
 @class MTHANRRecordRaw;
 
-typedef void (^MTHANRObserveResultHandler)(MTHANRObserver *anrMonitor, MTHANRRecordRaw *detectedANRRecord);
+typedef void (^MTHANRObserveResultHandler)(MTHANRObserver *anrMonitor, NSArray<MTHANRRecordRaw *> *detectedANRRecord);
 
 
 @interface MTHANRObserver : NSObject

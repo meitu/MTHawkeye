@@ -50,11 +50,9 @@
     __weak typeof(self) weakSelf = self;
     [self.detectThread
         startWithThresholdInSeconds:thresholdInSeconds
-                            handler:^(double roughBlockTimeInterval, MTHANRRecordRaw *recordRaw) {
+                            handler:^(NSArray<MTHANRRecordRaw *> *_Nonnull recordRaws) {
                                 if (weakSelf) {
-                                    recordRaw.time = [[NSDate new] timeIntervalSince1970];
-                                    recordRaw.duration = roughBlockTimeInterval;
-                                    weakSelf.detectedHandler(weakSelf, recordRaw);
+                                    weakSelf.detectedHandler(weakSelf, [recordRaws firstObject]);
                                 }
                             }];
 }

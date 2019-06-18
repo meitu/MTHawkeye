@@ -15,14 +15,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^MTHANRThreadResultBlock)(double roughBlockTimeInterval, MTHANRRecordRaw *recordRaw);
+typedef void (^MTHANRThreadResultBlock)(NSArray<MTHANRRecordRaw *> *recordRaws);
 
 @interface MTHANRDetectThread : NSThread
-@property (atomic, assign) BOOL isMainThreadBlock;
 @property (nonatomic, assign) BOOL shouldCaptureBackTrace;
 @property (nonatomic, assign) double thresholdInSeconds;
 @property (nonatomic, copy) MTHANRThreadResultBlock threadResultBlock;
-@property (nonatomic, strong) dispatch_semaphore_t semaphore;
 
 - (void)startWithThresholdInSeconds:(double)thresholdInSeconds handler:(MTHANRThreadResultBlock)threadResultBlock;
 
