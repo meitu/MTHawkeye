@@ -71,23 +71,25 @@
      }
      */
 
-    SEL sel = @selector(viewDidLoad);
+    SEL sel = NSSelectorFromString(@"tableView:shouldShowMenuForRowAtIndexPath:");
+    Class cls = NSClassFromString(@"FLEXFileBrowserTableViewController");
     SEL swzSel = [MTHawkeyeHooking swizzledSelectorForSelector:sel];
 
-    void (^swzBlock)(id) = ^void(id obj) {
-        ((void (*)(id, SEL))objc_msgSend)(obj, swzSel);
+    BOOL (^swzBlock)(id, UITableView *, NSIndexPath *) = ^BOOL(id obj, UITableView *tableView, NSIndexPath *indexPath) {
+        ((void (*)(id, SEL, UITableView *, NSIndexPath *))objc_msgSend)(obj, swzSel, tableView, indexPath);
         NSMutableArray<UIMenuItem *> *items = [[UIMenuController sharedMenuController].menuItems mutableCopy];
         for (UIMenuItem *item in items) {
             if ([item.title isEqualToString:@"AirDrop"]) {
-                return;
+                return YES;
             }
         }
 
         UIMenuItem *airDropMenuItem = [[UIMenuItem alloc] initWithTitle:@"AirDrop" action:NSSelectorFromString(@"fileAirDrop:")];
         [items addObject:airDropMenuItem];
         [UIMenuController sharedMenuController].menuItems = [items copy];
+        return YES;
     };
-    [MTHawkeyeHooking replaceImplementationOfKnownSelector:sel onClass:NSClassFromString(@"FLEXFileBrowserTableViewController") withBlock:swzBlock swizzledSelector:swzSel];
+    [MTHawkeyeHooking replaceImplementationOfKnownSelector:sel onClass:cls withBlock:swzBlock swizzledSelector:swzSel];
 }
 
 + (void)extendPerformAction {

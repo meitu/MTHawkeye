@@ -17,22 +17,22 @@ PODS:
   - AGAsyncTestHelper/Core (1.0)
   - AGAsyncTestHelper/Shorthand (1.0):
     - AGAsyncTestHelper/Core
-  - CocoaLumberjack (3.5.2):
-    - CocoaLumberjack/Core (= 3.5.2)
-  - CocoaLumberjack/Core (3.5.2)
+  - CocoaLumberjack (3.5.3):
+    - CocoaLumberjack/Core (= 3.5.3)
+  - CocoaLumberjack/Core (3.5.3)
   - FBRetainCycleDetector (0.1.4)
   - fishhook (0.2)
   - FLEX (3.0.0)
   - GYHttpMock (1.0.1)
-  - MTAppenderFile (0.4.0)
-  - MTGLDebug (3.1.0):
+  - MTAppenderFile (0.4.3)
+  - MTGLDebug (3.1.1):
     - fishhook (~> 0.2)
-    - MTGLDebug/ARC (= 3.1.0)
-    - MTGLDebug/MRC (= 3.1.0)
-  - MTGLDebug/ARC (3.1.0):
+    - MTGLDebug/ARC (= 3.1.1)
+    - MTGLDebug/MRC (= 3.1.1)
+  - MTGLDebug/ARC (3.1.1):
     - fishhook (~> 0.2)
     - MTGLDebug/MRC
-  - MTGLDebug/MRC (3.1.0):
+  - MTGLDebug/MRC (3.1.1):
     - fishhook (~> 0.2)
   - MTHawkeye/Core (0.11.4):
     - MTHawkeye/Utils
@@ -68,7 +68,7 @@ PODS:
     - MTHawkeye/EnergyPlugins/CPUTrace/HawkeyeCore
     - MTHawkeye/UISkeleton
   - MTHawkeye/FLEXExtension (0.11.4):
-    - FLEX
+    - FLEX (= 3.0.0)
     - MTHawkeye/UISkeleton
   - MTHawkeye/GraphicsPlugins (0.11.4):
     - MTHawkeye/GraphicsPlugins/OpenGLTrace (= 0.11.4)
@@ -247,14 +247,14 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   AGAsyncTestHelper: b1399096574bab94f2c94e9be3e8d88e7cefbc17
-  CocoaLumberjack: 118bf4a820efc641f79fa487b75ed928dccfae23
+  CocoaLumberjack: 2f44e60eb91c176d471fdba43b9e3eae6a721947
   FBRetainCycleDetector: 46f8179bbb1c587deee3ea838a1a3ee02acf5015
   fishhook: ea19933abfe8f2f52c55fd8b6e2718467d3ebc89
   FLEX: d66c759bce0f6ebbbf472c742380874d846f2883
   GYHttpMock: ad08e55ce8bde4e7f7b4d0cbc79ff23c1311658b
-  MTAppenderFile: bf01581e34bd597267ddbb2b624060203fa2e68e
-  MTGLDebug: 00dd831397c86bfd06cd977eae8e46b82cf5e502
-  MTHawkeye: 9c431f14c1bf796c416e93d00944d02084d9d7cd
+  MTAppenderFile: c7db8f33a8140ee2275a6200305fd11e609fae33
+  MTGLDebug: a65833811c1e8b84b2100dfb6b41c29c029254d6
+  MTHawkeye: e86129cf18d03129602977aec7fabaa8d9444c42
 
 PODFILE CHECKSUM: c1db26b9347b9402331d94c039af43561826d490
 
