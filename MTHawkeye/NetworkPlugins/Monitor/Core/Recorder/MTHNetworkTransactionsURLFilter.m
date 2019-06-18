@@ -55,7 +55,7 @@
 
     NSString *urlFilterDesc;
     if (self.urlStringFilter.length > 0) {
-        urlFilterDesc = [NSString stringWithFormat:@"Url filter: %@", urlFilterDesc];
+        urlFilterDesc = [NSString stringWithFormat:@"Url filter: %@", urlFilterDesc ?: @""];
     }
 
     NSMutableString *description = [NSMutableString string];
@@ -75,7 +75,15 @@
     return description.copy;
 }
 
+- (void)resetFilter {
+    self.duplicateModeFilter = NO;
+    self.statusFilter = MTHNetworkTransactionStatusCodeNone;
+    self.urlStringFilter = nil;
+}
+
 - (void)parseParamsString:(NSString *)paramsString {
+    [self resetFilter];
+
     NSArray *searchStringComponents = [paramsString componentsSeparatedByString:@" "];
 
     NSMutableArray *list = [NSMutableArray array];
