@@ -13,10 +13,9 @@
 #import <Foundation/Foundation.h>
 
 @class MTHANRObserver;
-@class MTHANRRecordRaw;
+@class MTHANRRecord;
 
-typedef void (^MTHANRObserveResultHandler)(MTHANRObserver *anrMonitor, NSArray<MTHANRRecordRaw *> *detectedANRRecord);
-
+typedef void (^MTHANRObserveResultHandler)(MTHANRObserver *anrMonitor, MTHANRRecord *anrRecord);
 
 @interface MTHANRObserver : NSObject
 

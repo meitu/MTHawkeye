@@ -12,14 +12,15 @@
 
 #import "MTHANRRecord.h"
 
-
 @implementation MTHANRRecordRaw
-
 - (void)dealloc {
     if (self->stackframes) {
         free(self->stackframes);
         self->stackframes = nil;
     }
 }
+@end
+
+@implementation MTHANRRecord
 
 @end

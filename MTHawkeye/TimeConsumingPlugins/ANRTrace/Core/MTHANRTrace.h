@@ -12,7 +12,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class MTHANRRecordRaw;
+@class MTHANRRecord;
 @protocol MTHANRTraceDelegate;
 
 @interface MTHANRTrace : NSObject
@@ -37,6 +37,6 @@
 
 @protocol MTHANRTraceDelegate <NSObject>
 
-- (void)mth_anrMonitor:(MTHANRTrace *)anrMonitor didDetectANR:(MTHANRRecordRaw *)anrRecord;
+- (void)mth_anrMonitor:(MTHANRTrace *)anrMonitor didDetectANR:(MTHANRRecord *)anrRecord;
 
 @end

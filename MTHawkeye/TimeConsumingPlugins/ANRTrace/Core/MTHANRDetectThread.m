@@ -34,7 +34,7 @@
     if (self) {
         self.shouldCaptureBackTrace = YES;
         self.thresholdInSeconds = 1.0f;
-        self.runloopTimeOutInterval = 2.0f;
+        self.runloopTimeOutInterval = 1.5f;
         self.name = @"com.meitu.hawkeye.anr.observer";
         self.threadStacks = [NSMutableArray array];
     }
@@ -80,7 +80,10 @@
         BOOL runloopTimeout = runloopInSecond >= self.runloopTimeOutInterval;
         if (runloopTimeout) {
             if (self.shouldCaptureBackTrace && self.threadResultBlock) {
-                self.threadResultBlock([NSArray arrayWithArray:self.threadStacks]);
+                MTHANRRecord *record = [[MTHANRRecord alloc] init];
+                record.rawRecords = [NSArray arrayWithArray:self.threadStacks];
+                record.duration = runloopInSecond;
+                self.threadResultBlock(record);
             }
         }
 
@@ -110,7 +113,6 @@
     threadStack = [[MTHANRRecordRaw alloc] init];
     threadStack.cpuUsed = MTHawkeyeAppStat.cpuUsedByAllThreads * 100.0f;
     threadStack.time = [[NSDate new] timeIntervalSince1970];
-    threadStack.duration = self.thresholdInSeconds * 1000;
     mth_stack_backtrace *stackframes = mth_malloc_stack_backtrace();
 
     if (stackframes) {

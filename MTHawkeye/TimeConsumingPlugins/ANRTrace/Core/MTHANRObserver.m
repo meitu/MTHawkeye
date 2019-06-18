@@ -48,13 +48,12 @@
     self.detectThread = [[MTHANRDetectThread alloc] init];
     self.detectThread.shouldCaptureBackTrace = self.shouldCaptureBackTrace;
     __weak typeof(self) weakSelf = self;
-    [self.detectThread
-        startWithThresholdInSeconds:thresholdInSeconds
-                            handler:^(NSArray<MTHANRRecordRaw *> *_Nonnull recordRaws) {
-                                if (weakSelf) {
-                                    weakSelf.detectedHandler(weakSelf, [recordRaws firstObject]);
-                                }
-                            }];
+    [self.detectThread startWithThresholdInSeconds:thresholdInSeconds
+                                           handler:^(MTHANRRecord *_Nonnull anrRecord) {
+                                               if (weakSelf) {
+                                                   weakSelf.detectedHandler(weakSelf, anrRecord);
+                                               }
+                                           }];
 }
 
 - (void)stop {

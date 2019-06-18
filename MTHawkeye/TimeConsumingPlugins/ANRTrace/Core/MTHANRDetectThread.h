@@ -15,7 +15,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^MTHANRThreadResultBlock)(NSArray<MTHANRRecordRaw *> *recordRaws);
+typedef void (^MTHANRThreadResultBlock)(MTHANRRecord *anrRecord);
 
 @interface MTHANRDetectThread : NSThread
 @property (nonatomic, assign) BOOL shouldCaptureBackTrace;

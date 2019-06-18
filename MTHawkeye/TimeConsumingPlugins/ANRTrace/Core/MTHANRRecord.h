@@ -19,6 +19,10 @@
 }
 
 @property (nonatomic, assign) NSTimeInterval time;
-@property (nonatomic, assign) NSTimeInterval duration; // ms
-@property (nonatomic, assign) float cpuUsed;           // 100%
+@property (nonatomic, assign) float cpuUsed;
+@end
+
+@interface MTHANRRecord : NSObject
+@property (nonatomic, strong) NSArray<MTHANRRecordRaw *> *rawRecords;
+@property (nonatomic, assign) NSTimeInterval duration;
 @end

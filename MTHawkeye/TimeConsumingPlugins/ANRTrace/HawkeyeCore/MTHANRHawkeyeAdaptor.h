@@ -15,11 +15,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MTHANRRecordRaw;
+@class MTHANRRecord;
 
 @interface MTHANRHawkeyeAdaptor : NSObject <MTHawkeyePlugin>
 
-+ (NSArray<MTHANRRecordRaw *> *)readANRRecords;
++ (NSArray<MTHANRRecord *> *)readANRRecords;
 
 @end
 

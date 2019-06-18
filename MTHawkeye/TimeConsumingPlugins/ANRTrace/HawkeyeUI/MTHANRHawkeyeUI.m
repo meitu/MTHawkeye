@@ -39,7 +39,7 @@
 }
 
 // MARK: - MTHANRTraceDelegate
-- (void)mth_anrMonitor:(MTHANRTrace *)anrMonitor didDetectANR:(MTHANRRecordRaw *)anrRecord {
+- (void)mth_anrMonitor:(MTHANRTrace *)anrMonitor didDetectANR:(MTHANRRecord *)anrRecord {
     NSDictionary *params = @{
         kMTHFloatingWidgetRaiseWarningParamsPanelIDKey : [self mainPanelIdentity],
         kMTHFloatingWidgetRaiseWarningParamsKeepDurationKey : @(3.f)

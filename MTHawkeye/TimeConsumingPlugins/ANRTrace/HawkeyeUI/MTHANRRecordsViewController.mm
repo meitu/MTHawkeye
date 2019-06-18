@@ -38,7 +38,7 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) MTHANRTrace *anrMonitor;
 
-@property (nonatomic, copy) NSArray<MTHANRRecordRaw *> *records;
+@property (nonatomic, copy) NSArray<MTHANRRecord *> *records;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *recordTitles;
 
 @property (nonatomic, assign) NSInteger detailLoadingIndex;
@@ -137,7 +137,7 @@
 - (void)symbolicateRecordTitles {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         for (NSInteger ri = 0; ri < self.records.count; ++ri) {
-            MTHANRRecordRaw *record = self.records[ri];
+            MTHANRRecordRaw *record = [self.records[ri].rawRecords lastObject];
             NSString *riStr = [NSString stringWithFormat:@"%ld", (long)ri];
 
             @synchronized(self.recordTitles) {
@@ -174,7 +174,7 @@
 }
 
 // MARK: - MTHANRTraceDelegate
-- (void)mth_anrMonitor:(MTHANRTrace *)anrMonitor didDetectANR:(MTHANRRecordRaw *)anrRecord {
+- (void)mth_anrMonitor:(MTHANRTrace *)anrMonitor didDetectANR:(MTHANRRecord *)anrRecord {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self updateTableView];
     });
@@ -209,11 +209,11 @@
     }
 
     if (indexPath.row < self.records.count) {
-        MTHANRRecordRaw *anrRecord = self.records[indexPath.row];
+        MTHANRRecordRaw *anrRecord = [self.records[indexPath.row].rawRecords lastObject];
         NSString *title = nil;
         NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:anrRecord.time]];
-        if (anrRecord.duration > 0.f) {
-            title = [NSString stringWithFormat:@"[%@]  ≈ %.2fs", time, anrRecord.duration / 1000.f];
+        if (self.records[indexPath.row].duration > 0.f) {
+            title = [NSString stringWithFormat:@"[%@]  ≈ %.2fs", time, self.records[indexPath.row].duration / 1000.f];
         } else {
             title = [NSString stringWithFormat:@"[%@]  > %.2fs", time, [MTHANRTrace shared].thresholdInSeconds];
         }
@@ -300,8 +300,7 @@ static BOOL anrReportSymbolicsRemote = NO;
         [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-            MTHANRRecordRaw *anrRecord = self.records[indexPath.row];
-            [self readANRRecordIntoReadableText:anrRecord
+            [self readANRRecordIntoReadableText:self.records[indexPath.row]
                                      completion:^(NSString *anrRecordDesc) {
                                          dispatch_async(dispatch_get_main_queue(), ^(void) {
                                              self.detailLoadingIndex = -1;
@@ -316,10 +315,10 @@ static BOOL anrReportSymbolicsRemote = NO;
     }
 }
 
-- (void)readANRRecordIntoReadableText:(MTHANRRecordRaw *)anrRecord completion:(void (^)(NSString *anrRecordDesc))completion {
+- (void)readANRRecordIntoReadableText:(MTHANRRecord *)anrRecord completion:(void (^)(NSString *anrRecordDesc))completion {
     NSMutableString *content = [NSMutableString string];
-
-    NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:anrRecord.time]];
+    MTHANRRecordRaw *rawRecord = [anrRecord.rawRecords lastObject];
+    NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:[anrRecord.rawRecords firstObject].time]];
     [content appendString:@"\n"];
     [content appendFormat:@"Time: %@", time];
     [content appendString:@"\n"];
@@ -334,8 +333,8 @@ static BOOL anrReportSymbolicsRemote = NO;
 
     if (anrReportSymbolicsRemote) {
         NSMutableArray *framesRaw = @[].mutableCopy;
-        for (int i = 0; i < anrRecord->stackframesSize; ++i) {
-            uintptr_t frame = anrRecord->stackframes[i];
+        for (int i = 0; i < rawRecord->stackframesSize; ++i) {
+            uintptr_t frame = rawRecord->stackframes[i];
             [framesRaw addObject:[NSString stringWithFormat:@"%p", (void *)frame]];
         }
 
@@ -348,8 +347,8 @@ static BOOL anrReportSymbolicsRemote = NO;
                    } else {
                        NSMutableDictionary<NSString *, NSString *> *outFrameDict = @{}.mutableCopy;
                        [self formatRemoteSymolizedFramesDicts:symbolizedFrames intoOnlineFrame:outFrameDict];
-                       for (int i = 0; i < anrRecord->stackframesSize; ++i) {
-                           uintptr_t frame = anrRecord->stackframes[i];
+                       for (int i = 0; i < rawRecord->stackframesSize; ++i) {
+                           uintptr_t frame = rawRecord->stackframes[i];
                            NSString *frameStr = [NSString stringWithFormat:@"%p", (void *)frame];
                            [content appendFormat:@"%*u %@\n", 2, i, outFrameDict[frameStr]];
                        }
@@ -359,8 +358,8 @@ static BOOL anrReportSymbolicsRemote = NO;
                }];
 
     } else {
-        for (int i = 0; i < anrRecord->stackframesSize; ++i) {
-            uintptr_t frame = anrRecord->stackframes[i];
+        for (int i = 0; i < rawRecord->stackframesSize; ++i) {
+            uintptr_t frame = rawRecord->stackframes[i];
             NSString *desc = [self recordFrameStringFrom:frame withoutFnameIfExistSname:NO];
             [content appendFormat:@"%*u %@\n", 2, i, desc];
         }
