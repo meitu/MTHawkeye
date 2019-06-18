@@ -477,6 +477,12 @@
 }
 
 // MARK: - UISearchBarDelegate
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    if (searchText.length > 0) {
+        searchBar.text = [searchText lowercaseString];
+    }
+}
+
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [searchBar resignFirstResponder];
 }

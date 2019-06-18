@@ -39,7 +39,7 @@
         if (statusDesc.length > 0) {
             [statusDesc deleteCharactersInRange:NSMakeRange(statusDesc.length - 3, 3)];
         }
-        [statusDesc insertString:@"Status Filter: " atIndex:0];
+        [statusDesc insertString:@"Matching Status: " atIndex:0];
     }
 
     NSString *duplicateOnDesc = nil;
@@ -55,7 +55,7 @@
 
     NSString *urlFilterDesc;
     if (self.urlStringFilter.length > 0) {
-        urlFilterDesc = [NSString stringWithFormat:@"Url filter: %@", urlFilterDesc ?: @""];
+        urlFilterDesc = [NSString stringWithFormat:@"Matching URL: %@", self.urlStringFilter];
     }
 
     NSMutableString *description = [NSMutableString string];
@@ -135,9 +135,10 @@
         }
     }
 
-    if (self.urlStringFilter.length > 0) {
+    NSString *urlStringFilter = self.urlStringFilter;
+    if (urlStringFilter.length > 0) {
         if (matched) {
-            matched = [[transaction.request.URL absoluteString] rangeOfString:self.urlStringFilter options:NSCaseInsensitiveSearch].length > 0;
+            matched = [[transaction.request.URL absoluteString] rangeOfString:urlStringFilter options:NSCaseInsensitiveSearch].length > 0;
         }
     }
 
