@@ -82,13 +82,14 @@ static const CGFloat kNetworkHistoryTimelineCellHeight = 20.f;
     CGRect indicatorViewFrame = CGRectMake(20.f + minX, collectionViewHeight, maxX - 20.f - minX, kTimeIndicatorViewHeight);
     self.timeIndicatorView.frame = indicatorViewFrame;
 
-    CGRect lineFrame = CGRectMake(0, 0, CGRectGetWidth(self.timeIndicatorView.bounds), 1.f / [UIScreen mainScreen].scale);
+    const CGFloat leftSpace = 5.f;
+    CGRect lineFrame = CGRectMake(0, 0, CGRectGetWidth(self.timeIndicatorView.bounds) - leftSpace, 1.f / [UIScreen mainScreen].scale);
     self.timeIndicatorLineView.frame = lineFrame;
 
     CGFloat labelPosY = 3.f;
     CGRect leftLabelFrame = CGRectMake(0, labelPosY, 40.f, 12.f);
-    CGRect rightLabelFrame = CGRectMake(CGRectGetWidth(self.timeIndicatorLineView.bounds) - 30.f, labelPosY, 60.f, 12.f);
-    CGRect middleLabelFrame = CGRectMake(CGRectGetWidth(self.timeIndicatorLineView.bounds) / 2.f - 30.f, labelPosY, 60.f, 12.f);
+    CGRect rightLabelFrame = CGRectMake(CGRectGetWidth(self.timeIndicatorLineView.bounds) - 60.f - leftSpace, labelPosY, 60.f, 12.f);
+    CGRect middleLabelFrame = CGRectMake(CGRectGetWidth(self.timeIndicatorLineView.bounds) / 2.f - 30.f - leftSpace, labelPosY, 60.f, 12.f);
     self.leftTimeIndicatorLabel.frame = leftLabelFrame;
     self.middleTimeIndicatorLabel.frame = middleLabelFrame;
     self.rightTimeIndicatorLabel.frame = rightLabelFrame;
@@ -224,6 +225,7 @@ static const CGFloat kNetworkHistoryTimelineCellHeight = 20.f;
         _middleTimeIndicatorLabel = [[UILabel alloc] init];
         _middleTimeIndicatorLabel.font = [UIFont systemFontOfSize:10.f];
         _middleTimeIndicatorLabel.textColor = [UIColor colorWithWhite:0.0118 alpha:1];
+        _middleTimeIndicatorLabel.textAlignment = NSTextAlignmentCenter;
     }
     return _middleTimeIndicatorLabel;
 }
@@ -233,6 +235,7 @@ static const CGFloat kNetworkHistoryTimelineCellHeight = 20.f;
         _rightTimeIndicatorLabel = [[UILabel alloc] init];
         _rightTimeIndicatorLabel.font = [UIFont systemFontOfSize:10.f];
         _rightTimeIndicatorLabel.textColor = [UIColor colorWithWhite:0.0118 alpha:1];
+        _rightTimeIndicatorLabel.textAlignment = NSTextAlignmentRight;
     }
     return _rightTimeIndicatorLabel;
 }
