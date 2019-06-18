@@ -24,6 +24,7 @@
 
 @property (nonatomic, copy) NSArray<MTHNetworkTransaction *> *filteredNetworkTransactions;
 
+@property (atomic, assign) NSInteger filterRunningTask;
 
 @property (nonatomic, assign) NSInteger requestIndexFocusOnCurrently;
 @property (nonatomic, copy) NSArray<NSNumber *> *currentOnViewIndexArray;
@@ -287,26 +288,72 @@
 
 // MARK: - filter
 - (void)updateSearchResultsWithText:(NSString *)searchString completion:(void (^)(void))completion {
+    [self filterTaskStarted];
+
     self.currentSearchText = searchString;
+
     if (!self.filter) {
         MTHNetworkTransactionsURLFilter *filter = [[MTHNetworkTransactionsURLFilter alloc] initWithParamsString:searchString];
         self.filter = filter;
     }
+
     MTHNetworkTransactionsURLFilter *filter = self.filter;
     [filter parseParamsString:searchString];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSArray *filteredNetworkTransactions = [self.networkTransactions filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(MTHNetworkTransaction *transaction, NSDictionary *bindings) {
-            return [filter isTransactionMatchFilter:transaction];
-        }]];
+        if ([self shouldCancelFilterTask]) {
+            return;
+        }
+
+        NSMutableArray *filteredNetworkTransactions = @[].mutableCopy;
+        __block BOOL taskCanceled = NO;
+        [self.networkTransactions enumerateObjectsUsingBlock:^(MTHNetworkTransaction *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+            if ([self shouldCancelFilterTask]) {
+                *stop = YES;
+                taskCanceled = YES;
+                return;
+            }
+
+            if ([filter isTransactionMatchFilter:obj]) {
+                [filteredNetworkTransactions addObject:obj];
+            }
+        }];
+
+        if (taskCanceled) {
+            return;
+        }
+
         dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self shouldCancelFilterTask]) {
+                return;
+            }
+
             if ([self.currentSearchText isEqualToString:searchString]) {
                 self.filteredNetworkTransactions = filteredNetworkTransactions;
                 if (completion) {
                     completion();
                 }
             }
+
+            [self filterTaskEnded];
         });
     });
+}
+
+// MARK: - Filter task
+- (void)filterTaskStarted {
+    self.filterRunningTask += 1;
+}
+
+- (void)filterTaskEnded {
+    self.filterRunningTask -= 1;
+}
+
+- (BOOL)shouldCancelFilterTask {
+    if (self.filterRunningTask > 1) {
+        self.filterRunningTask -= 1;
+        return YES;
+    }
+    return NO;
 }
 
 @end
