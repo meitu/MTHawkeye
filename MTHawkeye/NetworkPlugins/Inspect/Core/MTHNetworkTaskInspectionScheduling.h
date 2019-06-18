@@ -15,9 +15,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSInteger gMTHNetworkInspectionStartupIncludingSeconds; // default take the first 5 seconds as startup period.
 
 extern NSString *kMTHNetworkTaskAdviceKeyParallelRequestIndexList;
-
 
 @class MTHNetworkTaskInspection;
 
@@ -39,6 +39,8 @@ extern NSString *kMTHNetworkTaskAdviceKeyParallelRequestIndexList;
  */
 + (MTHNetworkTaskInspection *)startupHeavyRequestTaskInspection;
 
+extern NSInteger gMTHNetworkInspectionStartupHeavyTransactionCostLimit; // default 1.5s
+
 /**
  Detecting long DNS cost during startup, > 200ms
 
@@ -49,6 +51,8 @@ extern NSString *kMTHNetworkTaskAdviceKeyParallelRequestIndexList;
  */
 + (MTHNetworkTaskInspection *)startupDNSCostInspection;
 
+extern NSInteger gMTHNetworkInspectionStartupDNSCostLimit; // default 0.2s
+
 /**
  Detecting long TCP shake-hand during startup
 
@@ -58,6 +62,8 @@ extern NSString *kMTHNetworkTaskAdviceKeyParallelRequestIndexList;
  如果包含多个同一 host 的 dns 请求时间，建议做好优先级管理
  */
 + (MTHNetworkTaskInspection *)startupTCPConnectionCostInspection;
+
+extern NSInteger gMTHNetworkInspectionStartupTCPTimeCostLimit; // default 0.4s
 
 /**
  Detecting HTTP task priority management
