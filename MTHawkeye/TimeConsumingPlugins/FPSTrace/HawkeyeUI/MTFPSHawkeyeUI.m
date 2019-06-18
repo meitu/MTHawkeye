@@ -153,7 +153,13 @@
     } else {
         infoString = [NSString stringWithFormat:@"%@/%@", cacheFPS, cacheGPUImageFPS];
     }
-    [self.cell updateWithString:infoString];
+    if ([[NSThread currentThread] isMainThread]) {
+        [self.cell updateWithString:infoString];
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            [self.cell updateWithString:infoString];
+        });
+    }
 }
 
 @end
