@@ -39,7 +39,7 @@
         if (statusDesc.length > 0) {
             [statusDesc deleteCharactersInRange:NSMakeRange(statusDesc.length - 3, 3)];
         }
-        [statusDesc insertString:@"Status Filter: " atIndex:0];
+        [statusDesc insertString:@"Matching Status: " atIndex:0];
     }
 
     NSString *duplicateOnDesc = nil;
@@ -55,7 +55,7 @@
 
     NSString *urlFilterDesc;
     if (self.urlStringFilter.length > 0) {
-        urlFilterDesc = [NSString stringWithFormat:@"Url filter: %@", urlFilterDesc];
+        urlFilterDesc = [NSString stringWithFormat:@"Matching URL: %@", self.urlStringFilter];
     }
 
     NSMutableString *description = [NSMutableString string];
@@ -75,7 +75,15 @@
     return description.copy;
 }
 
+- (void)resetFilter {
+    self.duplicateModeFilter = NO;
+    self.statusFilter = MTHNetworkTransactionStatusCodeNone;
+    self.urlStringFilter = nil;
+}
+
 - (void)parseParamsString:(NSString *)paramsString {
+    [self resetFilter];
+
     NSArray *searchStringComponents = [paramsString componentsSeparatedByString:@" "];
 
     NSMutableArray *list = [NSMutableArray array];
@@ -127,13 +135,15 @@
         }
     }
 
-    if (self.urlStringFilter.length > 0) {
+    NSString *urlStringFilter = self.urlStringFilter;
+    if (urlStringFilter.length > 0) {
         if (matched) {
-            matched = [[transaction.request.URL absoluteString] rangeOfString:self.urlStringFilter options:NSCaseInsensitiveSearch].length > 0;
+            matched = [[transaction.request.URL absoluteString] rangeOfString:urlStringFilter options:NSCaseInsensitiveSearch].length > 0;
         }
     }
 
-    if (self.hostFilter && matched) {
+    // while the host filter is empty, match all.
+    if (self.hostFilter.count > 0 && matched) {
         NSString *host = [transaction.request.URL host];
         // 长度为 0 的 url 先匹配到任意 domain 下
         if (host.length == 0) {

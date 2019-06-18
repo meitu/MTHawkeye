@@ -23,8 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) MTHNetworkTransactionStatusCode statusFilter;
 @property (nonatomic, assign) BOOL duplicateModeFilter;
-@property (nonatomic, copy) NSString *urlStringFilter;       /**< 过滤特定 URL 整串 */
-@property (nonatomic, copy) NSArray<NSString *> *hostFilter; /**< 过滤特定 host */
+@property (nonatomic, copy, nullable) NSString *urlStringFilter;       /**< 过滤特定 URL 整串 */
+@property (nonatomic, copy, nullable) NSArray<NSString *> *hostFilter; /**< 过滤特定 host */
 
 - (instancetype)initWithParamsString:(NSString *)param;
 

@@ -155,7 +155,7 @@ typedef NS_ENUM(NSInteger, MTHTransactionAdviceDetailSectionType) {
 }
 
 - (CGSize)preferredContentSize {
-    return CGSizeApplyAffineTransform([UIScreen mainScreen].bounds.size, CGAffineTransformMakeScale(1, 0.9));
+    return CGSizeApplyAffineTransform([UIScreen mainScreen].bounds.size, CGAffineTransformMakeScale(1, 0.8));
 }
 
 - (NSAttributedString *)attributedStringFromString:(NSString *)string {

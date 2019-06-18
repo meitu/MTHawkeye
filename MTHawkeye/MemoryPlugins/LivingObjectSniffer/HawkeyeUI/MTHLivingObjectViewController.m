@@ -163,7 +163,7 @@
 
 - (void)updateCellDataInfo:(MTHLivingObjectInfo *)obj cell:(UITableViewCell *)cell {
     NSMutableString *instanceDetail = [NSMutableString string];
-    [instanceDetail appendFormat:@"pre-holder:%@", obj.preHolderName];
+    [instanceDetail appendFormat:@"pre-holder:%@", obj.preHolderName ?: @""];
     cell.detailTextLabel.text = instanceDetail;
 
     if (obj.theHodlerIsNotOwner) {

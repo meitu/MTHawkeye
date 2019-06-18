@@ -693,6 +693,9 @@ static BOOL remoteSymbolicateProcess = NO;
     __block NSTimeInterval currentSession = [MTHawkeyeUtility appLaunchedTime];
     [logDirectories enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
         NSDate *createDate = [dateFormatter dateFromString:obj];
+        if (!createDate) // ignore other directory such as preferences.
+            return;
+
         NSTimeInterval timeDiff = currentSession - [createDate timeIntervalSince1970];
         if (timeDiff > 1) {
             [historyDirList addObject:obj];

@@ -334,6 +334,9 @@ NSString *const kMTHawkeyeCollectionKeyValueRecordsFileName = @"records";
     const NSUInteger kMaxKeepCount = 10;
     [logDirectories enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
         NSDate *createDate = [dateFormatter dateFromString:obj];
+        if (!createDate) // ignore other directory such as preferences.
+            return;
+
         if (createDate && createDate.timeIntervalSinceNow < -kMTHawkeyeLogExpiredTime) {
             [[NSFileManager defaultManager] removeItemAtPath:[hawkeyePath stringByAppendingPathComponent:obj] error:NULL];
         } else if (idx >= kMaxKeepCount) {

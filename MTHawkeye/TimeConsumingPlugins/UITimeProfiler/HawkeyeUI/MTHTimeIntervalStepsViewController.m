@@ -210,8 +210,8 @@ static CGFloat const kDurationLabelHeight = 40.f;
 
 - (CGSize)preferredContentSize {
     CGSize screenSize = [UIScreen mainScreen].bounds.size;
-    CGFloat maxHeight = 540.f;
-    CGFloat height = screenSize.height - 75.f;
+    CGFloat maxHeight = 500.f;
+    CGFloat height = screenSize.height - 115.f;
     if (height > maxHeight)
         height = maxHeight;
 

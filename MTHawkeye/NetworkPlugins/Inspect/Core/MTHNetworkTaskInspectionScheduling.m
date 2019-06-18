@@ -18,6 +18,8 @@
 #import "MTHawkeyeUtility.h"
 
 
+NSInteger gMTHNetworkInspectionStartupIncludingSeconds = 5.0; // seconds
+
 NSString *kMTHNetworkTaskAdviceKeyParallelRequestIndexList = @"MTHNetworkTaskAdviceKeyParallelRequestIDList";
 
 @implementation MTHNetworkTaskInspectionScheduling
@@ -25,6 +27,8 @@ NSString *kMTHNetworkTaskAdviceKeyParallelRequestIndexList = @"MTHNetworkTaskAdv
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability"
+
+NSInteger gMTHNetworkInspectionStartupHeavyTransactionCostLimit = 1.5f;
 
 /**
  侦测启动期间 (目前设定为启动 5s 内) 时间较长的请求
@@ -45,7 +49,7 @@ NSString *kMTHNetworkTaskAdviceKeyParallelRequestIndexList = @"MTHNetworkTaskAdv
     startupDurationParam.displayName = @"Detecting time requests at startup";
     startupDurationParam.valueType = MTHNetworkTaskInspectionParamValueTypeFloat;
     startupDurationParam.valueUnits = @"s";
-    startupDurationParam.value = @(5.f);
+    startupDurationParam.value = @(gMTHNetworkInspectionStartupIncludingSeconds);
 
     MTHNetworkTaskInspectionParamEntity *requestDurationLimitParam = [[MTHNetworkTaskInspectionParamEntity alloc] init];
     requestDurationLimitParam.displayName = @"Timeout request";
@@ -87,6 +91,8 @@ NSString *kMTHNetworkTaskAdviceKeyParallelRequestIndexList = @"MTHNetworkTaskAdv
     return inspection;
 }
 
+NSInteger gMTHNetworkInspectionStartupDNSCostLimit = 0.2; //
+
 + (MTHNetworkTaskInspection *)startupDNSCostInspection {
     static MTHNetworkTaskInspection *inspection = nil;
     if (inspection != nil) {
@@ -103,13 +109,13 @@ NSString *kMTHNetworkTaskAdviceKeyParallelRequestIndexList = @"MTHNetworkTaskAdv
     startupDurationParam.displayName = @"Detecting time requests at startup";
     startupDurationParam.valueType = MTHNetworkTaskInspectionParamValueTypeFloat;
     startupDurationParam.valueUnits = @"s";
-    startupDurationParam.value = @(5.f);
+    startupDurationParam.value = @(gMTHNetworkInspectionStartupIncludingSeconds);
 
     MTHNetworkTaskInspectionParamEntity *dnsCostLimitParam = [[MTHNetworkTaskInspectionParamEntity alloc] init];
     dnsCostLimitParam.displayName = @"Detecting DNS timeout during startup";
     dnsCostLimitParam.valueType = MTHNetworkTaskInspectionParamValueTypeFloat;
     dnsCostLimitParam.valueUnits = @"s";
-    dnsCostLimitParam.value = @(0.2f);
+    dnsCostLimitParam.value = @(gMTHNetworkInspectionStartupDNSCostLimit);
 
     inspection.inspectCustomParams = @{
         @"StartupDuration" : startupDurationParam,
@@ -187,6 +193,8 @@ NSString *kMTHNetworkTaskAdviceKeyParallelRequestIndexList = @"MTHNetworkTaskAdv
     return inspection;
 }
 
+NSInteger gMTHNetworkInspectionStartupTCPTimeCostLimit = 0.4; // seconds
+
 + (MTHNetworkTaskInspection *)startupTCPConnectionCostInspection {
     static MTHNetworkTaskInspection *inspection = nil;
     if (inspection != nil) {
@@ -203,13 +211,13 @@ NSString *kMTHNetworkTaskAdviceKeyParallelRequestIndexList = @"MTHNetworkTaskAdv
     startupDurationParam.displayName = @"Detecting time requests at startup";
     startupDurationParam.valueType = MTHNetworkTaskInspectionParamValueTypeFloat;
     startupDurationParam.valueUnits = @"s";
-    startupDurationParam.value = @(5.f);
+    startupDurationParam.value = @(gMTHNetworkInspectionStartupIncludingSeconds);
 
     MTHNetworkTaskInspectionParamEntity *tcpConnectionLimitParam = [[MTHNetworkTaskInspectionParamEntity alloc] init];
-    tcpConnectionLimitParam.displayName = @"Detecting TCP timeout during startup";
+    tcpConnectionLimitParam.displayName = @"Detecting TCP time consuming during startup";
     tcpConnectionLimitParam.valueType = MTHNetworkTaskInspectionParamValueTypeFloat;
     tcpConnectionLimitParam.valueUnits = @"s";
-    tcpConnectionLimitParam.value = @(0.4f);
+    tcpConnectionLimitParam.value = @(gMTHNetworkInspectionStartupTCPTimeCostLimit);
 
     inspection.inspectCustomParams = @{
         @"StartupDuration" : startupDurationParam,
@@ -267,7 +275,7 @@ NSString *kMTHNetworkTaskAdviceKeyParallelRequestIndexList = @"MTHNetworkTaskAdv
             advice.typeId = @"TCP Connection Cost on Startup";
             advice.level = MTHNetworkTaskAdviceLevelLow;
             advice.requestIndex = transaction.requestIndex;
-            advice.adviceTitleText = @"TCP timeout during startup";
+            advice.adviceTitleText = @"TCP consuming during startup";
             NSMutableString *requestsDesc = [NSMutableString string];
             for (NSArray *item in context.containTCPConnCostRequestIndexesOnStartup) {
                 [requestsDesc appendFormat:@"%@: %.0fms, ", item[0], [item[1] floatValue] * 1000];

@@ -191,8 +191,6 @@
 
     if (ms > 0) {
         NSInteger newGPUImageFPS = (NSInteger)round(count * 1000.f / ms);
-        self.gpuImageFPSValue = newGPUImageFPS;
-
         if (newGPUImageFPS != self.gpuImageFPSValue) {
             [self.delegates.allObjects enumerateObjectsUsingBlock:^(id<MTHFPSTraceDelegate> _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
                 if ([obj respondsToSelector:@selector(gpuImageFPSValueDidChanged:)]) {
@@ -200,6 +198,7 @@
                 }
             }];
         }
+        self.gpuImageFPSValue = newGPUImageFPS;
     }
 
     t0 = t1;

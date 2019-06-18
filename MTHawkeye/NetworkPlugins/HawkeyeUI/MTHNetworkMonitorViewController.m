@@ -477,6 +477,12 @@
 }
 
 // MARK: - UISearchBarDelegate
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    if (searchText.length > 0) {
+        searchBar.text = [searchText lowercaseString];
+    }
+}
+
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [searchBar resignFirstResponder];
 }
@@ -515,9 +521,7 @@
     __weak typeof(self) weak_self = self;
     [self.viewModel updateSearchResultsWithText:searchString
                                      completion:^{
-                                         dispatch_async(dispatch_get_main_queue(), ^{
-                                             [weak_self reloadHistoryTableView];
-                                         });
+                                         [weak_self reloadHistoryTableView];
                                      }];
 }
 
