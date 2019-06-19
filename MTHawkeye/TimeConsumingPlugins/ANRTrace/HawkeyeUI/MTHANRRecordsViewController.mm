@@ -317,25 +317,20 @@ static BOOL anrReportSymbolicsRemote = NO;
 
 - (void)readANRRecordIntoReadableText:(MTHANRRecord *)anrRecord completion:(void (^)(NSString *anrRecordDesc))completion {
     NSMutableString *content = [NSMutableString string];
-    MTHANRRecordRaw *rawRecord = [anrRecord.rawRecords lastObject];
-    NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:[anrRecord.rawRecords firstObject].time]];
-    [content appendString:@"\n"];
-    [content appendFormat:@"Time: %@", time];
-    [content appendString:@"\n"];
 
     CGFloat duration = anrRecord.duration / 1000.f;
     CGFloat threshold = [MTHANRTrace shared].thresholdInSeconds;
     CGFloat biases = threshold / 2.f; // according to [NSThread sleepForTimeInterval:xx / 4.f]
-    NSString *blockingDesc = [NSString stringWithFormat:@"Blocking≈%.2fs(%.2f ~ %.2f+%.2f)", duration, duration, duration, biases];
-
+    NSString *blockingDesc = [NSString stringWithFormat:@"Blocking≈%.2fs(%.2f ~ %.2f+%.2f) \n", duration, duration, duration, biases];
     [content appendString:blockingDesc];
-    [content appendString:@"\n\n"];
 
     if (anrReportSymbolicsRemote) {
         NSMutableArray *framesRaw = @[].mutableCopy;
-        for (int i = 0; i < rawRecord->stackframesSize; ++i) {
-            uintptr_t frame = rawRecord->stackframes[i];
-            [framesRaw addObject:[NSString stringWithFormat:@"%p", (void *)frame]];
+        for (MTHANRRecordRaw *rawRecord in anrRecord.rawRecords) {
+            for (int i = 0; i < rawRecord->stackframesSize; ++i) {
+                uintptr_t frame = rawRecord->stackframes[i];
+                [framesRaw addObject:[NSString stringWithFormat:@"%p", (void *)frame]];
+            }
         }
 
         [MTHStackFrameSymbolicsRemote
@@ -347,10 +342,14 @@ static BOOL anrReportSymbolicsRemote = NO;
                    } else {
                        NSMutableDictionary<NSString *, NSString *> *outFrameDict = @{}.mutableCopy;
                        [self formatRemoteSymolizedFramesDicts:symbolizedFrames intoOnlineFrame:outFrameDict];
-                       for (int i = 0; i < rawRecord->stackframesSize; ++i) {
-                           uintptr_t frame = rawRecord->stackframes[i];
-                           NSString *frameStr = [NSString stringWithFormat:@"%p", (void *)frame];
-                           [content appendFormat:@"%*u %@\n", 2, i, outFrameDict[frameStr]];
+                       for (MTHANRRecordRaw *rawRecord in anrRecord.rawRecords) {
+                           NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:rawRecord.time]];
+                           [content appendFormat:@"\n Timesmap:%@ \n", time];
+                           for (int i = 0; i < rawRecord->stackframesSize; ++i) {
+                               uintptr_t frame = rawRecord->stackframes[i];
+                               NSString *frameStr = [NSString stringWithFormat:@"%p", (void *)frame];
+                               [content appendFormat:@"%*u %@\n", 2, i, outFrameDict[frameStr]];
+                           }
                        }
                    }
 
@@ -358,10 +357,14 @@ static BOOL anrReportSymbolicsRemote = NO;
                }];
 
     } else {
-        for (int i = 0; i < rawRecord->stackframesSize; ++i) {
-            uintptr_t frame = rawRecord->stackframes[i];
-            NSString *desc = [self recordFrameStringFrom:frame withoutFnameIfExistSname:NO];
-            [content appendFormat:@"%*u %@\n", 2, i, desc];
+        for (MTHANRRecordRaw *rawRecord in anrRecord.rawRecords) {
+            NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:rawRecord.time]];
+            [content appendFormat:@"\n Timesmap: %@ \n", time];
+            for (int i = 0; i < rawRecord->stackframesSize; ++i) {
+                uintptr_t frame = rawRecord->stackframes[i];
+                NSString *desc = [self recordFrameStringFrom:frame withoutFnameIfExistSname:NO];
+                [content appendFormat:@"%*u %@\n", 2, i, desc];
+            }
         }
         completion(content.copy);
     }
