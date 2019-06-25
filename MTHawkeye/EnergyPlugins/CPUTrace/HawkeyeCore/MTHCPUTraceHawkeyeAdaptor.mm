@@ -190,9 +190,14 @@
             NSData *data = [content dataUsingEncoding:NSUTF8StringEncoding];
             if (data) {
                 NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:path];
-                [fileHandle seekToEndOfFile];
-                [fileHandle writeData:data];
-                [fileHandle closeFile];
+                @try {
+                    [fileHandle seekToEndOfFile];
+                    [fileHandle writeData:data];
+                } @catch (NSException *exception) {
+                    MTHLogWarn("store cpu trace recorded frames failed: %@", exception);
+                } @finally {
+                    [fileHandle closeFile];
+                }
             }
         }
     });
