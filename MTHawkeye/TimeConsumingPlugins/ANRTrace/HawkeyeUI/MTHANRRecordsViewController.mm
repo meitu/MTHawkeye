@@ -137,7 +137,7 @@
 - (void)symbolicateRecordTitles {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         for (NSInteger ri = 0; ri < self.records.count; ++ri) {
-            MTHANRRecordRaw *record = [self.records[ri].rawRecords lastObject];
+            MTHANRRecordRaw *record = [self.records[ri].rawRecords firstObject];
             NSString *riStr = [NSString stringWithFormat:@"%ld", (long)ri];
 
             @synchronized(self.recordTitles) {
@@ -209,7 +209,7 @@
     }
 
     if (indexPath.row < self.records.count) {
-        MTHANRRecordRaw *anrRecord = [self.records[indexPath.row].rawRecords lastObject];
+        MTHANRRecordRaw *anrRecord = [self.records[indexPath.row].rawRecords firstObject];
         NSString *title = nil;
         NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:anrRecord.time]];
         if (self.records[indexPath.row].duration > 0.f) {
