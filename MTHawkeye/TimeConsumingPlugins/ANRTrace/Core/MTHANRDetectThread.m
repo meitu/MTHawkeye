@@ -13,6 +13,7 @@
 
 #import <MTHawkeye/MTHawkeyeAppStat.h>
 #import <MTHawkeye/MTHawkeyeDyldImagesUtils.h>
+#import <MTHawkeye/MTHawkeyeLogMacros.h>
 #import <MTHawkeye/mth_stack_backtrace.h>
 #import <pthread.h>
 
@@ -82,31 +83,31 @@
             if (self.appState == UIApplicationStateBackground) {
                 continue;
             }
-            
+
             anrDetected = YES;
             [self.threadStacks addObject:[self recordThreadStack:main_thread]];
         }
-        
+
         if (anrDetected || self.anrStartTime != 0) {
             self.anrStartTime = self.anrStartTime == 0 ? runloopCycleStartTime : self.anrStartTime;
-            
+
             // ANR is happening, wait for next normal one to report
             if (self.anrStartTime == runloopCycleStartTime) {
                 usleep(self.detectInterval * 1000 * 1000 + self.threadStacks.count * self.perStackIntervalInMillSecond);
                 continue;
             }
-            
+
             if (self.shouldCaptureBackTrace && self.threadResultBlock) {
                 MTHANRRecord *record = [[MTHANRRecord alloc] init];
                 record.rawRecords = [NSArray arrayWithArray:self.threadStacks];
                 record.duration = runloopCycleStartTime - self.anrStartTime;
                 self.threadResultBlock(record);
             }
-            
+
             [self.threadStacks removeAllObjects];
             self.anrStartTime = 0;
         }
-        
+
         usleep(self.detectInterval * 1000 * 1000);
     }
 }
@@ -147,20 +148,20 @@
 
 #pragma mark - Notifications
 - (void)registerNotification {
-    NSArray *appNotice = @[UIApplicationWillTerminateNotification,
-                           UIApplicationDidBecomeActiveNotification,
-                           UIApplicationDidEnterBackgroundNotification,
-                           UIApplicationWillResignActiveNotification];
+    NSArray *appNotice = @[ UIApplicationWillTerminateNotification,
+        UIApplicationDidBecomeActiveNotification,
+        UIApplicationDidEnterBackgroundNotification,
+        UIApplicationWillResignActiveNotification ];
     for (NSString *noticeName in appNotice) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationNotification:) name:noticeName object:nil];
     }
 }
 
 - (void)unregisterNotification {
-    NSArray *appNotice = @[UIApplicationWillTerminateNotification,
-                           UIApplicationDidBecomeActiveNotification,
-                           UIApplicationDidEnterBackgroundNotification,
-                           UIApplicationWillResignActiveNotification];
+    NSArray *appNotice = @[ UIApplicationWillTerminateNotification,
+        UIApplicationDidBecomeActiveNotification,
+        UIApplicationDidEnterBackgroundNotification,
+        UIApplicationWillResignActiveNotification ];
     for (NSString *noticeName in appNotice) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:noticeName object:nil];
     }
@@ -179,13 +180,20 @@ static void mthanr_runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunL
         case kCFRunLoopAfterWaiting: {
             // UIInitializationRunLoopMode just call once, so that should detect each step
             if (observer == object.initObserverRef || object.runloopWorking == NO) {
-                object.runloopCycleStartTime = CFAbsoluteTimeGetCurrent();
+                CFAbsoluteTime current = CFAbsoluteTimeGetCurrent();
+                CFAbsoluteTime diff = current - object.runloopCycleStartTime;
+                if (diff >= object.anrThreshold) {
+                    MTHLogWarn(@"ANR happend from:%@ to %@, duration:%fs",
+                        [NSDate dateWithTimeIntervalSinceReferenceDate:object.runloopCycleStartTime],
+                        [NSDate dateWithTimeIntervalSinceReferenceDate:current],
+                        diff);
+                }
+                object.runloopCycleStartTime = current;
             }
             object.runloopWorking = YES;
             break;
         }
         case kCFRunLoopBeforeWaiting: {
-            object.runloopCycleStartTime = CFAbsoluteTimeGetCurrent();
             object.runloopWorking = NO;
             break;
         }
@@ -201,11 +209,11 @@ static void mthanr_runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunL
         CFRunLoopAddObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes);
         self.observerRef = observer;
     }
-    
+
     if (!self.initObserverRef) {
         CFRunLoopObserverContext context = {0, (__bridge void *)self, NULL, NULL};
         CFRunLoopObserverRef observer = CFRunLoopObserverCreate(kCFAllocatorDefault, kCFRunLoopAllActivities, YES, 0, &mthanr_runLoopObserverCallBack, &context);
-        CFRunLoopAddObserver(CFRunLoopGetMain(), observer, (CFRunLoopMode)@"UIInitializationRunLoopMode");
+        CFRunLoopAddObserver(CFRunLoopGetMain(), observer, (CFRunLoopMode) @"UIInitializationRunLoopMode");
         self.initObserverRef = observer;
     }
 }
@@ -216,9 +224,9 @@ static void mthanr_runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunL
         CFRelease(self.observerRef);
         self.observerRef = NULL;
     }
-    
+
     if (self.initObserverRef) {
-        CFRunLoopRemoveObserver(CFRunLoopGetMain(), self.initObserverRef, (CFRunLoopMode)@"UIInitializationRunLoopMode");
+        CFRunLoopRemoveObserver(CFRunLoopGetMain(), self.initObserverRef, (CFRunLoopMode) @"UIInitializationRunLoopMode");
         CFRelease(self.initObserverRef);
         self.initObserverRef = NULL;
     }

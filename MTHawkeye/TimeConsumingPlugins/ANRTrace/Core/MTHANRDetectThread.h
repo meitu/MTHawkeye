@@ -18,8 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void (^MTHANRThreadResultBlock)(MTHANRRecord *anrRecord);
 
 @interface MTHANRDetectThread : NSThread
-@property (nonatomic, assign) float anrThreshold;    // defualt 0.4s
-@property (nonatomic, assign) float detectInterval;  // default 0.1s, must be < anrThreshold otherwise can't detect correct
+@property (nonatomic, assign) float anrThreshold;   // defualt 0.4s
+@property (nonatomic, assign) float detectInterval; // default 0.1s, must be < anrThreshold otherwise can't detect correct
 @property (nonatomic, assign) BOOL shouldCaptureBackTrace;
 @property (nonatomic, copy) MTHANRThreadResultBlock threadResultBlock;
 
