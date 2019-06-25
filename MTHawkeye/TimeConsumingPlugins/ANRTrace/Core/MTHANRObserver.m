@@ -39,21 +39,26 @@
     return !self.detectThread.isCancelled;
 }
 
+- (double)anrThresholdInSeconds {
+    return self.detectThread.anrThreshold;
+}
+
 - (void)setShouldCaptureBackTrace:(BOOL)shouldCaptureBackTrace {
     _shouldCaptureBackTrace = shouldCaptureBackTrace;
     self.detectThread.shouldCaptureBackTrace = shouldCaptureBackTrace;
 }
 
-- (void)startWithThresholdInSeconds:(double)thresholdInSeconds {
+- (void)startWithANRThreshold:(float)thresholdInSeconds {
     self.detectThread = [[MTHANRDetectThread alloc] init];
     self.detectThread.shouldCaptureBackTrace = self.shouldCaptureBackTrace;
     __weak typeof(self) weakSelf = self;
-    [self.detectThread startWithThresholdInSeconds:thresholdInSeconds
-                                           handler:^(MTHANRRecord *_Nonnull anrRecord) {
-                                               if (weakSelf) {
-                                                   weakSelf.detectedHandler(weakSelf, anrRecord);
-                                               }
-                                           }];
+    [self.detectThread startWithDetectInterval:0.1
+                                  anrThreshold:thresholdInSeconds
+                                       handler:^(MTHANRRecord *_Nonnull anrRecord) {
+                                           if (weakSelf) {
+                                               weakSelf.detectedHandler(weakSelf, anrRecord);
+                                           }
+                                       }];
 }
 
 - (void)stop {

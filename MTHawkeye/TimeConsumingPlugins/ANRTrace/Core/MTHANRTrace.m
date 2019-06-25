@@ -55,7 +55,7 @@
         }];
 
         self.observer.shouldCaptureBackTrace = self.shouldCaptureBackTrace;
-        [self.observer startWithThresholdInSeconds:self.thresholdInSeconds];
+        [self.observer startWithANRThreshold:self.thresholdInSeconds];
     }
 }
 

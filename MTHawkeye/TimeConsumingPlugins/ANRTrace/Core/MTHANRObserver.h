@@ -18,19 +18,12 @@
 typedef void (^MTHANRObserveResultHandler)(MTHANRObserver *anrMonitor, MTHANRRecord *anrRecord);
 
 @interface MTHANRObserver : NSObject
-
-@property (nonatomic, assign, readonly) BOOL isRunning;
-
 @property (nonatomic, assign) BOOL shouldCaptureBackTrace;
-
-// 卡顿侦测阈值，默认为 0.1s
-@property (nonatomic, assign, readonly) double thresholdInSeconds;
-
+@property (nonatomic, assign, readonly) BOOL isRunning;
+@property (nonatomic, assign, readonly) double anrThresholdInSeconds;
 @property (nonatomic, copy, readonly) MTHANRObserveResultHandler monitorBlock;
 
 - (instancetype)initWithObserveResultHandler:(MTHANRObserveResultHandler)monitorBlock;
-
-- (void)startWithThresholdInSeconds:(double)thresholdInSeconds;
+- (void)startWithANRThreshold:(float)thresholdInSeconds;
 - (void)stop;
-
 @end
