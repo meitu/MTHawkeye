@@ -22,7 +22,6 @@
 @interface MTHANRDetectThread ()
 @property (nonatomic, assign) float perStackIntervalInMillSecond;
 @property (nonatomic, assign) CFRunLoopObserverRef observerRef;
-@property (atomic, assign) CFRunLoopObserverRef initObserverRef;
 @property (atomic, assign) BOOL runloopWorking;
 @property (atomic, assign) CFAbsoluteTime runloopCycleStartTime;
 @property (atomic, assign) UIApplicationState appState;
@@ -103,6 +102,11 @@
                 record.duration = runloopCycleStartTime - self.anrStartTime;
                 self.threadResultBlock(record);
             }
+            
+            MTHLogWarn(@"ANR recorded from:%@ to %@, duration:%fs",
+                       [NSDate dateWithTimeIntervalSinceReferenceDate:self.anrStartTime],
+                       [NSDate dateWithTimeIntervalSinceReferenceDate:runloopCycleStartTime],
+                       runloopCycleStartTime - self.anrStartTime);
 
             [self.threadStacks removeAllObjects];
             self.anrStartTime = 0;
@@ -178,17 +182,8 @@ static void mthanr_runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunL
         case kCFRunLoopBeforeTimers:
         case kCFRunLoopBeforeSources:
         case kCFRunLoopAfterWaiting: {
-            // UIInitializationRunLoopMode just call once, so that should detect each step
-            if (observer == object.initObserverRef || object.runloopWorking == NO) {
-                CFAbsoluteTime current = CFAbsoluteTimeGetCurrent();
-                CFAbsoluteTime diff = current - object.runloopCycleStartTime;
-                if (diff >= object.anrThreshold) {
-                    MTHLogWarn(@"ANR happend from:%@ to %@, duration:%fs",
-                        [NSDate dateWithTimeIntervalSinceReferenceDate:object.runloopCycleStartTime],
-                        [NSDate dateWithTimeIntervalSinceReferenceDate:current],
-                        diff);
-                }
-                object.runloopCycleStartTime = current;
+            if (object.runloopWorking == NO) {
+                object.runloopCycleStartTime = CFAbsoluteTimeGetCurrent();
             }
             object.runloopWorking = YES;
             break;
@@ -209,13 +204,6 @@ static void mthanr_runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunL
         CFRunLoopAddObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes);
         self.observerRef = observer;
     }
-
-    if (!self.initObserverRef) {
-        CFRunLoopObserverContext context = {0, (__bridge void *)self, NULL, NULL};
-        CFRunLoopObserverRef observer = CFRunLoopObserverCreate(kCFAllocatorDefault, kCFRunLoopAllActivities, YES, 0, &mthanr_runLoopObserverCallBack, &context);
-        CFRunLoopAddObserver(CFRunLoopGetMain(), observer, (CFRunLoopMode) @"UIInitializationRunLoopMode");
-        self.initObserverRef = observer;
-    }
 }
 
 - (void)unregisterObserver {
@@ -223,12 +211,6 @@ static void mthanr_runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunL
         CFRunLoopRemoveObserver(CFRunLoopGetMain(), self.observerRef, kCFRunLoopCommonModes);
         CFRelease(self.observerRef);
         self.observerRef = NULL;
-    }
-
-    if (self.initObserverRef) {
-        CFRunLoopRemoveObserver(CFRunLoopGetMain(), self.initObserverRef, (CFRunLoopMode) @"UIInitializationRunLoopMode");
-        CFRelease(self.initObserverRef);
-        self.initObserverRef = NULL;
     }
 }
 @end
