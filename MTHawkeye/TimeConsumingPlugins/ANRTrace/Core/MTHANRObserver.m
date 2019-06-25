@@ -39,21 +39,17 @@
     return !self.detectThread.isCancelled;
 }
 
-- (double)anrThresholdInSeconds {
-    return self.detectThread.anrThreshold;
-}
-
 - (void)setShouldCaptureBackTrace:(BOOL)shouldCaptureBackTrace {
     _shouldCaptureBackTrace = shouldCaptureBackTrace;
     self.detectThread.shouldCaptureBackTrace = shouldCaptureBackTrace;
 }
 
-- (void)startWithANRThreshold:(float)thresholdInSeconds {
+- (void)startWithDetectInterval:(float)detectInterval anrThreshold:(float)anrThreshold {
     self.detectThread = [[MTHANRDetectThread alloc] init];
     self.detectThread.shouldCaptureBackTrace = self.shouldCaptureBackTrace;
     __weak typeof(self) weakSelf = self;
-    [self.detectThread startWithDetectInterval:0.1
-                                  anrThreshold:thresholdInSeconds
+    [self.detectThread startWithDetectInterval:detectInterval
+                                  anrThreshold:anrThreshold
                                        handler:^(MTHANRRecord *_Nonnull anrRecord) {
                                            if (weakSelf) {
                                                weakSelf.detectedHandler(weakSelf, anrRecord);

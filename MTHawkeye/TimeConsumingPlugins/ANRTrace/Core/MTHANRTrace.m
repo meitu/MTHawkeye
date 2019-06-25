@@ -36,6 +36,7 @@
 - (instancetype)init {
     if ((self = [super init])) {
         _thresholdInSeconds = 0.4;
+        _detectInterval = 0.1;
     }
     return self;
 }
@@ -55,7 +56,7 @@
         }];
 
         self.observer.shouldCaptureBackTrace = self.shouldCaptureBackTrace;
-        [self.observer startWithANRThreshold:self.thresholdInSeconds];
+        [self.observer startWithDetectInterval:self.detectInterval anrThreshold:self.thresholdInSeconds];
     }
 }
 
@@ -72,6 +73,17 @@
 - (void)setThresholdInSeconds:(CGFloat)thresholdInSeconds {
     if (fabs(_thresholdInSeconds - thresholdInSeconds) > DBL_EPSILON) {
         _thresholdInSeconds = thresholdInSeconds;
+
+        if (self.observer.isRunning) {
+            [self stop];
+            [self start];
+        }
+    }
+}
+
+- (void)setDetectInterval:(CGFloat)detectInterval {
+    if (fabs(_detectInterval - detectInterval) > DBL_EPSILON) {
+        _detectInterval = detectInterval;
 
         if (self.observer.isRunning) {
             [self stop];

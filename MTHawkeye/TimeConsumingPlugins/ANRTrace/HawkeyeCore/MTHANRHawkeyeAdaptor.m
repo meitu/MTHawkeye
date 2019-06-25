@@ -57,11 +57,20 @@
                 if (fabsf([oldValue floatValue] - [newValue floatValue]) > FLT_EPSILON)
                     [MTHANRTrace shared].thresholdInSeconds = [newValue floatValue];
             }];
+
+    [[MTHawkeyeUserDefaults shared]
+        mth_addObserver:self
+                 forKey:NSStringFromSelector(@selector(anrDetectInterval))
+            withHandler:^(id _Nullable oldValue, id _Nullable newValue) {
+                if (fabsf([oldValue floatValue] - [newValue floatValue]) > FLT_EPSILON)
+                    [MTHANRTrace shared].detectInterval = [newValue floatValue];
+            }];
 }
 
 - (void)unobserveANRSettingChange {
     [[MTHawkeyeUserDefaults shared] mth_removeObserver:self forKey:NSStringFromSelector(@selector(anrTraceOn))];
     [[MTHawkeyeUserDefaults shared] mth_removeObserver:self forKey:NSStringFromSelector(@selector(anrThresholdInSeconds))];
+    [[MTHawkeyeUserDefaults shared] mth_removeObserver:self forKey:NSStringFromSelector(@selector(anrDetectInterval))];
 }
 
 // MARK: - MTHawkeyePlugin

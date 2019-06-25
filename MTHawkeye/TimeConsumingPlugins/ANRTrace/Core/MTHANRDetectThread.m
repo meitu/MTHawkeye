@@ -92,7 +92,7 @@
 
             // ANR is happening, wait for next normal one to report
             if (self.anrStartTime == runloopCycleStartTime) {
-                usleep(self.detectInterval * 1000 * 1000 + self.threadStacks.count * self.perStackIntervalInMillSecond);
+                usleep(self.detectInterval * 1000 * 1000 + (self.threadStacks.count - 1) * self.perStackIntervalInMillSecond * 1000);
                 continue;
             }
 
@@ -102,11 +102,11 @@
                 record.duration = runloopCycleStartTime - self.anrStartTime;
                 self.threadResultBlock(record);
             }
-            
-            MTHLogWarn(@"ANR recorded from:%@ to %@, duration:%fs",
-                       [NSDate dateWithTimeIntervalSinceReferenceDate:self.anrStartTime],
-                       [NSDate dateWithTimeIntervalSinceReferenceDate:runloopCycleStartTime],
-                       runloopCycleStartTime - self.anrStartTime);
+
+            MTHLogWarn(@"ANR recorded from:%@ to %@, duration:%.2fs",
+                [NSDate dateWithTimeIntervalSinceReferenceDate:self.anrStartTime],
+                [NSDate dateWithTimeIntervalSinceReferenceDate:runloopCycleStartTime],
+                runloopCycleStartTime - self.anrStartTime);
 
             [self.threadStacks removeAllObjects];
             self.anrStartTime = 0;
