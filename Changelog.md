@@ -1,5 +1,13 @@
 # MTHawkeye
 
+## 0.11.5
+
+### bugfix
+- fix AirDrop extension for FLEX 3.0.0
+- fix network transaction record filter UI
+- fix GPUImageView present FPS UI
+- fix param `top_frames_to_skip` ignored within method `mth_stack_backgrace_of_thread`
+
 ## 0.11.4
 
 ### bugfix
