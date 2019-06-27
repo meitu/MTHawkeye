@@ -13,7 +13,6 @@
 
 #import <MTHawkeye/MTHawkeyeAppStat.h>
 #import <MTHawkeye/MTHawkeyeDyldImagesUtils.h>
-#import <MTHawkeye/MTHawkeyeLogMacros.h>
 #import <MTHawkeye/mth_stack_backtrace.h>
 #import <pthread.h>
 
@@ -27,6 +26,8 @@
 @property (atomic, assign) UIApplicationState appState;
 @property (nonatomic, assign) CFAbsoluteTime anrStartTime;
 @property (nonatomic, strong) NSMutableArray<MTHANRRecordRaw *> *threadStacks;
+@property (nonatomic, assign) float anrThreshold;
+@property (nonatomic, assign) float detectInterval;
 @end
 
 @implementation MTHANRDetectThread
@@ -45,6 +46,10 @@
 }
 
 - (void)startWithDetectInterval:(float)detectInterval anrThreshold:(float)anrThreshold handler:(MTHANRThreadResultBlock)threadResultBlock {
+    if ([@(anrThreshold) compare:@(detectInterval)] != NSOrderedDescending) {
+        NSAssert(0, @"Detect Interval should be less than ANR Threshold");
+    }
+    
     self.threadResultBlock = threadResultBlock;
     self.detectInterval = detectInterval;
     self.anrThreshold = anrThreshold;
@@ -102,12 +107,7 @@
                 record.duration = runloopCycleStartTime - self.anrStartTime;
                 self.threadResultBlock(record);
             }
-
-            MTHLogWarn(@"ANR recorded from:%@ to %@, duration:%.2fs",
-                [NSDate dateWithTimeIntervalSinceReferenceDate:self.anrStartTime],
-                [NSDate dateWithTimeIntervalSinceReferenceDate:runloopCycleStartTime],
-                runloopCycleStartTime - self.anrStartTime);
-
+            
             [self.threadStacks removeAllObjects];
             self.anrStartTime = 0;
         }

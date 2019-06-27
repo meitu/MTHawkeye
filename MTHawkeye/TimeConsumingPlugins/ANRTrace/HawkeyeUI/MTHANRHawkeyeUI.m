@@ -18,6 +18,7 @@
 #import <MTHawkeye/MTHMonitorViewCell.h>
 #import <MTHawkeye/MTHawkeyeSettingTableEntity.h>
 #import <MTHawkeye/MTHawkeyeUIClient.h>
+#import <MTHawkeye/MTHToast.h>
 
 
 @interface MTHANRHawkeyeUI () <MTHANRTraceDelegate>
@@ -122,6 +123,11 @@
     };
     editor.valueChangedHandler = ^BOOL(NSString *_Nonnull newValue) {
         CGFloat value = newValue.floatValue;
+        if (value <= [MTHawkeyeUserDefaults shared].anrDetectInterval) {
+            [[MTHToast shared] showToastWithMessage:@"Detect Interval should be less than ANR Threshold" handler:nil];
+            return YES;
+        }
+        
         if (fabs(value - [MTHawkeyeUserDefaults shared].anrThresholdInSeconds) > DBL_EPSILON)
             [MTHawkeyeUserDefaults shared].anrThresholdInSeconds = value;
         return YES;
@@ -142,6 +148,11 @@
     };
     editor.valueChangedHandler = ^BOOL(NSString *_Nonnull newValue) {
         CGFloat value = newValue.floatValue;
+        if (value >= [MTHawkeyeUserDefaults shared].anrThresholdInSeconds) {
+            [[MTHToast shared] showToastWithMessage:@"Detect Interval should be less than ANR Threshold" handler:nil];
+            return YES;
+        }
+        
         if (fabs(value - [MTHawkeyeUserDefaults shared].anrDetectInterval) > DBL_EPSILON)
             [MTHawkeyeUserDefaults shared].anrDetectInterval = value;
         return YES;
