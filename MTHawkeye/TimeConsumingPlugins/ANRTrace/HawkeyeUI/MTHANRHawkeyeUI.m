@@ -16,9 +16,9 @@
 #import "MTHawkeyeUserDefaults+ANRMonitor.h"
 
 #import <MTHawkeye/MTHMonitorViewCell.h>
+#import <MTHawkeye/MTHToast.h>
 #import <MTHawkeye/MTHawkeyeSettingTableEntity.h>
 #import <MTHawkeye/MTHawkeyeUIClient.h>
-#import <MTHawkeye/MTHToast.h>
 
 
 @interface MTHANRHawkeyeUI () <MTHANRTraceDelegate>
@@ -127,7 +127,7 @@
             [[MTHToast shared] showToastWithMessage:@"Detect Interval should be less than ANR Threshold" handler:nil];
             return YES;
         }
-        
+
         if (fabs(value - [MTHawkeyeUserDefaults shared].anrThresholdInSeconds) > DBL_EPSILON)
             [MTHawkeyeUserDefaults shared].anrThresholdInSeconds = value;
         return YES;
@@ -152,7 +152,7 @@
             [[MTHToast shared] showToastWithMessage:@"Detect Interval should be less than ANR Threshold" handler:nil];
             return YES;
         }
-        
+
         if (fabs(value - [MTHawkeyeUserDefaults shared].anrDetectInterval) > DBL_EPSILON)
             [MTHawkeyeUserDefaults shared].anrDetectInterval = value;
         return YES;

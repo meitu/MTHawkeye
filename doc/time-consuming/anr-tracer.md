@@ -23,17 +23,52 @@ If you need a accurate duration time while blocking and the detail calls, consid
 
 ANR records is store under [Records file](./../hawkeye-storage.md#0x02-built-in-plugin-data-storage-instructions). Use a `collection` name `anr`, `key` as the time block event generated, `value` is a JSON string with the following fields:
 
-- `time`: the time block event generated
 - `duration`: the rough duration of blocking
+- `biases`: the biases of `duration`
+- `stacks`: all stack frame during block event 
+- `titleframe`: block event stack title string
+- `time`: the time block event generated
 - `stackframes`: sampling stack frame when the block event captured (symbolic needed), hexadecimal address string separated by `,`
 
 examples:
 
 ```json
+
 {
-    "stackframes":"0x1b050d908,0x1b05091fb,0x1b05091fb,0x1b043a15b,0x1029f1013,0x1029f0ccf,0x1029f0727,0x1029f0653,0x1dd932457,0x1dd9326bb,0x1dd73087b,0x1dd71e877,0x1dd74d87f,0x1b04dc7cb,0x1b04d745f,0x1b04d79ff",
-    "time":1553593555.7076001,
-    "duration":"1009.450078010559"
+    biases = "47.95897006988525";
+    duration = "7352.797031402588";
+    stacks = [
+        {
+            stackframes = 0x10d1f64ae;
+            time = "1561618437.344688";
+            titleframe = 0x10d1f64ae;
+        },
+        {
+            stackframes = "0x10d1f5b1f,0x10d1efe7f,0x10d19c407,0x107203a1e,0x107203717,0x1072031dd,0x107203119,0x11545e418,0x11545e62c,0x11524ecc8,0x11523e198,0x11526b32a,0x10d1b80f6,0x10d1b25bd,0x10d1b2c30,0x10d1b2301,0x10ecf02fd,0x115243ba1,0x10720e2e1,0x10d877540";
+            time = "1561618437.448422";
+            titleframe = 0x107203a1e;
+        },
+        {
+            stackframes = "0x10d1efc16,0x10d19c407,0x107203a1e,0x107203717,0x1072031dd,0x107203119,0x11545e418,0x11545e62c,0x11524ecc8,0x11523e198,0x11526b32a,0x10d1b80f6,0x10d1b25bd,0x10d1b2c30,0x10d1b2301,0x10ecf02fd,0x115243ba1,0x10720e2e1,0x10d877540";
+            time = "1561618437.601369";
+            titleframe = 0x107203a1e;
+        },
+        {
+            stackframes = "0x10bd64660,0x107203717,0x1072031dd,0x107203119,0x11545e418,0x11545e62c,0x11524ecc8,0x11523e198,0x11526b32a,0x10d1b80f6,0x10d1b25bd,0x10d1b2c30,0x10d1b2301,0x10ecf02fd,0x115243ba1,0x10720e2e1,0x10d877540";
+            time = "1561618437.803538";
+            titleframe = 0x107203717;
+        },
+        {
+            stackframes = "0x1072039e9,0x107203717,0x1072031dd,0x107203119,0x11545e418,0x11545e62c,0x11524ecc8,0x11523e198,0x11526b32a,0x10d1b80f6,0x10d1b25bd,0x10d1b2c30,0x10d1b2301,0x10ecf02fd,0x115243ba1,0x10720e2e1,0x10d877540";
+            time = "1561618438.056277";
+            titleframe = 0x1072039e9;
+        },
+                {
+            stackframes = "0x10dbd8ce4,0x10d1e0853,0x10d1efedd,0x10d19c407,0x107203a1e,0x107203717,0x1072031dd,0x107203119,0x11545e418,0x11545e62c,0x11524ecc8,0x11523e198,0x11526b32a,0x10d1b80f6,0x10d1b25bd,0x10d1b2c30,0x10d1b2301,0x10ecf02fd,0x115243ba1,0x10720e2e1,0x10d877540";
+            time = "1561618438.359641";
+            titleframe = 0x107203a1e;
+        }
+    ]
 }
 ```
 

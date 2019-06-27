@@ -49,7 +49,7 @@
     if ([@(anrThreshold) compare:@(detectInterval)] != NSOrderedDescending) {
         NSAssert(0, @"Detect Interval should be less than ANR Threshold");
     }
-    
+
     self.threadResultBlock = threadResultBlock;
     self.detectInterval = detectInterval;
     self.anrThreshold = anrThreshold;
@@ -105,9 +105,10 @@
                 MTHANRRecord *record = [[MTHANRRecord alloc] init];
                 record.rawRecords = [NSArray arrayWithArray:self.threadStacks];
                 record.duration = runloopCycleStartTime - self.anrStartTime;
+                record.biases = diff;
                 self.threadResultBlock(record);
             }
-            
+
             [self.threadStacks removeAllObjects];
             self.anrStartTime = 0;
         }

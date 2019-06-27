@@ -25,4 +25,5 @@
 @interface MTHANRRecord : NSObject
 @property (nonatomic, strong) NSArray<MTHANRRecordRaw *> *rawRecords;
 @property (nonatomic, assign) NSTimeInterval duration;
+@property (nonatomic, assign) NSTimeInterval biases;
 @end

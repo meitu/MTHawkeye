@@ -319,9 +319,8 @@ static BOOL anrReportSymbolicsRemote = NO;
     NSMutableString *content = [NSMutableString string];
 
     CGFloat duration = anrRecord.duration / 1000.f;
-    CGFloat threshold = [MTHANRTrace shared].thresholdInSeconds;
-    CGFloat biases = threshold / 2.f; // according to [NSThread sleepForTimeInterval:xx / 4.f]
-    NSString *blockingDesc = [NSString stringWithFormat:@"Blocking≈%.2fs(%.2f ~ %.2f+%.2f) \n", duration, duration, duration, biases];
+    CGFloat biases = anrRecord.biases / 1000.f;
+    NSString *blockingDesc = [NSString stringWithFormat:@"Blocking≈%.2fs(%.2f-%.2f ~ %.2f) \n", duration, duration, biases, duration];
     [content appendString:blockingDesc];
 
     if (anrReportSymbolicsRemote) {
