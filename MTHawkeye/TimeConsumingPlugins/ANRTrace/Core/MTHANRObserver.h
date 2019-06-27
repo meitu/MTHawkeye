@@ -13,25 +13,16 @@
 #import <Foundation/Foundation.h>
 
 @class MTHANRObserver;
-@class MTHANRRecordRaw;
+@class MTHANRRecord;
 
-typedef void (^MTHANRObserveResultHandler)(MTHANRObserver *anrMonitor, MTHANRRecordRaw *detectedANRRecord);
-
+typedef void (^MTHANRObserveResultHandler)(MTHANRObserver *anrMonitor, MTHANRRecord *anrRecord);
 
 @interface MTHANRObserver : NSObject
-
-@property (nonatomic, assign, readonly) BOOL isRunning;
-
 @property (nonatomic, assign) BOOL shouldCaptureBackTrace;
-
-// 卡顿侦测阈值，默认为 0.1s
-@property (nonatomic, assign, readonly) double thresholdInSeconds;
-
+@property (nonatomic, assign, readonly) BOOL isRunning;
 @property (nonatomic, copy, readonly) MTHANRObserveResultHandler monitorBlock;
 
 - (instancetype)initWithObserveResultHandler:(MTHANRObserveResultHandler)monitorBlock;
-
-- (void)startWithThresholdInSeconds:(double)thresholdInSeconds;
+- (void)startWithDetectInterval:(float)detectInterval anrThreshold:(float)anrThreshold;
 - (void)stop;
-
 @end

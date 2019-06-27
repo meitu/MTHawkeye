@@ -36,6 +36,7 @@
 - (instancetype)init {
     if ((self = [super init])) {
         _thresholdInSeconds = 0.4;
+        _detectInterval = 0.1;
     }
     return self;
 }
@@ -43,19 +44,19 @@
 - (void)start {
     if (!self.observer.isRunning) {
         __weak typeof(self) weakSelf = self;
-        self.observer = [[MTHANRObserver alloc] initWithObserveResultHandler:^(MTHANRObserver *anrMonitor, MTHANRRecordRaw *recordRaw) {
-            if (!recordRaw)
+        self.observer = [[MTHANRObserver alloc] initWithObserveResultHandler:^(MTHANRObserver *anrMonitor, MTHANRRecord *anrRecord) {
+            if (!anrRecord)
                 return;
 
             [weakSelf.delegates.allObjects enumerateObjectsUsingBlock:^(id<MTHANRTraceDelegate> _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
                 if ([obj respondsToSelector:@selector(mth_anrMonitor:didDetectANR:)]) {
-                    [obj mth_anrMonitor:weakSelf didDetectANR:recordRaw];
+                    [obj mth_anrMonitor:weakSelf didDetectANR:anrRecord];
                 }
             }];
         }];
 
         self.observer.shouldCaptureBackTrace = self.shouldCaptureBackTrace;
-        [self.observer startWithThresholdInSeconds:self.thresholdInSeconds];
+        [self.observer startWithDetectInterval:self.detectInterval anrThreshold:self.thresholdInSeconds];
     }
 }
 
@@ -72,6 +73,17 @@
 - (void)setThresholdInSeconds:(CGFloat)thresholdInSeconds {
     if (fabs(_thresholdInSeconds - thresholdInSeconds) > DBL_EPSILON) {
         _thresholdInSeconds = thresholdInSeconds;
+
+        if (self.observer.isRunning) {
+            [self stop];
+            [self start];
+        }
+    }
+}
+
+- (void)setDetectInterval:(CGFloat)detectInterval {
+    if (fabs(_detectInterval - detectInterval) > DBL_EPSILON) {
+        _detectInterval = detectInterval;
 
         if (self.observer.isRunning) {
             [self stop];

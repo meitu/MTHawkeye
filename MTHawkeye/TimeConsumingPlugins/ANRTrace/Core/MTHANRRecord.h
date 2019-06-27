@@ -9,9 +9,7 @@
 // Created by: EuanC
 //
 
-
 #import <Foundation/Foundation.h>
-
 
 @interface MTHANRRecordRaw : NSObject {
   @public
@@ -21,7 +19,11 @@
 }
 
 @property (nonatomic, assign) NSTimeInterval time;
-@property (nonatomic, assign) NSTimeInterval duration; // ms
+@property (nonatomic, assign) float cpuUsed;
+@end
 
-
+@interface MTHANRRecord : NSObject
+@property (nonatomic, strong) NSArray<MTHANRRecordRaw *> *rawRecords;
+@property (nonatomic, assign) NSTimeInterval duration;
+@property (nonatomic, assign) NSTimeInterval biases;
 @end

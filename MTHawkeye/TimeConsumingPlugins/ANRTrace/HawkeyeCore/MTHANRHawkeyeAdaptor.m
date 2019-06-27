@@ -57,11 +57,20 @@
                 if (fabsf([oldValue floatValue] - [newValue floatValue]) > FLT_EPSILON)
                     [MTHANRTrace shared].thresholdInSeconds = [newValue floatValue];
             }];
+
+    [[MTHawkeyeUserDefaults shared]
+        mth_addObserver:self
+                 forKey:NSStringFromSelector(@selector(anrDetectInterval))
+            withHandler:^(id _Nullable oldValue, id _Nullable newValue) {
+                if (fabsf([oldValue floatValue] - [newValue floatValue]) > FLT_EPSILON)
+                    [MTHANRTrace shared].detectInterval = [newValue floatValue];
+            }];
 }
 
 - (void)unobserveANRSettingChange {
     [[MTHawkeyeUserDefaults shared] mth_removeObserver:self forKey:NSStringFromSelector(@selector(anrTraceOn))];
     [[MTHawkeyeUserDefaults shared] mth_removeObserver:self forKey:NSStringFromSelector(@selector(anrThresholdInSeconds))];
+    [[MTHawkeyeUserDefaults shared] mth_removeObserver:self forKey:NSStringFromSelector(@selector(anrDetectInterval))];
 }
 
 // MARK: - MTHawkeyePlugin
@@ -106,28 +115,36 @@
 }
 
 // MARK: - MTHANRTraceDelegate
-- (void)mth_anrMonitor:(MTHANRTrace *)anrMonitor didDetectANR:(MTHANRRecordRaw *)anrRecord {
+- (void)mth_anrMonitor:(MTHANRTrace *)anrMonitor didDetectANR:(MTHANRRecord *)anrRecord {
     [self storeANRRecord:anrRecord];
 }
 
 // MARK: - storage
-
-- (void)storeANRRecord:(MTHANRRecordRaw *)anrRecord {
+- (void)storeANRRecord:(MTHANRRecord *)anrRecord {
     NSString *curTime = [NSString stringWithFormat:@"%@", @([MTHawkeyeUtility currentTime])];
 
-    NSMutableString *stackInStr = [[NSMutableString alloc] init];
-    for (int i = 0; i < anrRecord->stackframesSize; ++i) {
-        [stackInStr appendFormat:@"%p,", (void *)anrRecord->stackframes[i]];
-    }
-    if (stackInStr.length > 1) {
-        [stackInStr deleteCharactersInRange:NSMakeRange(stackInStr.length - 1, 1)];
+    NSMutableArray<NSDictionary *> *stacks = [NSMutableArray array];
+    for (MTHANRRecordRaw *rawRecord in anrRecord.rawRecords) {
+        NSMutableString *stackInStr = [[NSMutableString alloc] init];
+        for (int i = 0; i < rawRecord->stackframesSize; ++i) {
+            [stackInStr appendFormat:@"%p,", (void *)rawRecord->stackframes[i]];
+        }
+        if (stackInStr.length > 1) {
+            [stackInStr deleteCharactersInRange:NSMakeRange(stackInStr.length - 1, 1)];
+        }
+
+        NSDictionary *dict = @{
+            @"time" : @(rawRecord.time),
+            @"stackframes" : stackInStr.copy,
+            @"titleframe" : [NSString stringWithFormat:@"%p", (void *)rawRecord->titleFrame]
+        };
+        [stacks addObject:dict];
     }
 
     NSDictionary *dict = @{
-        @"time" : @(anrRecord.time),
         @"duration" : [NSString stringWithFormat:@"%@", @(anrRecord.duration * 1000)],
-        @"stackframes" : stackInStr.copy,
-        @"titleframe" : [NSString stringWithFormat:@"%p", (void *)anrRecord->titleFrame],
+        @"biases" : [NSString stringWithFormat:@"%@", @(anrRecord.biases * 1000)],
+        @"stacks" : stacks
     };
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict.copy options:0 error:&error];
@@ -139,7 +156,7 @@
     }
 }
 
-+ (NSArray<MTHANRRecordRaw *> *)readANRRecords {
++ (NSArray<MTHANRRecord *> *)readANRRecords {
     NSArray *times;
     NSArray *anrRecordsInJSON;
     [[MTHawkeyeStorage shared] readKeyValuesInCollection:@"anr" keys:&times values:&anrRecordsInJSON];
@@ -150,31 +167,42 @@
         NSError *error;
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         if (!error) {
-            MTHANRRecordRaw *record = [[MTHANRRecordRaw alloc] init];
-            record.time = [dict[@"time"] doubleValue];
-            record.duration = [dict[@"duration"] doubleValue];
-            NSArray *stackInStr = [dict[@"stackframes"] componentsSeparatedByString:@","];
-            record->stackframesSize = stackInStr.count;
-            record->stackframes = malloc(sizeof(uintptr_t) * record->stackframesSize);
-            for (int i = 0; i < stackInStr.count; ++i) {
-                NSString *frameInStr = stackInStr[i];
-                if (frameInStr.length < 3)
-                    continue;
+            MTHANRRecord *record = [[MTHANRRecord alloc] init];
+            NSMutableArray *rawReocrds = [NSMutableArray array];
+            NSArray<NSDictionary *> *stacks = dict[@"stacks"];
+            for (NSDictionary *stack in stacks) {
+                MTHANRRecordRaw *rawRecord = [[MTHANRRecordRaw alloc] init];
+                NSArray *stackInStr = [stack[@"stackframes"] componentsSeparatedByString:@","];
+                rawRecord->stackframesSize = stackInStr.count;
+                rawRecord->stackframes = malloc(sizeof(uintptr_t) * rawRecord->stackframesSize);
+                for (int i = 0; i < stackInStr.count; ++i) {
+                    NSString *frameInStr = stackInStr[i];
+                    if (frameInStr.length < 3)
+                        continue;
 
-                unsigned long long frame = 0;
-                NSScanner *scanner = [NSScanner scannerWithString:frameInStr];
-                [scanner setScanLocation:2];
-                [scanner scanHexLongLong:&frame];
-                record->stackframes[i] = (uintptr_t)frame;
+                    unsigned long long frame = 0;
+                    NSScanner *scanner = [NSScanner scannerWithString:frameInStr];
+                    [scanner setScanLocation:2];
+                    [scanner scanHexLongLong:&frame];
+                    rawRecord->stackframes[i] = (uintptr_t)frame;
+                }
+
+                unsigned long long titleframe = 0;
+                NSString *titleFrame = stack[@"titleframe"];
+                if (titleFrame.length > 0) {
+                    NSScanner *scanner = [NSScanner scannerWithString:titleFrame];
+                    [scanner setScanLocation:2];
+                    [scanner scanHexLongLong:&titleframe];
+                    rawRecord->titleFrame = (uintptr_t)titleframe;
+                }
+
+                rawRecord.time = [stack[@"time"] doubleValue];
+                [rawReocrds addObject:rawRecord];
             }
-            unsigned long long titleframe = 0;
-            NSString *titleFrame = dict[@"titleframe"];
-            if (titleFrame.length > 0) {
-                NSScanner *scanner = [NSScanner scannerWithString:titleFrame];
-                [scanner setScanLocation:2];
-                [scanner scanHexLongLong:&titleframe];
-                record->titleFrame = (uintptr_t)titleframe;
-            }
+
+            record.duration = [dict[@"duration"] doubleValue];
+            record.biases = [dict[@"biases"] doubleValue];
+            record.rawRecords = rawReocrds;
             [anrRecords addObject:record];
         } else {
             MTHLogWarn(@"[storage] read anr record failed, %@", error);

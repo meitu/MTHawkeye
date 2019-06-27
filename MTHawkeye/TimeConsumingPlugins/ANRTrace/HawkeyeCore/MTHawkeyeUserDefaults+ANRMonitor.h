@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL anrTraceOn;
 @property (nonatomic, assign) CGFloat anrThresholdInSeconds;
+@property (nonatomic, assign) CGFloat anrDetectInterval;
 
 @end
 

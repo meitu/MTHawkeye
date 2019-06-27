@@ -32,4 +32,12 @@
     [self setObject:@(anrThresholdInSeconds) forKey:NSStringFromSelector(@selector(anrThresholdInSeconds))];
 }
 
+- (CGFloat)anrDetectInterval {
+    NSNumber *value = [self objectForKey:NSStringFromSelector(@selector(anrDetectInterval))];
+    return value ? value.floatValue : 0.1f;
+}
+
+- (void)setAnrDetectInterval:(CGFloat)anrDetectInterval {
+    [self setObject:@(anrDetectInterval) forKey:NSStringFromSelector(@selector(anrDetectInterval))];
+}
 @end

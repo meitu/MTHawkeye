@@ -16,6 +16,7 @@
 #import "MTHawkeyeUserDefaults+ANRMonitor.h"
 
 #import <MTHawkeye/MTHMonitorViewCell.h>
+#import <MTHawkeye/MTHToast.h>
 #import <MTHawkeye/MTHawkeyeSettingTableEntity.h>
 #import <MTHawkeye/MTHawkeyeUIClient.h>
 
@@ -39,7 +40,7 @@
 }
 
 // MARK: - MTHANRTraceDelegate
-- (void)mth_anrMonitor:(MTHANRTrace *)anrMonitor didDetectANR:(MTHANRRecordRaw *)anrRecord {
+- (void)mth_anrMonitor:(MTHANRTrace *)anrMonitor didDetectANR:(MTHANRRecord *)anrRecord {
     NSDictionary *params = @{
         kMTHFloatingWidgetRaiseWarningParamsPanelIDKey : [self mainPanelIdentity],
         kMTHFloatingWidgetRaiseWarningParamsKeepDurationKey : @(3.f)
@@ -85,10 +86,11 @@
     MTHawkeyeSettingSectionEntity *primary = [[MTHawkeyeSettingSectionEntity alloc] init];
     primary.tag = @"anr-trace";
     primary.headerText = @"ANR Trace";
-    primary.footerText = @"";
+    primary.footerText = @"Detect Interval should be less than ANR Threshold";
     primary.cells = @[
         [self anrTraceSwitcherCell],
-        [self anrThresholdEditorCell]
+        [self anrThresholdEditorCell],
+        [self anrDetectIntervalCell]
     ];
     return primary;
 }
@@ -121,8 +123,38 @@
     };
     editor.valueChangedHandler = ^BOOL(NSString *_Nonnull newValue) {
         CGFloat value = newValue.floatValue;
+        if (value <= [MTHawkeyeUserDefaults shared].anrDetectInterval) {
+            [[MTHToast shared] showToastWithMessage:@"Detect Interval should be less than ANR Threshold" handler:nil];
+            return YES;
+        }
+
         if (fabs(value - [MTHawkeyeUserDefaults shared].anrThresholdInSeconds) > DBL_EPSILON)
             [MTHawkeyeUserDefaults shared].anrThresholdInSeconds = value;
+        return YES;
+    };
+    return editor;
+}
+
++ (MTHawkeyeSettingEditorCellEntity *)anrDetectIntervalCell {
+    MTHawkeyeSettingEditorCellEntity *editor = [[MTHawkeyeSettingEditorCellEntity alloc] init];
+    editor.title = @"ANR Detect Interval";
+    editor.inputTips = @"";
+    editor.editorKeyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    editor.valueUnits = @"s";
+    editor.setupValueHandler = ^NSString *_Nonnull {
+        CGFloat threshold = [MTHawkeyeUserDefaults shared].anrDetectInterval;
+        NSString *str = [NSString stringWithFormat:@"%.2f", threshold];
+        return str;
+    };
+    editor.valueChangedHandler = ^BOOL(NSString *_Nonnull newValue) {
+        CGFloat value = newValue.floatValue;
+        if (value >= [MTHawkeyeUserDefaults shared].anrThresholdInSeconds) {
+            [[MTHToast shared] showToastWithMessage:@"Detect Interval should be less than ANR Threshold" handler:nil];
+            return YES;
+        }
+
+        if (fabs(value - [MTHawkeyeUserDefaults shared].anrDetectInterval) > DBL_EPSILON)
+            [MTHawkeyeUserDefaults shared].anrDetectInterval = value;
         return YES;
     };
     return editor;
