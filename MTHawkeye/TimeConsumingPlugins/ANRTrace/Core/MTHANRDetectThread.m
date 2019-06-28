@@ -20,7 +20,8 @@
 
 @interface MTHANRDetectThread ()
 @property (nonatomic, assign) float perStackIntervalInMillSecond;
-@property (nonatomic, assign) CFRunLoopObserverRef observerRef;
+@property (nonatomic, assign) CFRunLoopObserverRef highPriorityObserverRef;
+@property (nonatomic, assign) CFRunLoopObserverRef lowPriorityObserverRef;
 @property (atomic, assign) BOOL runloopWorking;
 @property (atomic, assign) CFAbsoluteTime runloopCycleStartTime;
 @property (atomic, assign) UIApplicationState appState;
@@ -179,7 +180,7 @@
 }
 
 #pragma mark - Runloop Observer
-static void mthanr_runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info) {
+static void mthanr_runLoopFirstObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info) {
     MTHANRDetectThread *object = (__bridge MTHANRDetectThread *)info;
     switch (activity) {
         case kCFRunLoopBeforeTimers:
@@ -191,6 +192,14 @@ static void mthanr_runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunL
             object.runloopWorking = YES;
             break;
         }
+        default:
+            break;
+    }
+}
+
+static void mthanr_runLoopLastObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info) {
+    MTHANRDetectThread *object = (__bridge MTHANRDetectThread *)info;
+    switch (activity) {
         case kCFRunLoopBeforeWaiting: {
             object.runloopWorking = NO;
             break;
@@ -201,19 +210,32 @@ static void mthanr_runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunL
 }
 
 - (void)registerObserver {
-    if (!self.observerRef) {
+    if (!self.highPriorityObserverRef) {
         CFRunLoopObserverContext context = {0, (__bridge void *)self, NULL, NULL};
-        CFRunLoopObserverRef observer = CFRunLoopObserverCreate(kCFAllocatorDefault, kCFRunLoopAllActivities, YES, 0, &mthanr_runLoopObserverCallBack, &context);
+        CFRunLoopObserverRef observer = CFRunLoopObserverCreate(kCFAllocatorDefault, kCFRunLoopAllActivities, YES, LONG_MIN, &mthanr_runLoopFirstObserverCallBack, &context);
         CFRunLoopAddObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes);
-        self.observerRef = observer;
+        self.highPriorityObserverRef = observer;
+    }
+
+    if (!self.lowPriorityObserverRef) {
+        CFRunLoopObserverContext context = {0, (__bridge void *)self, NULL, NULL};
+        CFRunLoopObserverRef observer = CFRunLoopObserverCreate(kCFAllocatorDefault, kCFRunLoopAllActivities, YES, LONG_MAX, &mthanr_runLoopLastObserverCallBack, &context);
+        CFRunLoopAddObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes);
+        self.lowPriorityObserverRef = observer;
     }
 }
 
 - (void)unregisterObserver {
-    if (self.observerRef) {
-        CFRunLoopRemoveObserver(CFRunLoopGetMain(), self.observerRef, kCFRunLoopCommonModes);
-        CFRelease(self.observerRef);
-        self.observerRef = NULL;
+    if (self.highPriorityObserverRef) {
+        CFRunLoopRemoveObserver(CFRunLoopGetMain(), self.highPriorityObserverRef, kCFRunLoopCommonModes);
+        CFRelease(self.highPriorityObserverRef);
+        self.highPriorityObserverRef = NULL;
+    }
+
+    if (self.lowPriorityObserverRef) {
+        CFRunLoopRemoveObserver(CFRunLoopGetMain(), self.lowPriorityObserverRef, kCFRunLoopCommonModes);
+        CFRelease(self.lowPriorityObserverRef);
+        self.lowPriorityObserverRef = NULL;
     }
 }
 @end
