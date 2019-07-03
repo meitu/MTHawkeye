@@ -88,6 +88,7 @@
         if (diff >= self.anrThreshold && current > runloopCycleStartTime) {
             // may mistake when app enter background
             if (self.appState == UIApplicationStateBackground) {
+                usleep(self.detectInterval * 1000 * 1000);
                 continue;
             }
 
