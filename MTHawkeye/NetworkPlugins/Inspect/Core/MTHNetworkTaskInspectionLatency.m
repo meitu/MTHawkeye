@@ -47,8 +47,8 @@
 
         BOOL isDNSLatencyDetected = NO;
         NSTimeInterval dnsCost = 0;
-        NSURLSessionTaskMetrics *taskMetrics = transactionToInspect.taskMetrics;
-        for (NSURLSessionTaskTransactionMetrics *transactionMetrics in taskMetrics.transactionMetrics) {
+        MTHURLSessionTaskMetrics *taskMetrics = transactionToInspect.taskMetrics;
+        for (MTHURLSessionTaskTransactionMetrics *transactionMetrics in taskMetrics.transactionMetrics) {
             dnsCost = [transactionMetrics.domainLookupEndDate timeIntervalSinceDate:transactionMetrics.domainLookupStartDate];
             if (3 * dnsCost > totalCost) {
                 isDNSLatencyDetected = YES;
@@ -99,8 +99,8 @@
         BOOL isRedirectionLatencyDetected = NO;
 
         // 判断重定向时间最后一段之外的时间占时长 > 1/2
-        NSURLSessionTaskMetrics *taskMetrics = transactionToInspect.taskMetrics;
-        NSURLSessionTaskTransactionMetrics *lastTransactionMetrics = taskMetrics.transactionMetrics.lastObject;
+        MTHURLSessionTaskMetrics *taskMetrics = transactionToInspect.taskMetrics;
+        MTHURLSessionTaskTransactionMetrics *lastTransactionMetrics = taskMetrics.transactionMetrics.lastObject;
         NSTimeInterval lastTransactionCost = [lastTransactionMetrics.responseEndDate timeIntervalSinceDate:lastTransactionMetrics.fetchStartDate];
         if (totalCost > lastTransactionCost * 2) {
             isRedirectionLatencyDetected = YES;
@@ -110,7 +110,7 @@
         if (!isRedirectionLatencyDetected) {
             BOOL isContainDNSOrTCPAfterFirstRedirection = NO;
             BOOL isAfterFirstRedirection = NO;
-            for (NSURLSessionTaskTransactionMetrics *transactionMetrics in taskMetrics.transactionMetrics) {
+            for (MTHURLSessionTaskTransactionMetrics *transactionMetrics in taskMetrics.transactionMetrics) {
                 if (!isAfterFirstRedirection) {
                     if (![transactionMetrics.response isKindOfClass:[NSHTTPURLResponse class]]) {
                         continue;
@@ -207,7 +207,7 @@
         NSMutableArray *hosts = [NSMutableArray array];
         if (transactionToInspect.useURLSessionTaskMetrics && transactionToInspect.taskMetrics) {
             NSArray *metricsArray = transactionToInspect.taskMetrics.transactionMetrics;
-            for (NSURLSessionTaskTransactionMetrics *metrics in metricsArray) {
+            for (MTHURLSessionTaskTransactionMetrics *metrics in metricsArray) {
                 NSString *host = metrics.request.URL.host;
                 if (host.length > 0) {
                     [hosts addObject:host];
