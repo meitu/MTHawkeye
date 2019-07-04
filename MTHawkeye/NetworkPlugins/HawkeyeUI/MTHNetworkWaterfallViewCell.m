@@ -76,8 +76,8 @@ static const float kTaskMetricsLayerHeightL = 12.f;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability"
 
-    NSURLSessionTaskMetrics *metrics = self.viewModel.transaction.taskMetrics;
-    NSURLSessionTaskTransactionMetrics *transMetrics = metrics.transactionMetrics.lastObject;
+    MTHURLSessionTaskMetrics *metrics = self.viewModel.transaction.taskMetrics;
+    MTHURLSessionTaskTransactionMetrics *transMetrics = metrics.transactionMetrics.lastObject;
     CGFloat taskStartAt = [metrics.taskInterval.startDate timeIntervalSince1970];
     CGFloat taskDuration = metrics.taskInterval.duration;
 

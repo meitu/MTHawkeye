@@ -443,7 +443,7 @@ typedef UIViewController * (^MTHawkeyeNetworkDetailRowSelectionFuture)(void);
 
         NSDate *thisTurnTransMetricsStartFrom = transaction.startTime;
         NSInteger index = 0;
-        for (NSURLSessionTaskTransactionMetrics *transMetrics in transaction.taskMetrics.transactionMetrics) {
+        for (MTHURLSessionTaskTransactionMetrics *transMetrics in transaction.taskMetrics.transactionMetrics) {
             if (index++ == 0) {
                 NSTimeInterval beforeStartDuration = [transMetrics.fetchStartDate timeIntervalSinceDate:transaction.startTime];
                 if (beforeStartDuration > 0.005f) {

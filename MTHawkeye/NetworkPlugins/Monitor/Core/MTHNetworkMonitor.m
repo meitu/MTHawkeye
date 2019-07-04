@@ -64,7 +64,7 @@
     if (transaction.transactionState == MTHNetworkTransactionStateFinished) {
         if (transaction.useURLSessionTaskMetrics) {
             // 过滤缓存情况
-            NSURLSessionTaskTransactionMetrics *metrics = [transaction.taskMetrics.transactionMetrics lastObject];
+            MTHURLSessionTaskTransactionMetrics *metrics = [transaction.taskMetrics.transactionMetrics lastObject];
             if (metrics.resourceFetchType == NSURLSessionTaskMetricsResourceFetchTypeLocalCache) {
                 return;
             } else {

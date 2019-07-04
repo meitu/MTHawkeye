@@ -13,12 +13,11 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "MTHNetworkStat.h"
-
+#import "MTHNetworkTransactionModel.h"
 
 #ifndef MTHawkeyeNetworkDebugEnabled
 #define MTHawkeyeNetworkDebugEnabled 0
 #endif
-
 
 typedef NS_ENUM(NSInteger, MTHNetworkTransactionState) {
     MTHNetworkTransactionStateUnstarted,
@@ -37,7 +36,6 @@ typedef NS_ENUM(NSInteger, MTHNetworkHTTPContentType) {
     MTHNetworkHTTPContentTypeNULL
 };
 
-
 typedef NS_ENUM(NSInteger, MTHNetworkTransactionStatusCode) {
     MTHNetworkTransactionStatusCodeNone = 0,
     MTHNetworkTransactionStatusCode1xx = 1 << 0,
@@ -50,7 +48,6 @@ typedef NS_ENUM(NSInteger, MTHNetworkTransactionStatusCode) {
                                              | MTHNetworkTransactionStatusCode5xx
                                              | MTHNetworkTransactionStatusCodeNoResponse), /**< failed (4xx || 5xx || not response ...) */
 };
-
 
 /**
  用于记录 URLSessionTask 网络请求时的参数，用于一些网络优化建议
@@ -77,7 +74,6 @@ typedef NS_ENUM(NSInteger, MTHNetworkTransactionStatusCode) {
 
 @end
 
-
 // MAKR: -
 
 @interface MTHNetworkTransaction : NSObject
@@ -101,8 +97,7 @@ typedef NS_ENUM(NSInteger, MTHNetworkTransactionStatusCode) {
 // iOS10 开始，使用 NSURLSessionTaskMetrics 来管理网络请求记录, 设置 taskMetrics 时开启
 //
 @property (nonatomic, assign, readonly) BOOL useURLSessionTaskMetrics;
-
-@property (nonatomic, strong) NSURLSessionTaskMetrics *taskMetrics API_AVAILABLE(macosx(10.12), ios(10.0), watchos(3.0), tvos(10.0));
+@property (nonatomic, strong) MTHURLSessionTaskMetrics *taskMetrics API_AVAILABLE(ios(10.0));
 
 @property (nonatomic, assign) MTHawkeyeNetworkConnectionQuality netQualityAtStart; // 任务创建时的网络状态
 @property (nonatomic, assign) MTHawkeyeNetworkConnectionQuality netQualityAtEnd;   // 任务结束时的网络状态
