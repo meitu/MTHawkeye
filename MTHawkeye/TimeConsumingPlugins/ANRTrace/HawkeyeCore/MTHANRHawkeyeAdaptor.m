@@ -12,6 +12,7 @@
 
 #import "MTHANRHawkeyeAdaptor.h"
 #import "MTHANRTrace.h"
+#import "MTHANRTracingBuffer.h"
 #import "MTHawkeyeUserDefaults+ANRMonitor.h"
 
 #import <MTHawkeye/MTHANRRecord.h>
@@ -93,6 +94,12 @@
     if ([[MTHANRTrace shared] isRunning])
         return;
 
+    // enable anr trace buffer, needed for tracing hard stall(stall then killed by watchdog or user)
+    if (![MTHANRTracingBuffer isTracingBufferRunning]) {
+        NSString *path = [[MTHawkeyeUtility hawkeyeStoreDirectory] stringByAppendingPathComponent:@"anr_tracing_buffer"];
+        [MTHANRTracingBuffer enableTracingBufferOn:path];
+    }
+
     [MTHANRTrace shared].thresholdInSeconds = [MTHawkeyeUserDefaults shared].anrThresholdInSeconds;
     [MTHANRTrace shared].shouldCaptureBackTrace = YES;
 
@@ -108,6 +115,10 @@
 - (void)stopANRTrace {
     if (![[MTHANRTrace shared] isRunning])
         return;
+
+    if ([MTHANRTracingBuffer isTracingBufferRunning]) {
+        [MTHANRTracingBuffer disableTracingBuffer];
+    }
 
     [[MTHANRTrace shared] removeDelegate:self];
     [[MTHANRTrace shared] stop];

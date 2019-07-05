@@ -18,6 +18,7 @@
 typedef void (^MTHANRObserveResultHandler)(MTHANRObserver *anrMonitor, MTHANRRecord *anrRecord);
 
 @interface MTHANRObserver : NSObject
+
 @property (nonatomic, assign) BOOL shouldCaptureBackTrace;
 @property (nonatomic, assign, readonly) BOOL isRunning;
 @property (nonatomic, copy, readonly) MTHANRObserveResultHandler monitorBlock;
@@ -25,4 +26,5 @@ typedef void (^MTHANRObserveResultHandler)(MTHANRObserver *anrMonitor, MTHANRRec
 - (instancetype)initWithObserveResultHandler:(MTHANRObserveResultHandler)monitorBlock;
 - (void)startWithDetectInterval:(float)detectInterval anrThreshold:(float)anrThreshold;
 - (void)stop;
+
 @end

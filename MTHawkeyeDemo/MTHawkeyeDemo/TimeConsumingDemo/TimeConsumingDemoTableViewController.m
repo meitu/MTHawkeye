@@ -97,9 +97,11 @@
 
 - (void)testActions {
     NSMutableString *str = [[NSMutableString alloc] init];
-    for (int i = 0; i < 5000; i++) {
-        for (int j = 0; j < 1000; j++) {
-            [str appendString:@"1"];
+    for (int i = 0; i < 50000; i++) {
+        for (int j = 0; j < 5000; j++) {
+            @autoreleasepool {
+                [str appendString:@"1"];
+            }
         }
     }
     dispatch_async(dispatch_get_global_queue(0, 0), ^{

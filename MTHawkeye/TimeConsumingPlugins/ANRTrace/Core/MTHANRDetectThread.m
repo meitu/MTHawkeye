@@ -10,28 +10,42 @@
 //
 
 #import "MTHANRDetectThread.h"
+#import "MTHANRTracingBuffer.h"
 
 #import <MTHawkeye/MTHawkeyeAppStat.h>
 #import <MTHawkeye/MTHawkeyeDyldImagesUtils.h>
+#import <MTHawkeye/MTHawkeyeLogMacros.h>
+#import <MTHawkeye/MTHawkeyeUtility.h>
 #import <MTHawkeye/mth_stack_backtrace.h>
+
+#import <errno.h>
 #import <pthread.h>
 
 #define MTHANRTRACE_MAXSTACKCOUNT 50
 
 @interface MTHANRDetectThread ()
+
 @property (nonatomic, assign) float perStackIntervalInMillSecond;
+
 @property (nonatomic, assign) CFRunLoopObserverRef highPriorityObserverRef;
 @property (nonatomic, assign) CFRunLoopObserverRef lowPriorityObserverRef;
 @property (nonatomic, assign) CFRunLoopObserverRef highPriorityInitObserverRef;
 @property (nonatomic, assign) CFRunLoopObserverRef lowPriorityInitObserverRef;
+
 @property (atomic, assign) BOOL runloopWorking;
-@property (atomic, assign) CFAbsoluteTime runloopCycleStartTime;
+
+@property (atomic, assign) NSTimeInterval runloopEventTime;
+@property (atomic, assign) NSTimeInterval runloopCycleStopTime;
+@property (atomic, assign) NSTimeInterval enterBackgroundNotifyTime;
 @property (atomic, assign) UIApplicationState appState;
-@property (nonatomic, assign) CFAbsoluteTime anrStartTime;
+
+@property (nonatomic, assign) NSTimeInterval anrStartTime;
 @property (nonatomic, strong) NSMutableArray<MTHANRRecordRaw *> *threadStacks;
 @property (nonatomic, assign) float anrThreshold;
 @property (nonatomic, assign) float detectInterval;
+
 @end
+
 
 @implementation MTHANRDetectThread
 
@@ -56,7 +70,7 @@
     self.threadResultBlock = threadResultBlock;
     self.detectInterval = detectInterval;
     self.anrThreshold = anrThreshold;
-    self.runloopCycleStartTime = CFAbsoluteTimeGetCurrent();
+    self.runloopEventTime = 0;
     [self start];
 }
 
@@ -81,14 +95,23 @@
     });
 
     while (self.isCancelled == false) {
-        CFAbsoluteTime current = CFAbsoluteTimeGetCurrent();
-        CFAbsoluteTime runloopCycleStartTime = self.runloopCycleStartTime;
+        NSTimeInterval current = [MTHawkeyeUtility currentTime];
+        NSTimeInterval runloopCycleStartTime = self.runloopEventTime;
         float diff = current - runloopCycleStartTime;
         BOOL anrDetected = NO;
         if (diff >= self.anrThreshold && current > runloopCycleStartTime) {
-            // may mistake when app enter background
             if (self.appState == UIApplicationStateBackground) {
-                continue;
+                if (self.enterBackgroundNotifyTime != 0) {
+                    NSTimeInterval backgroundRunningTime = current - self.enterBackgroundNotifyTime;
+                    if (backgroundRunningTime > 175) {
+                        MTHLogWarn(@"background task will run out of time");
+                    }
+
+                    usleep(self.detectInterval * 1000 * 1000);
+                    continue;
+                } else {
+                    MTHLogWarn(@"in background, but main thread still block.");
+                }
             }
 
             anrDetected = YES;
@@ -149,6 +172,8 @@
         if (stackframes->frames) {
             memcpy(threadStack->stackframes, stackframes->frames, sizeof(uintptr_t) * stackframes->frames_size);
             threadStack->titleFrame = [self titleFrameForStackframes:stackframes->frames size:stackframes->frames_size];
+
+            [MTHANRTracingBuffer traceStackBacktrace:stackframes];
         }
         mth_free_stack_backtrace(stackframes);
     }
@@ -158,40 +183,65 @@
 
 #pragma mark - Notifications
 - (void)registerNotification {
-    NSArray *appNotice = @[ UIApplicationWillTerminateNotification,
-        UIApplicationDidBecomeActiveNotification,
-        UIApplicationDidEnterBackgroundNotification,
-        UIApplicationWillResignActiveNotification ];
-    for (NSString *noticeName in appNotice) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationNotification:) name:noticeName object:nil];
+    NSArray *appNotice = @[
+        UIApplicationWillEnterForegroundNotification, @(MTHawkeyeAppLifeActivityWillEnterForeground),
+        UIApplicationWillTerminateNotification, @(MTHawkeyeAppLifeActivityWillTerminate),
+        UIApplicationDidBecomeActiveNotification, @(MTHawkeyeAppLifeActivityDidBecomeActive),
+        UIApplicationDidEnterBackgroundNotification, @(MTHawkeyeAppLifeActivityDidEnterBackground),
+        UIApplicationWillResignActiveNotification, @(MTHawkeyeAppLifeActivityWillResignActive)
+    ];
+
+    for (NSInteger i = 0; i < appNotice.count; i += 2) {
+        NSString *noticeName = appNotice[i];
+        MTHawkeyeAppLifeActivity activity = [appNotice[i + 1] integerValue];
+
+        [[NSNotificationCenter defaultCenter]
+            addObserverForName:noticeName
+                        object:nil
+                         queue:nil
+                    usingBlock:^(NSNotification *_Nonnull note) {
+                        self.appState = [UIApplication sharedApplication].applicationState;
+
+                        [MTHANRTracingBuffer traceAppLifeActivity:activity];
+
+                        if (activity == MTHawkeyeAppLifeActivityDidEnterBackground) {
+                            self.enterBackgroundNotifyTime = [MTHawkeyeUtility currentTime];
+                        } else if (activity == MTHawkeyeAppLifeActivityDidBecomeActive) {
+                            self.enterBackgroundNotifyTime = 0;
+                        }
+                    }];
     }
 }
 
 - (void)unregisterNotification {
-    NSArray *appNotice = @[ UIApplicationWillTerminateNotification,
+    NSArray *appNotice = @[
+        UIApplicationWillEnterForegroundNotification,
+        UIApplicationWillTerminateNotification,
         UIApplicationDidBecomeActiveNotification,
         UIApplicationDidEnterBackgroundNotification,
-        UIApplicationWillResignActiveNotification ];
+        UIApplicationWillResignActiveNotification
+    ];
     for (NSString *noticeName in appNotice) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:noticeName object:nil];
     }
 }
 
-- (void)applicationNotification:(NSNotification *)notice {
-    self.appState = [UIApplication sharedApplication].applicationState;
-}
-
 #pragma mark - Runloop Observer
 static void mthanr_runLoopHighPriorityObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info) {
     MTHANRDetectThread *object = (__bridge MTHANRDetectThread *)info;
+
     switch (activity) {
+        case kCFRunLoopEntry:
         case kCFRunLoopBeforeTimers:
         case kCFRunLoopBeforeSources:
         case kCFRunLoopAfterWaiting: {
             // UIInitializationRunLoopMode just call once, so that should detect each step
             if (observer == object.highPriorityInitObserverRef || object.runloopWorking == NO) {
-                object.runloopCycleStartTime = CFAbsoluteTimeGetCurrent();
+                object.runloopEventTime = [MTHawkeyeUtility currentTime];
             }
+
+            [MTHANRTracingBuffer traceRunloopActivity:activity];
+
             object.runloopWorking = YES;
             break;
         }
@@ -203,8 +253,14 @@ static void mthanr_runLoopHighPriorityObserverCallBack(CFRunLoopObserverRef obse
 static void mthanr_lowPriorityObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info) {
     MTHANRDetectThread *object = (__bridge MTHANRDetectThread *)info;
     switch (activity) {
-        case kCFRunLoopBeforeWaiting: {
-            object.runloopWorking = NO;
+        case kCFRunLoopBeforeWaiting:
+        case kCFRunLoopExit: {
+            if (object.runloopWorking) {
+                object.runloopWorking = NO;
+            }
+
+            [MTHANRTracingBuffer traceRunloopActivity:activity];
+
             break;
         }
         default:
@@ -265,4 +321,5 @@ static void mthanr_lowPriorityObserverCallBack(CFRunLoopObserverRef observer, CF
         self.lowPriorityInitObserverRef = NULL;
     }
 }
+
 @end

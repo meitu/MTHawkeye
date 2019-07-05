@@ -15,6 +15,7 @@
 #import "MTHANRHawkeyeUI.h"
 #import "MTHANRRecord.h"
 #import "MTHANRTrace.h"
+#import "MTHANRTracingBuffer.h"
 #import "MTHawkeyeUserDefaults+ANRMonitor.h"
 
 #import <MTHawkeye/MTHStackFrameSymbolics.h>
@@ -40,6 +41,8 @@
 
 @property (nonatomic, copy) NSArray<MTHANRRecord *> *records;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *recordTitles;
+
+@property (nonatomic, strong) NSDictionary *previousSessionANRDetectingCache;
 
 @property (nonatomic, assign) NSInteger detailLoadingIndex;
 
@@ -128,6 +131,11 @@
 }
 
 - (void)loadData {
+    [MTHANRTracingBuffer readPreviousSessionBufferInDict:^(NSDictionary *_Nullable dict) {
+        self.previousSessionANRDetectingCache = dict;
+        MTHLog(@"previous anr buffer context: %@", dict);
+    }];
+
     self.records = [[[MTHANRHawkeyeAdaptor readANRRecords] reverseObjectEnumerator] allObjects];
     [self updateTableView];
 

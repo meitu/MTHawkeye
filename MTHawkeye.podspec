@@ -199,7 +199,7 @@ Pod::Spec.new do |s|
     tc.subspec 'ANRTrace' do |anr|
       anr.subspec 'Core' do |core|
         core.public_header_files = 'MTHawkeye/TimeConsumingPlugins/ANRTrace/Core/*.{h}'
-        core.source_files = 'MTHawkeye/TimeConsumingPlugins/ANRTrace/Core/*.{h,m}'
+        core.source_files = 'MTHawkeye/TimeConsumingPlugins/ANRTrace/Core/*.{h,m,mm}'
         core.dependency 'MTHawkeye/Utils'
         core.dependency 'MTHawkeye/StackBacktrace'
       end

@@ -10,6 +10,7 @@
 //
 
 #import "MTHANRObserver.h"
+#import <MTHawkeye/MTHawkeyeUtility.h>
 #import "MTHANRDetectThread.h"
 #import "MTHANRRecord.h"
 
