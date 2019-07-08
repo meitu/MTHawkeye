@@ -14,7 +14,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// MARK: -
 API_AVAILABLE(ios(10.0))
 @interface MTHURLSessionTaskTransactionMetrics : NSObject
 @property (copy) NSURLRequest *request;
