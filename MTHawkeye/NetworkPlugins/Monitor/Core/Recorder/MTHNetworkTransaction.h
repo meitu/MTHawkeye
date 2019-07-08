@@ -13,7 +13,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "MTHNetworkStat.h"
-#import "MTHNetworkTransactionModel.h"
+#import "MTHURLSessionTaskMetrics.h"
 
 #ifndef MTHawkeyeNetworkDebugEnabled
 #define MTHawkeyeNetworkDebugEnabled 0
