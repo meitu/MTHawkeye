@@ -310,7 +310,7 @@ typedef CFHTTPMessageRef (*MTHURLResponseGetHTTPResponse)(CFURLRef response);
             }
 
             if (transactionMetricsArray.count) {
-                [taskMetrics setValue:[transactionMetricsArray copy] forKey:@"transactionMetrics"];
+                taskMetrics.transactionMetrics = transactionMetricsArray;
             }
 
             transation.taskMetrics = taskMetrics;

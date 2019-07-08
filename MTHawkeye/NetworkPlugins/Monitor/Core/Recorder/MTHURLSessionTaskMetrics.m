@@ -43,6 +43,7 @@
         mthTranscationMetric.proxyConnection = transcationMetric.isProxyConnection;
         mthTranscationMetric.reusedConnection = transcationMetric.isReusedConnection;
         mthTranscationMetric.resourceFetchType = transcationMetric.resourceFetchType;
+        [arry addObject:mthTranscationMetric];
     }
     metrics.transactionMetrics = arry;
     return metrics;
