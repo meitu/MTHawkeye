@@ -28,6 +28,8 @@ typedef NS_ENUM(NSInteger, MTHawkeyeAppLifeActivity) {
     MTHawkeyeAppLifeActivityDidBecomeActive,
     MTHawkeyeAppLifeActivityWillResignActive,
     MTHawkeyeAppLifeActivityWillTerminate,
+    MTHawkeyeAppLifeActivityMemoryWarning,               // received memory warning.
+    MTHawkeyeAppLifeActivityBackgroundTaskWillOutOfTime, // background task running out of 175s.
 };
 extern NSString *mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivity activity);
 extern NSString *mthStringFromRunloopActivity(CFRunLoopActivity activity);
@@ -75,6 +77,9 @@ extern MTHANRTracingBufferContext mthANRTracingBufferContextFromMmapFile(NSStrin
 
  Once the App killed by system because of hard stall, we can retrieve the latest records
  from the mmap file, and find out the details of the hard stall.
+
+ Memory Impact: for memory mmapping only works on entire pages of memory,
+                it would use 16KB ( pagesize() on 64bit devices ) mmapping memory.
  */
 @interface MTHANRTracingBuffer : NSObject
 

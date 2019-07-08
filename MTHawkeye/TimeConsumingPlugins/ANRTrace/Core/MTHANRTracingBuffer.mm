@@ -31,6 +31,10 @@ NSString *mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivity activity) {
             return @"willResignActive";
         case MTHawkeyeAppLifeActivityWillTerminate:
             return @"willTerminate";
+        case MTHawkeyeAppLifeActivityMemoryWarning:
+            return @"memoryWarning";
+        case MTHawkeyeAppLifeActivityBackgroundTaskWillOutOfTime:
+            return @"bgTaskRunOutOfTime";
         default:
             return [NSString stringWithFormat:@"%@", @(activity)];
     }
@@ -65,7 +69,7 @@ BOOL mthMmapANRTracingBufferContextOn(NSString *filepath, NSString *openAttr, MT
 
     size_t sz = sizeof(MTHANRTracingBufferContext);
     if (sz < getpagesize() || (sz % getpagesize() != 0)) {
-        sz = (sz / getpagesize() + 1) * getpagesize();
+        sz = (sz / getpagesize() + 1) * getpagesize(); // 16KB on 64bit device
         if (ftruncate(fileno(fp), sz) != 0) {
             MTHLogWarn("[ANR] fail to truncate:%s, size:%zu\n", strerror(errno), sz);
             return NO;

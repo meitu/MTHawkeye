@@ -104,6 +104,7 @@
                 if (self.enterBackgroundNotifyTime != 0) {
                     NSTimeInterval backgroundRunningTime = current - self.enterBackgroundNotifyTime;
                     if (backgroundRunningTime > 175) {
+                        [MTHANRTracingBuffer traceAppLifeActivity:MTHawkeyeAppLifeActivityBackgroundTaskWillOutOfTime];
                         MTHLogWarn(@"background task will run out of time");
                     }
 
@@ -184,11 +185,18 @@
 #pragma mark - Notifications
 - (void)registerNotification {
     NSArray *appNotice = @[
-        UIApplicationWillEnterForegroundNotification, @(MTHawkeyeAppLifeActivityWillEnterForeground),
-        UIApplicationWillTerminateNotification, @(MTHawkeyeAppLifeActivityWillTerminate),
-        UIApplicationDidBecomeActiveNotification, @(MTHawkeyeAppLifeActivityDidBecomeActive),
-        UIApplicationDidEnterBackgroundNotification, @(MTHawkeyeAppLifeActivityDidEnterBackground),
-        UIApplicationWillResignActiveNotification, @(MTHawkeyeAppLifeActivityWillResignActive)
+        UIApplicationWillEnterForegroundNotification,
+        @(MTHawkeyeAppLifeActivityWillEnterForeground),
+        UIApplicationWillTerminateNotification,
+        @(MTHawkeyeAppLifeActivityWillTerminate),
+        UIApplicationDidBecomeActiveNotification,
+        @(MTHawkeyeAppLifeActivityDidBecomeActive),
+        UIApplicationDidEnterBackgroundNotification,
+        @(MTHawkeyeAppLifeActivityDidEnterBackground),
+        UIApplicationWillResignActiveNotification,
+        @(MTHawkeyeAppLifeActivityWillResignActive),
+        UIApplicationDidReceiveMemoryWarningNotification,
+        @(MTHawkeyeAppLifeActivityMemoryWarning),
     ];
 
     for (NSInteger i = 0; i < appNotice.count; i += 2) {
@@ -219,7 +227,8 @@
         UIApplicationWillTerminateNotification,
         UIApplicationDidBecomeActiveNotification,
         UIApplicationDidEnterBackgroundNotification,
-        UIApplicationWillResignActiveNotification
+        UIApplicationWillResignActiveNotification,
+        UIApplicationDidReceiveMemoryWarningNotification,
     ];
     for (NSString *noticeName in appNotice) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:noticeName object:nil];
