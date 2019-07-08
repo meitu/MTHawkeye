@@ -25,7 +25,7 @@
 
 @interface MTHANRDetectThread ()
 
-@property (nonatomic, assign) float perStackIntervalInMillSecond;
+@property (nonatomic, assign) float annealingStepInMS;
 
 @property (nonatomic, assign) CFRunLoopObserverRef highPriorityObserverRef;
 @property (nonatomic, assign) CFRunLoopObserverRef lowPriorityObserverRef;
@@ -55,7 +55,7 @@
         self.shouldCaptureBackTrace = YES;
         self.detectInterval = 0.1f;
         self.anrThreshold = 0.4f;
-        self.perStackIntervalInMillSecond = 50;
+        self.annealingStepInMS = 200;
         self.name = @"com.meitu.hawkeye.anr.observer";
         self.threadStacks = [NSMutableArray array];
     }
@@ -123,7 +123,7 @@
 
             // ANR is happening, wait for next normal one to report
             if (self.anrStartTime == runloopCycleStartTime) {
-                usleep(self.detectInterval * 1000 * 1000 + (self.threadStacks.count - 1) * self.perStackIntervalInMillSecond * 1000);
+                usleep(self.detectInterval * 1000 * 1000 + (self.threadStacks.count - 1) * self.annealingStepInMS * 1000);
                 continue;
             }
 
