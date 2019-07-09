@@ -143,12 +143,8 @@ static BOOL networkObserverEnabled = NO;
 
         NSURLConnection * (^creatorSwizzleBlock)(Class, NSURLRequest *request, id<NSURLConnectionDelegate> delegate) = ^NSURLConnection *(Class slf, NSURLRequest *request, id<NSURLConnectionDelegate> delegate) {
             id replacedDelegate = nil;
-            if (TRUE) {
-                MTHURLConnectionDelegateProxy *delegateProxy = [[MTHURLConnectionDelegateProxy alloc] initWithOriginalDelegate:delegate observer:observer];
-                replacedDelegate = delegateProxy;
-            } else {
-                replacedDelegate = delegate;
-            }
+            MTHURLConnectionDelegateProxy *delegateProxy = [[MTHURLConnectionDelegateProxy alloc] initWithOriginalDelegate:delegate observer:observer];
+            replacedDelegate = delegateProxy;
             NSURLConnection *connection = ((id(*)(id, SEL, NSURLRequest *, id))objc_msgSend)(slf, swizzledSelector, request, replacedDelegate);
             return connection;
         };
@@ -193,12 +189,8 @@ static BOOL networkObserverEnabled = NO;
 
         NSURLSession * (^creatorSwizzleBlock)(Class, NSURLSessionConfiguration *, id<NSURLSessionDelegate>, NSOperationQueue *) = ^NSURLSession *(Class slf, NSURLSessionConfiguration *cfg, id<NSURLSessionDelegate> delegate, NSOperationQueue *queue) {
             id replacedDelegate = nil;
-            if (TRUE) {
-                MTHURLSessionDelegateProxy *delegateProxy = [[MTHURLSessionDelegateProxy alloc] initWithOriginalDelegate:delegate observer:observer];
-                replacedDelegate = delegateProxy;
-            } else {
-                replacedDelegate = delegate;
-            }
+            MTHURLSessionDelegateProxy *delegateProxy = [[MTHURLSessionDelegateProxy alloc] initWithOriginalDelegate:delegate observer:observer];
+            replacedDelegate = delegateProxy;
             NSURLSession *session = ((id(*)(id, SEL, NSURLSessionConfiguration *, id, NSOperationQueue *))objc_msgSend)(slf, swizzledSelector, cfg, replacedDelegate, queue);
             return session;
         };
