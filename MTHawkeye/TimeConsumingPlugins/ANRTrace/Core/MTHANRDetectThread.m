@@ -111,7 +111,7 @@
                     usleep(self.detectInterval * 1000 * 1000);
                     continue;
                 } else {
-                    MTHLogWarn(@"in background, but main thread still block.");
+                    MTHLogWarn(@"in background, but main thread still stalling.");
                 }
             }
 
@@ -132,7 +132,6 @@
                 MTHANRRecord *record = [[MTHANRRecord alloc] init];
                 record.rawRecords = [NSArray arrayWithArray:self.threadStacks];
                 record.duration = runloopCycleStartTime - self.anrStartTime;
-                record.biases = diff;
                 self.threadResultBlock(record);
             }
 

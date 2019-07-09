@@ -205,7 +205,7 @@
     // when the app killed, it still amoung the stall, we could only get the rough time.
     self.previousSessionHardStallTimeRough = fromLastRunloopActivityToLastBacktrace;
     self.previousSessionHardStallDescTitle = @"Previous session exit unexpected";
-    self.previousSessionHardStallDescSubTitle = [NSString stringWithFormat:@"Stall at least %.0fs", self.previousSessionHardStallTimeRough];
+    self.previousSessionHardStallDescSubTitle = [NSString stringWithFormat:@"stalling at least %.0f seconds", self.previousSessionHardStallTimeRough];
 
     NSMutableArray *btBeforeLast = @[].mutableCopy;
     NSMutableArray *btAfterLast = @[].mutableCopy;
@@ -334,9 +334,9 @@
         NSString *title = nil;
         NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:anrRecord.time]];
         if (self.records[indexPath.row].duration > 0.f) {
-            title = [NSString stringWithFormat:@"[%@]  ≈ %.2fs", time, self.records[indexPath.row].duration / 1000.f];
+            title = [NSString stringWithFormat:@"[%@] stalling %.2fs", time, self.records[indexPath.row].duration / 1000.f];
         } else {
-            title = [NSString stringWithFormat:@"[%@]  > %.2fs", time, [MTHANRTrace shared].thresholdInSeconds];
+            title = [NSString stringWithFormat:@"[%@] stalling > %.2fs", time, [MTHANRTrace shared].thresholdInSeconds];
         }
         cell.textLabel.text = title;
         @synchronized(self.recordTitles) {
@@ -470,7 +470,7 @@ static BOOL anrReportSymbolicsRemote = NO;
     void (^symbolicsCompletion)(NSDictionary<NSString *, NSString *> *_Nullable symbolizedFrames, NSString *_Nullable symbolicsErrorInfo) = ^(NSDictionary<NSString *, NSString *> *_Nullable symbolizedFrames, NSString *_Nullable symbolicsErrorInfo) {
         NSMutableString *content = [NSMutableString string];
 
-        NSString *title = [NSString stringWithFormat:@"Previous session exit unexpected, stall at least %.0fs \n (From last runloop activity to last backtrace record.)\n\n", self.previousSessionHardStallTimeRough];
+        NSString *title = [NSString stringWithFormat:@"Previous session exit unexpected, stalling at least %.0fs \n (From last runloop activity to last backtrace record.)\n\n", self.previousSessionHardStallTimeRough];
 
         [content appendString:title];
 
@@ -584,9 +584,8 @@ static BOOL anrReportSymbolicsRemote = NO;
     NSMutableString *content = [NSMutableString string];
 
     CGFloat duration = anrRecord.duration / 1000.f;
-    CGFloat biases = anrRecord.biases / 1000.f;
-    NSString *blockingDesc = [NSString stringWithFormat:@"Blocking≈%.2fs(%.2f-%.2f ~ %.2f) \n", duration, duration, biases, duration];
-    [content appendString:blockingDesc];
+    NSString *stallingDesc = [NSString stringWithFormat:@"Stalling %.2f seconds\n", duration];
+    [content appendString:stallingDesc];
 
     if (anrReportSymbolicsRemote) {
         NSMutableArray *framesRaw = @[].mutableCopy;

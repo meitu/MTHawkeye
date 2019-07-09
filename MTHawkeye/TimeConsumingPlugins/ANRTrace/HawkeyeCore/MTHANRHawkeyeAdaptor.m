@@ -154,7 +154,6 @@
 
     NSDictionary *dict = @{
         @"duration" : [NSString stringWithFormat:@"%@", @(anrRecord.duration * 1000)],
-        @"biases" : [NSString stringWithFormat:@"%@", @(anrRecord.biases * 1000)],
         @"stacks" : stacks
     };
     NSError *error;
@@ -212,7 +211,6 @@
             }
 
             record.duration = [dict[@"duration"] doubleValue];
-            record.biases = [dict[@"biases"] doubleValue];
             record.rawRecords = rawReocrds;
             [anrRecords addObject:record];
         } else {
