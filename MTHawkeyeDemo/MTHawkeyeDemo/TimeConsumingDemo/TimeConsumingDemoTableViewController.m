@@ -39,18 +39,18 @@
     if (indexPath.section == 0) {
         switch (indexPath.row) {
             case 0:
-                [self runHeavyTaskOnMainThread];
+                [self stallAction];
                 break;
             case 1:
+                [self hardStallAction];
+                break;
+            case 2:
                 [self logCustomTimeEvent];
+                break;
             default:
                 break;
         }
     }
-}
-
-- (void)runHeavyTaskOnMainThread {
-    [self testAction];
 }
 
 - (void)logCustomTimeEvent {
@@ -71,9 +71,18 @@
     i++;
 }
 
-- (void)testAction {
+- (void)stallAction {
     double time1 = CFAbsoluteTimeGetCurrent();
-    [self testActions];
+    [self testActions:10000 loopCount2:1000];
+
+    double time2 = CFAbsoluteTimeGetCurrent();
+
+    NSLog(@"actual blocking : %.2fms", (time2 - time1) * 1000.f);
+}
+
+- (void)hardStallAction {
+    double time1 = CFAbsoluteTimeGetCurrent();
+    [self testActions:50000 loopCount2:5000];
 
     double time2 = CFAbsoluteTimeGetCurrent();
 
@@ -95,10 +104,10 @@
     }
 }
 
-- (void)testActions {
+- (void)testActions:(NSInteger)loopCount1 loopCount2:(NSInteger)loopCount2 {
     NSMutableString *str = [[NSMutableString alloc] init];
-    for (int i = 0; i < 50000; i++) {
-        for (int j = 0; j < 5000; j++) {
+    for (int i = 0; i < loopCount1; i++) {
+        for (int j = 0; j < loopCount2; j++) {
             @autoreleasepool {
                 [str appendString:@"1"];
             }
