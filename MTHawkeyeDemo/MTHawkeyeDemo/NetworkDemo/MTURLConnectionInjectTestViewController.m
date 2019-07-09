@@ -8,7 +8,7 @@
 
 #import "MTURLConnectionInjectTestViewController.h"
 
-@interface MTURLConnectionInjectTestViewController () <NSURLConnectionDelegate, NSURLConnectionDataDelegate, NSURLSessionDelegate>
+@interface MTURLConnectionInjectTestViewController () <NSURLConnectionDelegate, NSURLConnectionDataDelegate, NSURLSessionDelegate, NSURLSessionDataDelegate, NSURLConnectionDataDelegate>
 
 @property (nonatomic, copy) NSArray<NSString *> *itemTitles;
 
@@ -76,9 +76,17 @@
     [task resume];
 }
 
-// MARK: - Without Connection/Session Delegates
-//- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-//    NSLog(@"%@ did finish loading", connection);
-//}
+- (void)URLSession:(NSURLSession *)session
+              dataTask:(NSURLSessionDataTask *)dataTask
+    didReceiveResponse:(NSURLResponse *)response
+     completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler {
 
+    if (completionHandler) {
+        completionHandler(NSURLSessionResponseAllow);
+    }
+}
+
+- (void)connection:(NSURLConnection *)connection
+    didReceiveResponse:(NSURLResponse *)response {
+}
 @end

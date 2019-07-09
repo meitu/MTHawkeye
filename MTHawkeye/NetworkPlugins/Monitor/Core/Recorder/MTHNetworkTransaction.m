@@ -30,14 +30,13 @@ typedef CFHTTPMessageRef (*MTHURLResponseGetHTTPResponse)(CFURLRef response);
 
 @end
 
-
 @implementation MTHNetworkTransaction
 
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability"
 
-- (void)setTaskMetrics:(NSURLSessionTaskMetrics *)taskMetrics {
+- (void)setTaskMetrics:(MTHURLSessionTaskMetrics *)taskMetrics {
     self.useURLSessionTaskMetrics = (taskMetrics != nil);
     _taskMetrics = taskMetrics;
 }
@@ -52,7 +51,7 @@ typedef CFHTTPMessageRef (*MTHURLResponseGetHTTPResponse)(CFURLRef response);
 
 - (NSTimeInterval)latency {
     if (self.useURLSessionTaskMetrics) {
-        NSURLSessionTaskTransactionMetrics *metrics = self.taskMetrics.transactionMetrics.lastObject;
+        MTHURLSessionTaskTransactionMetrics *metrics = self.taskMetrics.transactionMetrics.lastObject;
         NSTimeInterval latency = [metrics.responseStartDate timeIntervalSinceDate:self.taskMetrics.taskInterval.startDate];
         return latency;
     } else {
@@ -280,38 +279,38 @@ typedef CFHTTPMessageRef (*MTHURLResponseGetHTTPResponse)(CFURLRef response);
     NSDictionary *taskMetricsDictionary;
     if ((taskMetricsDictionary = dictionary[@"task_metrics"])) {
         if (@available(iOS 10.0, *)) {
-            NSURLSessionTaskMetrics *taskMetrics = [[NSURLSessionTaskMetrics alloc] init];
-            [taskMetrics setValue:taskMetricsDictionary[@"redirect_count"] forKey:@"redirectCount"];
+            MTHURLSessionTaskMetrics *taskMetrics = [[MTHURLSessionTaskMetrics alloc] init];
+            taskMetrics.redirectCount = ((NSNumber *)taskMetricsDictionary[@"redirect_count"]).unsignedIntegerValue;
 
             NSDictionary *taskIntervalDictionary = taskMetricsDictionary[@"task_interval"];
-            NSDateInterval *dateInterval = [[NSDateInterval alloc] initWithStartDate:[NSDate dateWithTimeIntervalSince1970:[taskIntervalDictionary[@"start"] doubleValue]]
+            NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:[taskIntervalDictionary[@"start"] doubleValue]];
+            NSDateInterval *dateInterval = [[NSDateInterval alloc] initWithStartDate:startDate
                                                                             duration:[taskIntervalDictionary[@"duration"] doubleValue]];
-            [taskMetrics setValue:dateInterval forKey:@"taskInterval"];
+            taskMetrics.taskInterval = dateInterval;
 
             NSArray<NSDictionary *> *transactionMetricsDictionaryArray = taskMetricsDictionary[@"transaction_metrics"];
-            NSMutableArray<NSURLSessionTaskTransactionMetrics *> *transactionMetricsArray = [NSMutableArray arrayWithCapacity:transactionMetricsDictionaryArray.count];
+            NSMutableArray<MTHURLSessionTaskTransactionMetrics *> *transactionMetricsArray = [NSMutableArray arrayWithCapacity:transactionMetricsDictionaryArray.count];
             for (NSDictionary *transMetricsDictionary in transactionMetricsDictionaryArray) {
-                NSURLSessionTaskTransactionMetrics *transMetrics = [[NSURLSessionTaskTransactionMetrics alloc] init];
-                [transMetrics setValue:request forKey:@"request"];
-                [transMetrics setValue:transMetricsDictionary[@"type"] forKey:@"resourceFetchType"];
-                [transMetrics setValue:[NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"fetch_start"] doubleValue]] forKey:@"fetchStartDate"];
-                [transMetrics setValue:[NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"dns_start"] doubleValue]] forKey:@"domainLookupStartDate"];
-                [transMetrics setValue:[NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"dns_end"] doubleValue]] forKey:@"domainLookupEndDate"];
-                [transMetrics setValue:[NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"conn_start"] doubleValue]] forKey:@"connectStartDate"];
-                [transMetrics setValue:[NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"conn_end"] doubleValue]] forKey:@"connectEndDate"];
-                [transMetrics setValue:[NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"sec_conn_start"] doubleValue]] forKey:@"secureConnectionStartDate"];
-                [transMetrics setValue:[NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"sec_conn_end"] doubleValue]] forKey:@"secureConnectionEndDate"];
-                [transMetrics setValue:[NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"req_start"] doubleValue]] forKey:@"requestStartDate"];
-                [transMetrics setValue:[NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"req_end"] doubleValue]] forKey:@"requestEndDate"];
-                [transMetrics setValue:[NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"req_end"] doubleValue]] forKey:@"requestEndDate"];
-                [transMetrics setValue:[NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"res_start"] doubleValue]] forKey:@"responseStartDate"];
-                [transMetrics setValue:[NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"res_end"] doubleValue]] forKey:@"responseEndDate"];
-                [transMetrics setValue:transMetricsDictionary[@"protocol"] forKey:@"networkProtocolName"];
+                MTHURLSessionTaskTransactionMetrics *transMetrics = [[MTHURLSessionTaskTransactionMetrics alloc] init];
+                transMetrics.request = request;
+                transMetrics.resourceFetchType = ((NSNumber *)transMetricsDictionary[@"type"]).integerValue;
+                transMetrics.fetchStartDate = [NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"fetch_start"] doubleValue]];
+                transMetrics.domainLookupStartDate = [NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"dns_start"] doubleValue]];
+                transMetrics.domainLookupEndDate = [NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"dns_end"] doubleValue]];
+                transMetrics.connectStartDate = [NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"conn_start"] doubleValue]];
+                transMetrics.connectEndDate = [NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"conn_end"] doubleValue]];
+                transMetrics.secureConnectionStartDate = [NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"sec_conn_start"] doubleValue]];
+                transMetrics.secureConnectionEndDate = [NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"sec_conn_end"] doubleValue]];
+                transMetrics.requestStartDate = [NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"req_start"] doubleValue]];
+                transMetrics.requestEndDate = [NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"req_end"] doubleValue]];
+                transMetrics.responseStartDate = [NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"res_start"] doubleValue]];
+                transMetrics.responseEndDate = [NSDate dateWithTimeIntervalSince1970:[transMetricsDictionary[@"res_end"] doubleValue]];
+                transMetrics.networkProtocolName = transMetricsDictionary[@"protocol"];
                 [transactionMetricsArray addObject:transMetrics];
             }
 
             if (transactionMetricsArray.count) {
-                [taskMetrics setValue:[transactionMetricsArray copy] forKey:@"transactionMetrics"];
+                taskMetrics.transactionMetrics = transactionMetricsArray;
             }
 
             transation.taskMetrics = taskMetrics;
@@ -396,7 +395,7 @@ typedef CFHTTPMessageRef (*MTHURLResponseGetHTTPResponse)(CFURLRef response);
         taskMetrics[@"task_interval"] = taskInterval.copy;
 
         NSMutableArray *transactionMetrics = @[].mutableCopy;
-        for (NSURLSessionTaskTransactionMetrics *metrics in self.taskMetrics.transactionMetrics) {
+        for (MTHURLSessionTaskTransactionMetrics *metrics in self.taskMetrics.transactionMetrics) {
             NSMutableDictionary *metricsDict = @{}.mutableCopy;
             metricsDict[@"request_url"] = metrics.request.URL.absoluteString ?: @"";
             metricsDict[@"type"] = @(metrics.resourceFetchType);

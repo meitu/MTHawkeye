@@ -212,7 +212,7 @@
             return;
         }
 
-        transaction.taskMetrics = metrics;
+        transaction.taskMetrics = [MTHURLSessionTaskMetrics metricsFromSystemMetrics:metrics];
         [self cacheTransactionAsUpdate:transaction];
     });
 }

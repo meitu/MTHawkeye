@@ -136,7 +136,7 @@ NSInteger gMTHNetworkInspectionStartupDNSCostLimit = 0.2; //
         }
 
         NSTimeInterval dnsDurationCost = 0.f;
-        for (NSURLSessionTaskTransactionMetrics *metrics in transaction.taskMetrics.transactionMetrics) {
+        for (MTHURLSessionTaskTransactionMetrics *metrics in transaction.taskMetrics.transactionMetrics) {
             NSTimeInterval itemDnsDuration = [metrics.domainLookupEndDate timeIntervalSinceDate:metrics.domainLookupStartDate];
             if (itemDnsDuration > 0.001f) {
                 context.dnsCostTotalOnStartup += itemDnsDuration;
@@ -248,7 +248,7 @@ NSInteger gMTHNetworkInspectionStartupTCPTimeCostLimit = 0.4; // seconds
         }
 
         NSTimeInterval tcpConnDurationCost = 0.f;
-        for (NSURLSessionTaskTransactionMetrics *metrics in transaction.taskMetrics.transactionMetrics) {
+        for (MTHURLSessionTaskTransactionMetrics *metrics in transaction.taskMetrics.transactionMetrics) {
             NSTimeInterval itemTCPConnDuration = [metrics.connectEndDate timeIntervalSinceDate:metrics.connectStartDate];
             if (itemTCPConnDuration > 0.001f) {
                 context.tcpConnCostTotalOnStartup += itemTCPConnDuration;
@@ -344,7 +344,7 @@ NSInteger gMTHNetworkInspectionStartupTCPTimeCostLimit = 0.4; // seconds
         }
 
         // queueing duration
-        NSURLSessionTaskTransactionMetrics *metrics = [transaction.taskMetrics.transactionMetrics firstObject];
+        MTHURLSessionTaskTransactionMetrics *metrics = [transaction.taskMetrics.transactionMetrics firstObject];
         NSTimeInterval queueingDuration = 0;
         if (metrics.domainLookupStartDate) {
             queueingDuration = [metrics.domainLookupStartDate timeIntervalSinceDate:metrics.fetchStartDate];
@@ -422,7 +422,7 @@ NSInteger gMTHNetworkInspectionStartupTCPTimeCostLimit = 0.4; // seconds
         }
 
         NSTimeInterval connDuration = 0;
-        for (NSURLSessionTaskTransactionMetrics *metrics in transaction.taskMetrics.transactionMetrics) {
+        for (MTHURLSessionTaskTransactionMetrics *metrics in transaction.taskMetrics.transactionMetrics) {
             connDuration += [metrics.connectEndDate timeIntervalSinceDate:metrics.connectStartDate];
         }
         if (connDuration <= 0.002f) {
@@ -440,7 +440,7 @@ NSInteger gMTHNetworkInspectionStartupTCPTimeCostLimit = 0.4; // seconds
                 [parallelTransactionRequestIndexes addObject:@(trans.requestIndex)];
 
                 NSTimeInterval connDuration = 0;
-                for (NSURLSessionTaskTransactionMetrics *metrics in trans.taskMetrics.transactionMetrics) {
+                for (MTHURLSessionTaskTransactionMetrics *metrics in trans.taskMetrics.transactionMetrics) {
                     connDuration += [metrics.connectEndDate timeIntervalSinceDate:metrics.connectStartDate];
                 }
                 if (connDuration > tcpConnectionDurationFilterLimit) {
