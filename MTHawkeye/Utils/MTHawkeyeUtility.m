@@ -85,17 +85,58 @@ MTHawkeyeStoreDirectoryOption gMTHawkeyeStoreDirectoryRoot = MTHawkeyeStoreDirec
     static NSString *storeDirectory;
     dispatch_once(&onceToken, ^{
         NSString *hawkeyePath = [MTHawkeyeUtility hawkeyeStoreDirectory];
-        NSTimeInterval appLaunchedTime = [MTHawkeyeUtility appLaunchedTime];
-        NSDate *launchedDate = [NSDate dateWithTimeIntervalSince1970:appLaunchedTime];
-
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:[self currentStoreDirectoryNameFormat]];
-        [dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
-        NSString *formattedDateString = [dateFormatter stringFromDate:launchedDate];
-
+        NSString *formattedDateString = [self currentStorePathLastComponent];
         storeDirectory = [hawkeyePath stringByAppendingPathComponent:formattedDateString];
     });
+    NSString *pre = [self previousSessionStorePath];
+
     return storeDirectory;
+}
+
++ (NSString *)currentStorePathLastComponent {
+    NSTimeInterval appLaunchedTime = [MTHawkeyeUtility appLaunchedTime];
+    NSDate *launchedDate = [NSDate dateWithTimeIntervalSince1970:appLaunchedTime];
+
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:[self currentStoreDirectoryNameFormat]];
+    [dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
+    NSString *formattedDateString = [dateFormatter stringFromDate:launchedDate];
+    return formattedDateString;
+}
+
++ (NSString *)previousSessionStorePath {
+    static dispatch_once_t onceToken;
+    static NSString *preStoreDirectory = nil;
+    dispatch_once(&onceToken, ^{
+        NSString *hawkeyePath = [MTHawkeyeUtility hawkeyeStoreDirectory];
+        NSArray<NSString *> *logDirectories = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:hawkeyePath error:NULL];
+
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:[MTHawkeyeUtility currentStoreDirectoryNameFormat]];
+        [dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
+
+        NSIndexSet *cachesIndexSet = [logDirectories
+            indexesOfObjectsWithOptions:0
+                            passingTest:^BOOL(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                                NSDate *createDate = [dateFormatter dateFromString:obj];
+                                return createDate ? YES : NO;
+                            }];
+        logDirectories = [logDirectories objectsAtIndexes:cachesIndexSet];
+        logDirectories = [logDirectories sortedArrayUsingComparator:^NSComparisonResult(NSString *_Nonnull obj1, NSString *_Nonnull obj2) {
+            return [obj2 compare:obj1];
+        }];
+
+        NSString *currentSessionDirName = [self currentStorePathLastComponent];
+        // in case current session directory not creat yet.
+        if ([logDirectories.firstObject isEqualToString:currentSessionDirName]) {
+            if (logDirectories.count >= 2) {
+                preStoreDirectory = logDirectories[1];
+            }
+        } else {
+            preStoreDirectory = [logDirectories firstObject];
+        }
+    });
+    return preStoreDirectory;
 }
 
 @end
