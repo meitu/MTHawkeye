@@ -42,7 +42,13 @@
 @property (nonatomic, copy) NSArray<MTHANRRecord *> *records;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *recordTitles;
 
-@property (nonatomic, strong) NSDictionary *previousSessionANRDetectingCache;
+@property (nonatomic, assign) BOOL showPreviousSessionRearmostContext;
+
+@property (nonatomic, assign) NSTimeInterval previousSessionHardStallTimeRough;
+@property (nonatomic, copy) NSString *previousSessionHardStallDescTitle;
+@property (nonatomic, copy) NSString *previousSessionHardStallDescSubTitle;
+@property (nonatomic, copy) NSDictionary *previousSessionHardStallDetail;
+@property (nonatomic, assign) BOOL previousSessionDetailLoading;
 
 @property (nonatomic, assign) NSInteger detailLoadingIndex;
 
@@ -132,7 +138,7 @@
 
 - (void)loadData {
     [MTHANRTracingBuffer readPreviousSessionBufferInDict:^(NSDictionary *_Nullable dict) {
-        self.previousSessionANRDetectingCache = dict;
+        [self checkIfPreviousSessionCrashUnexpected:dict];
         MTHLog(@"previous anr buffer context: %@", dict);
     }];
 
@@ -140,6 +146,86 @@
     [self updateTableView];
 
     [self symbolicateRecordTitles];
+}
+
+- (void)checkIfPreviousSessionCrashUnexpected:(NSDictionary *)preSessionANRContext {
+    self.showPreviousSessionRearmostContext = NO;
+
+    NSArray *applifeActivities = preSessionANRContext[@"applife"];
+    if (applifeActivities.count == 0) {
+        MTHLogWarn(@"the previous session applife activities records is empty.");
+        return;
+    }
+
+    BOOL isPreSessionActive = YES;
+    NSTimeInterval lastMemoryWarningTime = 0;
+    for (NSDictionary *activityDict in [applifeActivities.reverseObjectEnumerator allObjects]) {
+        NSInteger activity = [activityDict[@"activity"] integerValue];
+        if (isPreSessionActive && (activity == MTHawkeyeAppLifeActivityWillTerminate || activity == MTHawkeyeAppLifeActivityDidEnterBackground)) {
+            isPreSessionActive = NO;
+        }
+        if (lastMemoryWarningTime == 0 && activity == MTHawkeyeAppLifeActivityMemoryWarning) {
+            lastMemoryWarningTime = [activityDict[@"time"] doubleValue];
+        }
+    }
+
+    if (!isPreSessionActive) {
+        // previous session normally exit.
+        return;
+    }
+
+    NSTimeInterval fromLastRunloopActivityToLastBacktrace = 0;
+    NSArray *runloopActivities = preSessionANRContext[@"runloop"];
+    NSArray *backtraceList = preSessionANRContext[@"stackbacktrace"];
+
+    NSDictionary *lastRLActivity = nil;
+    NSTimeInterval lastRLActivityTime = 0;
+
+    if (runloopActivities.count == 0 || backtraceList.count == 0) {
+        if (runloopActivities.count == 0) MTHLogInfo(@"the previous session runloop activities records is empty.");
+        if (backtraceList.count == 0) MTHLogInfo(@"the previous session backtrace records is empty.");
+    } else {
+        lastRLActivity = [runloopActivities lastObject];
+        lastRLActivityTime = [lastRLActivity[@"time"] doubleValue];
+
+        NSDictionary *lastBacktrace = [backtraceList lastObject];
+        NSTimeInterval lastBTTime = [lastBacktrace[@"time"] doubleValue];
+
+        fromLastRunloopActivityToLastBacktrace = lastBTTime - lastRLActivityTime;
+    }
+
+    if (fromLastRunloopActivityToLastBacktrace <= 0) {
+        self.previousSessionHardStallDescTitle = @"Previous session exit unexpected";
+        self.previousSessionHardStallDescSubTitle = @"Empty stall record captured.";
+        return;
+    }
+
+    self.showPreviousSessionRearmostContext = YES;
+
+    // when the app killed, it still amoung the stall, we could only get the rough time.
+    self.previousSessionHardStallTimeRough = fromLastRunloopActivityToLastBacktrace;
+    self.previousSessionHardStallDescTitle = @"Previous session exit unexpected";
+    self.previousSessionHardStallDescSubTitle = [NSString stringWithFormat:@"Stall at least %.0fs", self.previousSessionHardStallTimeRough];
+
+    NSMutableArray *btBeforeLast = @[].mutableCopy;
+    NSMutableArray *btAfterLast = @[].mutableCopy;
+
+    for (NSDictionary *bt in backtraceList) {
+        NSTimeInterval time = [bt[@"time"] doubleValue];
+        if (time > lastRLActivityTime) {
+            [btAfterLast addObject:bt];
+        } else {
+            [btBeforeLast addObject:bt];
+        }
+    }
+
+    self.previousSessionHardStallDetail = @{
+        @"btAfter" : [btAfterLast copy],
+        @"btBefore" : [btBeforeLast copy],
+        @"lastRunloopActivity" : lastRLActivity,
+        @"runloopActivities" : runloopActivities,
+        @"appLifeActivities" : applifeActivities,
+    };
 }
 
 - (void)symbolicateRecordTitles {
@@ -190,21 +276,34 @@
 
 // MARK: - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if (self.records.count > 0)
-        return 2;
+    if (self.records.count == 0 && self.showPreviousSessionRearmostContext)
+        return 1;
+    else if (self.records.count > 0)
+        return self.showPreviousSessionRearmostContext ? 3 : 2;
     else
         return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == 0)
+    if (section == 0) {
         return 1;
-    else
+    } else if (section == 1) {
         return self.records.count;
+    } else {
+        return 1; // previous session buffer context
+    }
+}
+
+- (BOOL)isRemoteSymbolicSwitchCell:(NSIndexPath *)indexPath {
+    return indexPath.section == 0 && self.records.count > 0;
+}
+
+- (BOOL)isPreviousSessionHardStallCell:(NSIndexPath *)indexPath {
+    return (indexPath.section == 2) || (indexPath.section == 0 && self.records.count == 0);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 0) {
+    if ([self isRemoteSymbolicSwitchCell:indexPath]) {
         MTHawkeyeSettingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"mt-hawkeye-setting" forIndexPath:indexPath];
         cell.model = [self remoteSymbolicisSwitcherCell];
         return cell;
@@ -216,7 +315,21 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
 
-    if (indexPath.row < self.records.count) {
+    if ([self isPreviousSessionHardStallCell:indexPath]) { // previous session buffer context
+        cell.textLabel.text = self.previousSessionHardStallDescTitle;
+        cell.detailTextLabel.text = self.previousSessionHardStallDescSubTitle;
+        if (self.previousSessionHardStallDetail) {
+            if (self.previousSessionDetailLoading) {
+                UIActivityIndicatorView *loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+                cell.accessoryView = loadingView;
+                [loadingView startAnimating];
+            } else {
+                cell.accessoryView = nil;
+            }
+        } else {
+            cell.accessoryType = UITableViewCellAccessoryNone;
+        }
+    } else if (indexPath.row < self.records.count) {
         MTHANRRecordRaw *anrRecord = [self.records[indexPath.row].rawRecords firstObject];
         NSString *title = nil;
         NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:anrRecord.time]];
@@ -286,8 +399,11 @@ static BOOL anrReportSymbolicsRemote = NO;
 
 // MARK: UITableViewDelegate
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 0)
+    if ([self isRemoteSymbolicSwitchCell:indexPath])
         return NO;
+
+    if ([self isPreviousSessionHardStallCell:indexPath])
+        return !self.previousSessionDetailLoading;
 
     if (self.detailLoadingIndex < 0)
         return YES;
@@ -296,9 +412,32 @@ static BOOL anrReportSymbolicsRemote = NO;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 0)
+    if ([self isRemoteSymbolicSwitchCell:indexPath])
         return;
 
+    // previous hard stall cell.
+    if ([self isPreviousSessionHardStallCell:indexPath]) {
+        if (self.previousSessionDetailLoading)
+            return;
+
+        self.previousSessionDetailLoading = YES;
+        [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+            [self convertPreviousHardStallInfo:self.previousSessionHardStallDetail
+                readableResultCompletionHandler:^(NSString *desc) {
+                    dispatch_async(dispatch_get_main_queue(), ^(void) {
+                        self.previousSessionDetailLoading = NO;
+                        [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
+
+                        MTHawkeyeWebViewController *vc = [[MTHawkeyeWebViewController alloc] initWithText:desc];
+                        [self.navigationController pushViewController:vc animated:YES];
+                    });
+                }];
+        });
+        return;
+    }
+
+    // anr records
     if (self.detailLoadingIndex >= 0)
         return;
 
@@ -323,6 +462,124 @@ static BOOL anrReportSymbolicsRemote = NO;
     }
 }
 
+- (void)convertPreviousHardStallInfo:(NSDictionary *)previousSessionHardStall readableResultCompletionHandler:(void (^)(NSString *desc))completion {
+    NSArray *btAfterLastActivity = self.previousSessionHardStallDetail[@"btAfter"];
+    NSArray *btBeforeLastActivity = self.previousSessionHardStallDetail[@"btBefore"];
+
+
+    void (^symbolicsCompletion)(NSDictionary<NSString *, NSString *> *_Nullable symbolizedFrames, NSString *_Nullable symbolicsErrorInfo) = ^(NSDictionary<NSString *, NSString *> *_Nullable symbolizedFrames, NSString *_Nullable symbolicsErrorInfo) {
+        NSMutableString *content = [NSMutableString string];
+
+        NSString *title = [NSString stringWithFormat:@"Previous session exit unexpected, stall at least %.0fs \n (From last runloop activity to last backtrace record.)\n\n", self.previousSessionHardStallTimeRough];
+
+        [content appendString:title];
+
+        if (symbolicsErrorInfo.length > 0) {
+            [content appendFormat:@"%@\n\n", symbolicsErrorInfo];
+        }
+
+        NSDictionary *lastRunloopActivity = self.previousSessionHardStallDetail[@"lastRunloopActivity"];
+        NSString *lastRunloopActivityDesc = nil;
+        if (lastRunloopActivity.count > 0) {
+            NSTimeInterval time = [lastRunloopActivity[@"time"] doubleValue];
+            NSString *timeStr = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:time]];
+            lastRunloopActivityDesc = [NSString stringWithFormat:@"%@: %@ (last runloop activity)", timeStr, lastRunloopActivity[@"activity"]];
+            [content appendFormat:@"\n%@\n\n", lastRunloopActivityDesc];
+        }
+
+        [content appendString:@"\n\n---- stack backtrace *after* last runloop activity ----\n\n"];
+        if (btAfterLastActivity.count > 0) {
+            for (NSDictionary *btDict in btAfterLastActivity) {
+                NSTimeInterval time = [btDict[@"time"] doubleValue];
+                NSString *timeStr = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:time]];
+                [content appendFormat:@"%@:\n", timeStr];
+                NSArray *rawFrames = [btDict[@"frames"] componentsSeparatedByString:@","];
+                for (int i = 0; i < rawFrames.count; ++i) {
+                    NSString *rawFrame = rawFrames[i];
+                    if (symbolizedFrames[rawFrame]) {
+                        [content appendFormat:@"%*u %@\n", 2, i, symbolizedFrames[rawFrame]];
+                    } else {
+                        [content appendFormat:@"%*u %@\n", 2, i, rawFrame];
+                    }
+                }
+                [content appendString:@"\n"];
+            }
+        }
+        [content appendString:@"\n----\n"];
+
+        [content appendString:@"\n\n---- the lastest runloop activities ----\n\n"];
+
+        NSArray *runloopActivities = self.previousSessionHardStallDetail[@"runloopActivities"];
+        // only display the last 5
+        if (runloopActivities.count > 5)
+            runloopActivities = [runloopActivities subarrayWithRange:NSMakeRange(runloopActivities.count - 5, 5)];
+
+        for (NSDictionary *activityDict in runloopActivities) {
+            NSTimeInterval time = [activityDict[@"time"] doubleValue];
+            NSString *timeStr = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:time]];
+            [content appendFormat:@"%@: %@\n", timeStr, activityDict[@"activity"]];
+        }
+        [content appendString:@"\n----\n"];
+
+        [content appendString:@"\n\n---- the lastest applife activities ----\n\n"];
+        NSArray *appLifeActivities = self.previousSessionHardStallDetail[@"appLifeActivities"];
+        for (NSDictionary *activityDict in appLifeActivities) {
+            NSTimeInterval time = [activityDict[@"time"] doubleValue];
+            NSString *timeStr = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:time]];
+            [content appendFormat:@"%@: %@\n", timeStr, activityDict[@"activity"]];
+        }
+        [content appendString:@"\n----\n"];
+
+        [content appendFormat:@"\n\n---- stack backtrace *before* last runloop activity ----\n%@\n\n", lastRunloopActivityDesc];
+        if (btBeforeLastActivity.count > 0) {
+            for (NSDictionary *btDict in btBeforeLastActivity) {
+                NSTimeInterval time = [btDict[@"time"] doubleValue];
+                NSString *timeStr = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:time]];
+                [content appendFormat:@"%@:\n", timeStr];
+                NSArray *rawFrames = [btDict[@"frames"] componentsSeparatedByString:@","];
+                for (int i = 0; i < rawFrames.count; ++i) {
+                    NSString *rawFrame = rawFrames[i];
+                    if (symbolizedFrames[rawFrame]) {
+                        [content appendFormat:@"%*u %@\n", 2, i, symbolizedFrames[rawFrame]];
+                    } else {
+                        [content appendFormat:@"%*u %@\n", 2, i, rawFrame];
+                    }
+                }
+                [content appendString:@"\n"];
+            }
+        }
+        [content appendString:@"\n----\n\n"];
+
+        completion(content);
+    };
+
+    NSMutableArray *framesRaw = @[].mutableCopy;
+    for (NSDictionary *btDict in btAfterLastActivity) {
+        [framesRaw addObjectsFromArray:[btDict[@"frames"] componentsSeparatedByString:@","]];
+    }
+    for (NSDictionary *btDict in btBeforeLastActivity) {
+        [framesRaw addObjectsFromArray:[btDict[@"frames"] componentsSeparatedByString:@","]];
+    }
+
+    if ([MTHStackFrameSymbolicsRemote symbolicsServerURL].length > 0) {
+        [MTHStackFrameSymbolicsRemote
+            symbolizeStackFrames:[framesRaw copy]
+             withDyldImagesInfos:[MTHawkeyeDyldImagesStorage cachedDyldImagesInfo]
+               completionHandler:^(NSArray<NSDictionary<NSString *, NSString *> *> *_Nonnull symbolizedFrames, NSError *_Nonnull error) {
+                   if (error) {
+                       symbolicsCompletion(nil, [NSString stringWithFormat:@"%@", error]);
+                   } else {
+                       NSMutableDictionary<NSString *, NSString *> *outFrameDict = @{}.mutableCopy;
+                       [self formatRemoteSymolizedFramesDicts:symbolizedFrames intoOnlineFrame:outFrameDict];
+                       symbolicsCompletion(outFrameDict, nil);
+                   }
+               }];
+    } else {
+        symbolicsCompletion(nil, @"****\nRemote Symbolics Server Needed. \n(See MTHStackFrameSymbolicsRemote.h)\n***");
+    }
+}
+
+// MARK:
 - (void)readANRRecordIntoReadableText:(MTHANRRecord *)anrRecord completion:(void (^)(NSString *anrRecordDesc))completion {
     NSMutableString *content = [NSMutableString string];
 
@@ -351,7 +608,7 @@ static BOOL anrReportSymbolicsRemote = NO;
                        [self formatRemoteSymolizedFramesDicts:symbolizedFrames intoOnlineFrame:outFrameDict];
                        for (MTHANRRecordRaw *rawRecord in anrRecord.rawRecords) {
                            NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:rawRecord.time]];
-                           [content appendFormat:@"\n Timesmap:%@ \n", time];
+                           [content appendFormat:@"\n Timestamp:%@ \n", time];
                            for (int i = 0; i < rawRecord->stackframesSize; ++i) {
                                uintptr_t frame = rawRecord->stackframes[i];
                                NSString *frameStr = [NSString stringWithFormat:@"%p", (void *)frame];
@@ -366,7 +623,7 @@ static BOOL anrReportSymbolicsRemote = NO;
     } else {
         for (MTHANRRecordRaw *rawRecord in anrRecord.rawRecords) {
             NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:rawRecord.time]];
-            [content appendFormat:@"\n Timesmap: %@ \n", time];
+            [content appendFormat:@"\n Timestamp: %@ \n", time];
             for (int i = 0; i < rawRecord->stackframesSize; ++i) {
                 uintptr_t frame = rawRecord->stackframes[i];
                 NSString *desc = [self recordFrameStringFrom:frame withoutFnameIfExistSname:NO];
