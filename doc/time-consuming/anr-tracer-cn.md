@@ -1,6 +1,6 @@
 # Hawkeye - ANR Tracer
 
-`ANR Records` 用于记录卡顿事件，同时采样卡顿发生时的主线程调用栈
+`ANR Records` 用于记录卡顿/卡死事件，同时采样卡顿发生时的主线程调用栈
 
 ## 0x00 使用
 
@@ -18,12 +18,31 @@
 
 如果需要更精确的卡顿时长和堆栈信息，可考虑使用 [UI Time Profiler](./ui-time-profiler.md)
 
-## 0x02 存储说明
+## 0x02 卡死记录
+
+每次启动时，可通过  `MTHANRTracingBuffer` 获取到上一次是否是卡死状态退出。
+
+### 界面说明
+
+如果上一次 `Hawkeye` 的 `ANRTrace` 模块有开启，运行时卡死，下一次运行，进入到 `Hawkeye` 的 `ANR Records` 界面，列表的最后一个 section 会展示这次卡死记录。
+
+标题为 `Previous session exit unexptected`，副标题展示了卡住的时间。
+
+### 接口调用说明
+
+如果上层要在启动时统计上报卡死事件，可参考 `Hawkeye` 里 `[MTHANRTracingBufferRunner readPreviousSessionBufferAtPath:completionHandler:]` 的代码调用逻辑，根据自己需要上报记录。目前记录了以下数据：
+
+- 程序退出前的最后 30 次主线程 runloop activity
+- 程序退出前的最后 10 次 App 生命周期记录
+- 卡顿/卡死发生时记录到的主线程调用栈 （最多保留 500 帧)
+
+可根据接口提供的数据，读取卡死了多长时间，卡死后捕获到的主线程的调用栈记录。
+
+## 0x03 存储说明
 
 ANR 的数据存储在 [Records 文件](./../hawkeye-storage-cn.md#0x02-内置插件存储数据说明) 下。`collection` 为 `anr`，`key` 为卡顿时间结束的时间点，`value` 为 json 字符串，字段说明如下：
 
-- `duration`: 大约的卡顿时长
-- `biases`: 卡顿时长偏差
+- `duration`: 卡顿时长（毫秒）
 - `stacks`: 卡顿周期内记录到的主线程堆栈
 - `titleframe`: 卡顿堆栈标题
 - `time`: 卡顿堆栈记录时间点
@@ -34,7 +53,6 @@ ANR 的数据存储在 [Records 文件](./../hawkeye-storage-cn.md#0x02-内置�
 ```json
 
 {
-    biases = "47.95897006988525";
     duration = "7352.797031402588";
     stacks = [
         {

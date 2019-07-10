@@ -1,6 +1,6 @@
 # Hawkeye - ANR Trace
 
-`ANR Trace` is used to capture the main thread block event, and will sampling the main thread stack frame when the jam occurs.
+`ANR Trace` is used to capture the main thread stalling event, and will sampling the main thread stack frame when the jam occurs.
 
 ## 0x00 Usage
 
@@ -11,31 +11,34 @@ After add `ANR Trace` to `MTHawkeyeClient`, by default it'll start after `MTHawk
 3. Tap `Setting` in the upper right corner of the switching view, enter the Setting view home.
 4. Find `TimeConsuming` and go to `ANR Trace`, turn off `Trace ANR`, configure `ANR Threshold`
 
-## 0x01 Record block event
+## 0x01 Record stalling event
 
-When a method executed on main thread takes longer than the specified threshold (the default is 400ms), `ANR Trace` will capture a block event, and sampling the stack frame of main thread. You can see the recorded block events and details within the App while development.
+When a method executed on main thread takes longer than the specified threshold (the default is 400ms), `ANR Trace` will capture a stalling event, and sampling the stack frame of main thread. You can see the recorded stalling events and details within the App while development.
 
 ![ANR Record list](./anr-record-list.png) ![ANR Record detail](./anr-record-detail.png)
 
-If you need a accurate duration time while blocking and the detail calls, consider using [UI Time Profiler](./ui-time-profiler.md)
+If you need a accurate duration time while stalling and the detail calls, consider using [UI Time Profiler](./ui-time-profiler.md)
 
-## 0x02 Storage
+## 0x02 Hard stall event
 
-ANR records is store under [Records file](./../hawkeye-storage.md#0x02-built-in-plugin-data-storage-instructions). Use a `collection` name `anr`, `key` as the time block event generated, `value` is a JSON string with the following fields:
+When the app run into hard stall, it may killed without any logs, you can use `MTHANRTracingBuffer` to cache and restore the last running context.
 
-- `duration`: the rough duration of blocking
-- `biases`: the biases of `duration`
-- `stacks`: all stack frame during block event 
-- `titleframe`: block event stack title string
-- `time`: the time block event generated
-- `stackframes`: sampling stack frame when the block event captured (symbolic needed), hexadecimal address string separated by `,`
+
+## 0x03 Storage
+
+ANR records is store under [Records file](./../hawkeye-storage.md#0x02-built-in-plugin-data-storage-instructions). Use a `collection` name `anr`, `key` as the time stalling event generated, `value` is a JSON string with the following fields:
+
+- `duration`: stalling duration, in millisecond
+- `stacks`: all stack frame during stalling event 
+- `titleframe`: stall event stack title string
+- `time`: the time stalling event generated
+- `stackframes`: sampling stack frame when the stalling event captured (symbolic needed), hexadecimal address string separated by `,`
 
 examples:
 
 ```json
 
 {
-    biases = "47.95897006988525";
     duration = "7352.797031402588";
     stacks = [
         {
