@@ -351,7 +351,7 @@ static BOOL anrReportSymbolicsRemote = NO;
                        for (int i = 0; i < anrRecord->stackframesSize; ++i) {
                            uintptr_t frame = anrRecord->stackframes[i];
                            NSString *frameStr = [NSString stringWithFormat:@"%p", (void *)frame];
-                           [content appendFormat:@"%*u %@\n", 2, i, outFrameDict[frameStr]];
+                           [content appendFormat:@"%*u %@\n", 2, i, outFrameDict[frameStr] ?: frameStr];
                        }
                    }
 
@@ -371,6 +371,11 @@ static BOOL anrReportSymbolicsRemote = NO;
 - (void)formatRemoteSymolizedFramesDicts:(NSArray<NSDictionary<NSString *, NSString *> *> *)remoteSymblizedFrames
                          intoOnlineFrame:(NSMutableDictionary<NSString *, NSString *> *)outFrameDict {
     for (NSDictionary<NSString *, NSString *> *frameInfo in remoteSymblizedFrames) {
+        if (![frameInfo isKindOfClass:[NSDictionary class]]) {
+            MTHLogWarn(@" unexpected frameInfo: %@", frameInfo);
+            continue;
+        }
+
         NSString *frameKey = frameInfo[@"addr"];
         if (frameKey.length == 0)
             continue;
