@@ -448,7 +448,7 @@ static BOOL anrReportSymbolicsRemote = NO;
             for (NSInteger i = 0; i < hardStallInfo.backtraceRecordTimes.count; ++i) {
                 NSNumber *timeNum = hardStallInfo.backtraceRecordTimes[i];
                 NSTimeInterval btTime = [timeNum doubleValue];
-                if (btTime >= lastRunloopActivityTime)
+                if (btTime < lastRunloopActivityTime)
                     continue;
 
                 NSArray<NSNumber *> *backtrace = hardStallInfo.backtraceRecords[i];
@@ -493,7 +493,7 @@ static BOOL anrReportSymbolicsRemote = NO;
             for (NSInteger i = 0; i < hardStallInfo.backtraceRecordTimes.count; ++i) {
                 NSNumber *timeNum = hardStallInfo.backtraceRecordTimes[i];
                 NSTimeInterval btTime = [timeNum doubleValue];
-                if (btTime < lastRunloopActivityTime)
+                if (btTime >= lastRunloopActivityTime)
                     continue;
 
                 NSArray<NSNumber *> *backtrace = hardStallInfo.backtraceRecords[i];
