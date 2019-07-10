@@ -101,28 +101,9 @@ BOOL mthUmmapANRTracingBufferContextOn(MTHANRTracingBufferContext *context, FILE
     return YES;
 }
 
-NSString *mthPreviousSessionBufferPath(NSString *currentSessionPath) {
-    return [currentSessionPath stringByAppendingString:@"_prev"];
-}
-
-BOOL mthBackupSessionTracingBufferAsPrevious(NSString *sessionFile) {
-    NSError *error;
-    NSString *prevPath = mthPreviousSessionBufferPath(sessionFile);
-    if ([[NSFileManager defaultManager] fileExistsAtPath:prevPath]) {
-        if (![[NSFileManager defaultManager] removeItemAtPath:prevPath error:&error]) {
-            MTHLogWarn(@"[ANR] remove previous backup failed, %@", error);
-            return NO;
-        }
-    }
-    if (![[NSFileManager defaultManager] copyItemAtPath:sessionFile toPath:prevPath error:&error]) {
-        MTHLogWarn(@"[ANR] backup previous failed, %@", error);
-        return NO;
-    }
-    return YES;
-}
-
 MTHANRTracingBufferContext mthANRTracingBufferContextFromMmapFile(NSString *filepath) {
     MTHANRTracingBufferContext outContext;
+    memset(&outContext, 0, sizeof(MTHANRTracingBufferContext));
 
     MTHANRTracingBufferContext *context = NULL;
     FILE *file = NULL;
@@ -260,7 +241,7 @@ NSDictionary *mthDictionaryFromANRTracingBufferContext(MTHANRTracingBufferContex
         // - the remain is the stack frames.
 
         NSInteger startFrom = (context->stackFramesStartIndex + count) % kMTHawkeyeStackBacktracesBufferLimit;
-        if (context->stackBacktraces[startFrom] == 0) {
+        if (context->stackBacktraces[startFrom] == 0 || context->stackBacktraces[startFrom] >= kMTHawkeyeStackBacktracesBufferLimit) {
             continue;
         }
 
@@ -307,7 +288,7 @@ static NSString *_bufferFilePath = NULL;
 
 @implementation MTHANRTracingBuffer
 
-+ (BOOL)enableTracingBufferOn:(NSString *)bufferFilePath {
++ (BOOL)enableTracingBufferAtPath:(NSString *)bufferFilePath {
     if (_tracingBufferRunning) {
         MTHLogWarn(@"ANR Traing Buffer already run, do nothing.");
         return NO;
@@ -325,8 +306,6 @@ static NSString *_bufferFilePath = NULL;
             MTHLogWarn(@"[ANR] create directory %@ failed", _bufferFilePath);
             return NO;
         }
-    } else {
-        mthBackupSessionTracingBufferAsPrevious(_bufferFilePath);
     }
 
     BOOL success = mthMmapANRTracingBufferContextOn(_bufferFilePath, @"wb+", &_context, &_file, &_fileSize);
@@ -388,15 +367,15 @@ static NSString *_bufferFilePath = NULL;
     }
 }
 
-+ (void)readPreviousSessionBufferInDict:(void (^)(NSDictionary *_Nullable))completionHandler {
++ (void)readPreviousSessionBufferAtPath:(NSString *)bufferFilePath
+                       completionInDict:(void (^)(NSDictionary *_Nullable context))completionHandler {
     if (!completionHandler) return;
 
-    if (_bufferFilePath.length == 0) {
+    if (bufferFilePath.length == 0) {
         MTHLogWarn(@"bufferFilePath needed for load previous session buffer.");
         completionHandler(nil);
     } else {
-        NSString *prevBufferPath = mthPreviousSessionBufferPath(_bufferFilePath);
-        MTHANRTracingBufferContext context = mthANRTracingBufferContextFromMmapFile(prevBufferPath);
+        MTHANRTracingBufferContext context = mthANRTracingBufferContextFromMmapFile(bufferFilePath);
         NSDictionary *resultInDict = mthDictionaryFromANRTracingBufferContext(&context);
         completionHandler(resultInDict);
     }

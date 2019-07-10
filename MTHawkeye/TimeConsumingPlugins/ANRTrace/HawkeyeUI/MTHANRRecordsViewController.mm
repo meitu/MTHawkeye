@@ -26,6 +26,7 @@
 #import <MTHawkeye/MTHawkeyeSettingTableEntity.h>
 #import <MTHawkeye/MTHawkeyeSettingViewController.h>
 #import <MTHawkeye/MTHawkeyeStorage.h>
+#import <MTHawkeye/MTHawkeyeUtility.h>
 #import <MTHawkeye/MTHawkeyeWebViewController.h>
 #import <MTHawkeye/UITableView+MTHEmptyTips.h>
 #import <MTHawkeye/UIViewController+MTHawkeyeCurrentViewController.h>
@@ -137,10 +138,14 @@
 }
 
 - (void)loadData {
-    [MTHANRTracingBuffer readPreviousSessionBufferInDict:^(NSDictionary *_Nullable dict) {
-        [self checkIfPreviousSessionCrashUnexpected:dict];
-        MTHLog(@"previous anr buffer context: %@", dict);
-    }];
+    NSString *prevSessionBufferPath = [[MTHawkeyeUtility previousSessionStorePath] stringByAppendingPathComponent:@"anr_tracing_buffer"];
+    [MTHANRTracingBuffer readPreviousSessionBufferAtPath:prevSessionBufferPath
+                                        completionInDict:^(NSDictionary *_Nullable context) {
+                                            if (context) {
+                                                [self checkIfPreviousSessionCrashUnexpected:context];
+                                                MTHLog(@"previous anr buffer context: %@ \n%@", prevSessionBufferPath, context);
+                                            }
+                                        }];
 
     self.records = [[[MTHANRHawkeyeAdaptor readANRRecords] reverseObjectEnumerator] allObjects];
     [self updateTableView];
@@ -564,7 +569,7 @@ static BOOL anrReportSymbolicsRemote = NO;
     if ([MTHStackFrameSymbolicsRemote symbolicsServerURL].length > 0) {
         [MTHStackFrameSymbolicsRemote
             symbolizeStackFrames:[framesRaw copy]
-             withDyldImagesInfos:[MTHawkeyeDyldImagesStorage cachedDyldImagesInfo]
+             withDyldImagesInfos:[MTHawkeyeDyldImagesStorage previousSessionCachedDyldImagesInfo]
                completionHandler:^(NSArray<NSDictionary<NSString *, NSString *> *> *_Nonnull symbolizedFrames, NSError *_Nonnull error) {
                    if (error) {
                        symbolicsCompletion(nil, [NSString stringWithFormat:@"%@", error]);

@@ -130,10 +130,10 @@ MTHawkeyeStoreDirectoryOption gMTHawkeyeStoreDirectoryRoot = MTHawkeyeStoreDirec
         // in case current session directory not creat yet.
         if ([logDirectories.firstObject isEqualToString:currentSessionDirName]) {
             if (logDirectories.count >= 2) {
-                preStoreDirectory = logDirectories[1];
+                preStoreDirectory = [hawkeyePath stringByAppendingPathComponent:logDirectories[1]];
             }
         } else {
-            preStoreDirectory = [logDirectories firstObject];
+            preStoreDirectory = [hawkeyePath stringByAppendingPathComponent:[logDirectories firstObject]];
         }
     });
     return preStoreDirectory;

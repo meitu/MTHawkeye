@@ -22,13 +22,13 @@
 @implementation ANRDetectingMmapBufferTests
 
 - (NSString *)testBufferPath {
-    return [[MTHawkeyeUtility hawkeyeStoreDirectory] stringByAppendingPathComponent:@"anr_buffer_test"];
+    return [[MTHawkeyeUtility currentStorePath] stringByAppendingPathComponent:@"anr_buffer_test"];
 }
 
 - (void)setUp {
     // Put setup code here. This method is called before the invocation of each test method in the class.
     [MTHANRTracingBuffer disableTracingBuffer];
-    [MTHANRTracingBuffer enableTracingBufferOn:[self testBufferPath]];
+    [MTHANRTracingBuffer enableTracingBufferAtPath:[self testBufferPath]];
 }
 
 - (void)tearDown {
@@ -183,31 +183,31 @@
         [self traceBacktrace:item];
     }
 
-    // trigger backup
     [MTHANRTracingBuffer disableTracingBuffer];
-    [MTHANRTracingBuffer enableTracingBufferOn:[self testBufferPath]];
 
-    [MTHANRTracingBuffer readPreviousSessionBufferInDict:^(NSDictionary *_Nullable context) {
-        NSArray *runloop = context[@"runloop"];
-        XCTAssert(runloop.count == 3, @"runloop record should be equal.");
-        XCTAssert([runloop[2][@"activity"] isEqualToString:mthStringFromRunloopActivity(kCFRunLoopExit)]);
+    [MTHANRTracingBuffer
+        readPreviousSessionBufferAtPath:[self testBufferPath]
+                       completionInDict:^(NSDictionary *_Nullable context) {
+                           NSArray *runloop = context[@"runloop"];
+                           XCTAssert(runloop.count == 3, @"runloop record should be equal.");
+                           XCTAssert([runloop[2][@"activity"] isEqualToString:mthStringFromRunloopActivity(kCFRunLoopExit)]);
 
-        // applife
-        NSArray *applifes = context[@"applife"];
-        XCTAssert(applifes.count == 3, @"runloop record should be equal.");
+                           // applife
+                           NSArray *applifes = context[@"applife"];
+                           XCTAssert(applifes.count == 3, @"runloop record should be equal.");
 
-        XCTAssert([applifes[0][@"activity"] isEqualToString:mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivityWillTerminate)]);
-        XCTAssert([applifes[1][@"activity"] isEqualToString:mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivityWillEnterForeground)]);
-        XCTAssert([applifes[2][@"activity"] isEqualToString:mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivityDidBecomeActive)]);
+                           XCTAssert([applifes[0][@"activity"] isEqualToString:mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivityWillTerminate)]);
+                           XCTAssert([applifes[1][@"activity"] isEqualToString:mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivityWillEnterForeground)]);
+                           XCTAssert([applifes[2][@"activity"] isEqualToString:mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivityDidBecomeActive)]);
 
-        // bt
-        NSArray *backtraces = context[@"stackbacktrace"];
-        XCTAssert(backtraces.count == backtraceList.count);
+                           // bt
+                           NSArray *backtraces = context[@"stackbacktrace"];
+                           XCTAssert(backtraces.count == backtraceList.count);
 
-        NSDictionary *last = [backtraces lastObject];
-        NSString *frames = last[@"frames"];
-        [self assertFrames:frames equalToFramesInNumber:[backtraceList lastObject]];
-    }];
+                           NSDictionary *last = [backtraces lastObject];
+                           NSString *frames = last[@"frames"];
+                           [self assertFrames:frames equalToFramesInNumber:[backtraceList lastObject]];
+                       }];
 }
 
 // test after enter background, the tracing.

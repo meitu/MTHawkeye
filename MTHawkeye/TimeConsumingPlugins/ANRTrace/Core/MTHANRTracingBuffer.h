@@ -84,7 +84,7 @@ extern MTHANRTracingBufferContext mthANRTracingBufferContextFromMmapFile(NSStrin
 @interface MTHANRTracingBuffer : NSObject
 
 + (BOOL)isTracingBufferRunning;
-+ (BOOL)enableTracingBufferOn:(NSString *)bufferFilePath;
++ (BOOL)enableTracingBufferAtPath:(NSString *)bufferFilePath;
 + (void)disableTracingBuffer;
 
 + (BOOL)traceRunloopActivity:(CFRunLoopActivity)activity;
@@ -110,7 +110,9 @@ extern MTHANRTracingBufferContext mthANRTracingBufferContextFromMmapFile(NSStrin
  }
  */
 + (void)readCurrentSessionBufferInDict:(void (^)(NSDictionary *_Nullable context))completionHandler;
-+ (void)readPreviousSessionBufferInDict:(void (^)(NSDictionary *_Nullable context))completionHandler;
+
++ (void)readPreviousSessionBufferAtPath:(NSString *)bufferFilePath
+                       completionInDict:(void (^)(NSDictionary *_Nullable context))completionHandler;
 
 @end
 

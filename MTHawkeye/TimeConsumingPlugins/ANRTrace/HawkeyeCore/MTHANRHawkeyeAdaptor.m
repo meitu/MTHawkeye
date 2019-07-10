@@ -96,8 +96,8 @@
 
     // enable anr trace buffer, needed for tracing hard stall(stall then killed by watchdog or user)
     if (![MTHANRTracingBuffer isTracingBufferRunning]) {
-        NSString *path = [[MTHawkeyeUtility hawkeyeStoreDirectory] stringByAppendingPathComponent:@"anr_tracing_buffer"];
-        [MTHANRTracingBuffer enableTracingBufferOn:path];
+        NSString *path = [[MTHawkeyeUtility currentStorePath] stringByAppendingPathComponent:@"anr_tracing_buffer"];
+        [MTHANRTracingBuffer enableTracingBufferAtPath:path];
     }
 
     [MTHANRTrace shared].thresholdInSeconds = [MTHawkeyeUserDefaults shared].anrThresholdInSeconds;
