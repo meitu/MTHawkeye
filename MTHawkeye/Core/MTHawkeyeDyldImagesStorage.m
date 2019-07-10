@@ -12,6 +12,7 @@
 
 #import "MTHawkeyeDyldImagesStorage.h"
 #import "MTHawkeyeStorage.h"
+#import "MTHawkeyeUtility.h"
 
 #import <MTHawkeye/MTHawkeyeDyldImagesUtils.h>
 #import <MTHawkeye/MTHawkeyeLogMacros.h>
@@ -21,7 +22,7 @@
 + (void)asyncCacheDyldImagesInfoIfNeeded {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSString *path = [self storagePath];
+        NSString *path = [self currentStoragePath];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
             if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
                 mtha_setup_dyld_images_dumper_with_path(path);
@@ -31,21 +32,31 @@
 }
 
 + (NSDictionary *)cachedDyldImagesInfo {
-    NSString *dyldImagesInfoString = [[NSString alloc] initWithContentsOfFile:[self storagePath] encoding:NSUTF8StringEncoding error:nil];
+    return [self cachedDyldImagesInfoAt:[self currentStoragePath]];
+}
+
++ (NSDictionary *)previousSessionCachedDyldImagesInfo {
+    NSString *prevSessionPath = [MTHawkeyeUtility previousSessionStorePath];
+    if (prevSessionPath.length == 0) return nil;
+    return [self cachedDyldImagesInfoAt:[prevSessionPath stringByAppendingPathComponent:@"dyld-images"]];
+}
+
++ (NSDictionary *)cachedDyldImagesInfoAt:(NSString *)dyldImagesCacheFilePath {
+    NSString *dyldImagesInfoString = [[NSString alloc] initWithContentsOfFile:dyldImagesCacheFilePath encoding:NSUTF8StringEncoding error:nil];
     NSData *dyldImagesInfoData = [dyldImagesInfoString dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *dyldImagesDict = nil;
     if (dyldImagesInfoData) {
         NSError *error;
         dyldImagesDict = [NSJSONSerialization JSONObjectWithData:dyldImagesInfoData options:0 error:&error];
         if (error || ![dyldImagesDict isKindOfClass:[NSDictionary class]]) {
-            MTHLogWarn(@"%@", [NSString stringWithFormat:@"convert dyld images file string to json failed: %@", error]);
+            MTHLogWarn(@"%@", [NSString stringWithFormat:@"convert dyld images file string to json failed: %@, at:%@", error, dyldImagesCacheFilePath]);
         }
     }
     return dyldImagesDict;
 }
 
-+ (NSString *)storagePath {
-    NSString *path = [[[MTHawkeyeStorage shared] storeDirectory] stringByAppendingPathComponent:@"dyld-images"];
++ (NSString *)currentStoragePath {
+    NSString *path = [[MTHawkeyeUtility currentStorePath] stringByAppendingPathComponent:@"dyld-images"];
     return path;
 }
 
