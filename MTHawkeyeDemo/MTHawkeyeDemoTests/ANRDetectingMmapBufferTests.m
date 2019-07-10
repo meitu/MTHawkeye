@@ -27,14 +27,14 @@
 
 - (void)setUp {
     // Put setup code here. This method is called before the invocation of each test method in the class.
-    [MTHANRTracingBuffer disableTracingBuffer];
-    [MTHANRTracingBuffer enableTracingBufferAtPath:[self testBufferPath]];
+    [MTHANRTracingBufferRunner disableTracingBuffer];
+    [MTHANRTracingBufferRunner enableTracingBufferAtPath:[self testBufferPath]];
 }
 
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 
-    [MTHANRTracingBuffer disableTracingBuffer];
+    [MTHANRTracingBufferRunner disableTracingBuffer];
 }
 
 - (void)testExample {
@@ -52,59 +52,68 @@
 - (void)testRunloopActivitiesCache {
 
     // cache 3 elements, read
-    [MTHANRTracingBuffer traceRunloopActivity:kCFRunLoopAfterWaiting];
-    [MTHANRTracingBuffer traceRunloopActivity:kCFRunLoopAfterWaiting];
-    [MTHANRTracingBuffer traceRunloopActivity:kCFRunLoopAfterWaiting];
+    [MTHANRTracingBufferRunner traceRunloopActivity:kCFRunLoopAfterWaiting];
+    [MTHANRTracingBufferRunner traceRunloopActivity:kCFRunLoopAfterWaiting];
+    [MTHANRTracingBufferRunner traceRunloopActivity:kCFRunLoopAfterWaiting];
 
-    [MTHANRTracingBuffer readCurrentSessionBufferInDict:^(NSDictionary *_Nullable context) {
-        NSArray *runloop = context[@"runloop"];
-        XCTAssert(runloop.count == 3, @"runloop record should be equal.");
+    [MTHANRTracingBufferRunner readCurrentSessionBufferWithCompletionHandler:^(MTHANRTracingBuffer *_Nullable buffer) {
+        XCTAssert(buffer.runloopActivities.count == buffer.runloopActivitiesTimes.count);
+        XCTAssert(buffer.runloopActivities.count == 3);
+
+        XCTAssert(buffer.applifeActivities.count == 0);
+        XCTAssert(buffer.backtraceRecords.count == 0);
     }];
 
     // insert ..., replace 2 of 3 (remain one), read
     for (NSInteger i = 0; i < kMTHawkeyeRunloopActivitiesBufferCount - 1; ++i) {
-        [MTHANRTracingBuffer traceRunloopActivity:kCFRunLoopBeforeWaiting];
+        [MTHANRTracingBufferRunner traceRunloopActivity:kCFRunLoopBeforeWaiting];
     }
-    [MTHANRTracingBuffer readCurrentSessionBufferInDict:^(NSDictionary *_Nullable context) {
-        NSArray *runloop = context[@"runloop"];
-        XCTAssert(runloop.count == kMTHawkeyeRunloopActivitiesBufferCount, @"should full now.");
+    [MTHANRTracingBufferRunner readCurrentSessionBufferWithCompletionHandler:^(MTHANRTracingBuffer *_Nullable buffer) {
+        XCTAssert(buffer != nil);
+        XCTAssert(buffer.runloopActivities.count == buffer.runloopActivitiesTimes.count);
 
-        NSDictionary *last = [runloop lastObject];
-        XCTAssert([last[@"activity"] isEqualToString:mthStringFromRunloopActivity(kCFRunLoopBeforeWaiting)], @"last activity should be right");
+        NSArray *runloopActivities = buffer.runloopActivities;
+        XCTAssert(runloopActivities.count == kMTHawkeyeRunloopActivitiesBufferCount, @"should full now.");
 
-        NSDictionary *first = [runloop firstObject];
-        XCTAssert([first[@"activity"] isEqualToString:mthStringFromRunloopActivity(kCFRunLoopAfterWaiting)], @"first activity should be right");
+        XCTAssert([runloopActivities.lastObject integerValue] == (NSInteger)kCFRunLoopBeforeWaiting);
+        XCTAssert([runloopActivities.firstObject integerValue] == (NSInteger)kCFRunLoopAfterWaiting);
     }];
 }
 
 - (void)testApplifeActivitiesCache {
     // cache
-    [MTHANRTracingBuffer traceAppLifeActivity:MTHawkeyeAppLifeActivityDidBecomeActive];
-    [MTHANRTracingBuffer traceAppLifeActivity:MTHawkeyeAppLifeActivityWillResignActive];
-    [MTHANRTracingBuffer traceAppLifeActivity:MTHawkeyeAppLifeActivityDidEnterBackground];
+    [MTHANRTracingBufferRunner traceAppLifeActivity:MTHawkeyeAppLifeActivityDidBecomeActive];
+    [MTHANRTracingBufferRunner traceAppLifeActivity:MTHawkeyeAppLifeActivityWillResignActive];
+    [MTHANRTracingBufferRunner traceAppLifeActivity:MTHawkeyeAppLifeActivityDidEnterBackground];
 
-    [MTHANRTracingBuffer readCurrentSessionBufferInDict:^(NSDictionary *_Nullable context) {
-        NSArray *applifes = context[@"applife"];
+    [MTHANRTracingBufferRunner readCurrentSessionBufferWithCompletionHandler:^(MTHANRTracingBuffer *_Nullable buffer) {
+        XCTAssert(buffer != nil);
+        XCTAssert(buffer.applifeActivities.count == buffer.applifeActivitiesTimes.count);
+
+        NSArray *applifes = buffer.applifeActivities;
         XCTAssert(applifes.count == 3, @"runloop record should be equal.");
 
-        XCTAssert([applifes[0][@"activity"] isEqualToString:mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivityDidBecomeActive)]);
-        XCTAssert([applifes[1][@"activity"] isEqualToString:mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivityWillResignActive)]);
-        XCTAssert([applifes[2][@"activity"] isEqualToString:mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivityDidEnterBackground)]);
+        XCTAssert([applifes[0] integerValue] == (NSInteger)MTHawkeyeAppLifeActivityDidBecomeActive);
+        XCTAssert([applifes[1] integerValue] == (NSInteger)MTHawkeyeAppLifeActivityWillResignActive);
+        XCTAssert([applifes[2] integerValue] == (NSInteger)MTHawkeyeAppLifeActivityDidEnterBackground);
     }];
 
     // replace 1 of 3, (remain two)
     for (NSInteger i = 0; i < kMTHawkeyeAppLifeActivitiesBufferCount - 2; ++i) {
-        [MTHANRTracingBuffer traceAppLifeActivity:MTHawkeyeAppLifeActivityWillTerminate];
+        [MTHANRTracingBufferRunner traceAppLifeActivity:MTHawkeyeAppLifeActivityWillTerminate];
     }
 
-    [MTHANRTracingBuffer readCurrentSessionBufferInDict:^(NSDictionary *_Nullable context) {
-        NSArray *applifes = context[@"applife"];
+    [MTHANRTracingBufferRunner readCurrentSessionBufferWithCompletionHandler:^(MTHANRTracingBuffer *_Nullable buffer) {
+        XCTAssert(buffer != nil);
+        XCTAssert(buffer.applifeActivities.count == buffer.applifeActivitiesTimes.count);
+
+        NSArray *applifes = buffer.applifeActivities;
         XCTAssert(applifes.count == kMTHawkeyeAppLifeActivitiesBufferCount, @"runloop record should be equal.");
 
-        XCTAssert([applifes[0][@"activity"] isEqualToString:mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivityWillResignActive)]);
-        XCTAssert([applifes[1][@"activity"] isEqualToString:mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivityDidEnterBackground)]);
-        XCTAssert([applifes[2][@"activity"] isEqualToString:mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivityWillTerminate)]);
-        XCTAssert([[applifes lastObject][@"activity"] isEqualToString:mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivityWillTerminate)]);
+        XCTAssert([applifes[0] integerValue] == (NSInteger)MTHawkeyeAppLifeActivityWillResignActive);
+        XCTAssert([applifes[1] integerValue] == (NSInteger)MTHawkeyeAppLifeActivityDidEnterBackground);
+        XCTAssert([applifes[2] integerValue] == (NSInteger)MTHawkeyeAppLifeActivityWillTerminate);
+        XCTAssert([[applifes lastObject] integerValue] == (NSInteger)MTHawkeyeAppLifeActivityWillTerminate);
     }];
 }
 
@@ -121,13 +130,11 @@
         existCount += (item.count + 2); // 2 extra for frame_size, time storage
     }
 
-    [MTHANRTracingBuffer readCurrentSessionBufferInDict:^(NSDictionary *_Nullable context) {
-        NSArray *backtraces = context[@"stackbacktrace"];
-        XCTAssert(backtraces.count == backtraceList.count);
+    [MTHANRTracingBufferRunner readCurrentSessionBufferWithCompletionHandler:^(MTHANRTracingBuffer *_Nullable buffer) {
+        NSArray *backtraceRecords = buffer.backtraceRecords;
+        XCTAssert(backtraceRecords.count == backtraceList.count);
 
-        NSDictionary *last = [backtraces lastObject];
-        NSString *frames = last[@"frames"];
-        [self assertFrames:frames equalToFramesInNumber:[backtraceList lastObject]];
+        [self assertFrames:[backtraceRecords lastObject] equalToFramesInNumber:[backtraceList lastObject]];
     }];
 
     NSArray *newerBacktrace = @[ @(1001), @(1002), @(1003), @(1004), @(1005), @(1006), @(1007), @(1008) ];
@@ -150,28 +157,33 @@
     }
     [self traceBacktrace:lastestBacktrace];
 
-    [MTHANRTracingBuffer readCurrentSessionBufferInDict:^(NSDictionary *_Nullable context) {
-        NSArray *backtraces = context[@"stackbacktrace"];
+    __block BOOL callbacked = NO;
+    [MTHANRTracingBufferRunner readCurrentSessionBufferWithCompletionHandler:^(MTHANRTracingBuffer *_Nullable buffer) {
+        callbacked = YES;
+
+        NSArray *backtraces = buffer.backtraceRecords;
         XCTAssert(backtraces.count == midBacktraceCount + 1 /*lastestBacktrace*/ + 1 /*the only remain*/);
 
-        NSDictionary *first = [backtraces firstObject];
-        NSDictionary *last = [backtraces lastObject];
+        NSArray<NSNumber *> *firstBacktrace = [backtraces firstObject];
+        NSArray<NSNumber *> *lastBacktrace = [backtraces lastObject];
 
         NSArray *orgFirstBracetrace = [[backtraceList lastObject] subarrayWithRange:NSMakeRange(0, remainOldBacktraceCount)];
-        [self assertFrames:first[@"frames"] equalToFramesInNumber:orgFirstBracetrace];
-        [self assertFrames:last[@"frames"] equalToFramesInNumber:lastestBacktrace];
+        [self assertFrames:firstBacktrace equalToFramesInNumber:orgFirstBracetrace];
+        [self assertFrames:lastBacktrace equalToFramesInNumber:lastestBacktrace];
     }];
+
+    XCTAssert(callbacked);
 }
 
 
 - (void)testPreviousANRContextCache {
-    [MTHANRTracingBuffer traceRunloopActivity:kCFRunLoopBeforeSources];
-    [MTHANRTracingBuffer traceRunloopActivity:kCFRunLoopBeforeSources];
-    [MTHANRTracingBuffer traceRunloopActivity:kCFRunLoopExit];
+    [MTHANRTracingBufferRunner traceRunloopActivity:kCFRunLoopBeforeSources];
+    [MTHANRTracingBufferRunner traceRunloopActivity:kCFRunLoopBeforeSources];
+    [MTHANRTracingBufferRunner traceRunloopActivity:kCFRunLoopExit];
 
-    [MTHANRTracingBuffer traceAppLifeActivity:MTHawkeyeAppLifeActivityWillTerminate];
-    [MTHANRTracingBuffer traceAppLifeActivity:MTHawkeyeAppLifeActivityWillEnterForeground];
-    [MTHANRTracingBuffer traceAppLifeActivity:MTHawkeyeAppLifeActivityDidBecomeActive];
+    [MTHANRTracingBufferRunner traceAppLifeActivity:MTHawkeyeAppLifeActivityWillTerminate];
+    [MTHANRTracingBufferRunner traceAppLifeActivity:MTHawkeyeAppLifeActivityWillEnterForeground];
+    [MTHANRTracingBufferRunner traceAppLifeActivity:MTHawkeyeAppLifeActivityDidBecomeActive];
 
     NSArray *backtraceList = @[
         @[ @(100), @(101), @(102), @(103) ],
@@ -183,31 +195,34 @@
         [self traceBacktrace:item];
     }
 
-    [MTHANRTracingBuffer disableTracingBuffer];
+    [MTHANRTracingBufferRunner disableTracingBuffer];
 
-    [MTHANRTracingBuffer
+    __block BOOL callbacked = NO;
+    [MTHANRTracingBufferRunner
         readPreviousSessionBufferAtPath:[self testBufferPath]
-                       completionInDict:^(NSDictionary *_Nullable context) {
-                           NSArray *runloop = context[@"runloop"];
-                           XCTAssert(runloop.count == 3, @"runloop record should be equal.");
-                           XCTAssert([runloop[2][@"activity"] isEqualToString:mthStringFromRunloopActivity(kCFRunLoopExit)]);
+                      completionHandler:^(MTHANRTracingBuffer *_Nullable buffer) {
+                          callbacked = YES;
+                          NSArray *runloopActivities = buffer.runloopActivities;
+                          XCTAssert(runloopActivities.count == 3, @"runloop record should be equal.");
+                          XCTAssert([runloopActivities[2] integerValue] == (NSInteger)kCFRunLoopExit);
 
-                           // applife
-                           NSArray *applifes = context[@"applife"];
-                           XCTAssert(applifes.count == 3, @"runloop record should be equal.");
+                          // applife
+                          NSArray *applifes = buffer.applifeActivities;
+                          XCTAssert(applifes.count == 3, @"runloop record should be equal.");
 
-                           XCTAssert([applifes[0][@"activity"] isEqualToString:mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivityWillTerminate)]);
-                           XCTAssert([applifes[1][@"activity"] isEqualToString:mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivityWillEnterForeground)]);
-                           XCTAssert([applifes[2][@"activity"] isEqualToString:mthStringFromAppLifeActivity(MTHawkeyeAppLifeActivityDidBecomeActive)]);
+                          XCTAssert([applifes[0] integerValue] == (NSInteger)MTHawkeyeAppLifeActivityWillTerminate);
+                          XCTAssert([applifes[1] integerValue] == (NSInteger)MTHawkeyeAppLifeActivityWillEnterForeground);
+                          XCTAssert([applifes[2] integerValue] == (NSInteger)MTHawkeyeAppLifeActivityDidBecomeActive);
 
-                           // bt
-                           NSArray *backtraces = context[@"stackbacktrace"];
-                           XCTAssert(backtraces.count == backtraceList.count);
+                          // bt
+                          NSArray *backtraceRecords = buffer.backtraceRecords;
+                          XCTAssert(backtraceRecords.count == backtraceList.count);
 
-                           NSDictionary *last = [backtraces lastObject];
-                           NSString *frames = last[@"frames"];
-                           [self assertFrames:frames equalToFramesInNumber:[backtraceList lastObject]];
-                       }];
+                          NSArray<NSNumber *> *lastBacktrace = [backtraceRecords lastObject];
+                          [self assertFrames:lastBacktrace equalToFramesInNumber:[backtraceList lastObject]];
+                      }];
+
+    XCTAssert(callbacked);
 }
 
 // test after enter background, the tracing.
@@ -226,19 +241,21 @@
         bt->frames[i] = (uintptr_t)[frames[i] integerValue];
     }
 
-    [MTHANRTracingBuffer traceStackBacktrace:bt];
+    [MTHANRTracingBufferRunner traceStackBacktrace:bt];
 
     mth_free_stack_backtrace(bt);
 }
 
-- (void)assertFrames:(NSString *)framesInString equalToFramesInNumber:(NSArray *)framesInNumber {
-    NSMutableString *framesInStringFromNumber = [NSMutableString string];
-    for (NSNumber *item in framesInNumber) {
-        [framesInStringFromNumber appendFormat:@"%p,", (void *)[item integerValue]];
-    }
-    NSString *frames = [framesInStringFromNumber substringToIndex:framesInStringFromNumber.length - 1];
+- (void)assertFrames:(NSArray<NSNumber *> *)framesInNumberA equalToFramesInNumber:(NSArray *)framesInNumberB {
+    XCTAssert(framesInNumberA.count == framesInNumberB.count);
 
-    XCTAssert([framesInString isEqualToString:frames]);
+    for (NSInteger i = 0; i < framesInNumberA.count; ++i) {
+        XCTAssert(i < framesInNumberB.count);
+
+        if (i < framesInNumberB.count) {
+            XCTAssert([framesInNumberA[i] integerValue] == [framesInNumberB[i] integerValue]);
+        }
+    }
 }
 
 @end

@@ -15,7 +15,6 @@
 #import "MTHawkeyeUtility.h"
 
 #import <sys/mman.h>
-#import <vector>
 
 
 // MARK: - Activity
@@ -101,19 +100,19 @@ BOOL mthUmmapANRTracingBufferContextOn(MTHANRTracingBufferContext *context, FILE
     return YES;
 }
 
-MTHANRTracingBufferContext mthANRTracingBufferContextFromMmapFile(NSString *filepath) {
-    MTHANRTracingBufferContext outContext;
-    memset(&outContext, 0, sizeof(MTHANRTracingBufferContext));
+BOOL mthANRTracingBufferContextFromMmapFile(NSString *filepath, MTHANRTracingBufferContext *outContext) {
+    if (outContext == nil) return NO;
 
     MTHANRTracingBufferContext *context = NULL;
     FILE *file = NULL;
-    size_t filesize = NULL;
+    size_t filesize = 0;
     BOOL success = mthMmapANRTracingBufferContextOn(filepath, @"rb+", &context, &file, &filesize);
     if (success) {
-        memcpy(&outContext, context, sizeof(MTHANRTracingBufferContext));
+        memcpy(outContext, context, sizeof(MTHANRTracingBufferContext));
         mthUmmapANRTracingBufferContextOn(context, file, filesize);
+        return YES;
     }
-    return outContext;
+    return NO;
 }
 
 // MARK: Activities write & read
@@ -126,15 +125,16 @@ void mthSaveRunloopActivityToContext(MTHANRTracingBufferContext *context, CFRunL
     context->runloopActivitiesStartIndex = insertIdx;
 }
 
-std::vector<MTHawkeyeRunloopActivityRecord> mthReadRunloopActivitiesFromContext(MTHANRTracingBufferContext *context) {
-    std::vector<MTHawkeyeRunloopActivityRecord> records = std::vector<MTHawkeyeRunloopActivityRecord>();
+void mthReadRunloopActivitiesFromContext(MTHANRTracingBufferContext *context, void (^activityRecordReadHandler)(CFRunLoopActivity activity, NSTimeInterval time)) {
+    if (!activityRecordReadHandler) return;
+
     for (NSInteger count = 0; count < kMTHawkeyeRunloopActivitiesBufferCount; ++count) {
         NSInteger idx = (context->runloopActivitiesStartIndex + count) % kMTHawkeyeRunloopActivitiesBufferCount;
         MTHawkeyeRunloopActivityRecord record = context->runloopActivities[idx];
-        if (record.time > 0)
-            records.push_back(record);
+        if (record.time > 0) {
+            activityRecordReadHandler(record.activity, record.time);
+        }
     }
-    return records;
 }
 
 void mthSaveAppLifeActivityToContext(MTHANRTracingBufferContext *context, MTHawkeyeAppLifeActivity activity, NSTimeInterval time) {
@@ -145,15 +145,16 @@ void mthSaveAppLifeActivityToContext(MTHANRTracingBufferContext *context, MTHawk
     context->appLifeActivitiesStartIndex = insertIdx;
 }
 
-std::vector<MTHawkeyeAppLifeActivityRecord> mthReadAppLifeActivitiesFromContext(MTHANRTracingBufferContext *context) {
-    std::vector<MTHawkeyeAppLifeActivityRecord> records = std::vector<MTHawkeyeAppLifeActivityRecord>();
+void mthReadAppLifeActivitiesFromContext(MTHANRTracingBufferContext *context, void (^activityRecordReadHandler)(MTHawkeyeAppLifeActivity activity, NSTimeInterval time)) {
+    if (!activityRecordReadHandler) return;
+
     for (NSInteger count = 0; count < kMTHawkeyeAppLifeActivitiesBufferCount; ++count) {
-        NSInteger idx = (context->stackFramesStartIndex + count) % kMTHawkeyeAppLifeActivitiesBufferCount;
+        NSInteger idx = (context->appLifeActivitiesStartIndex + count) % kMTHawkeyeAppLifeActivitiesBufferCount;
         MTHawkeyeAppLifeActivityRecord record = context->appLifeActivities[idx];
-        if (record.time > 0)
-            records.push_back(record);
+        if (record.time > 0) {
+            activityRecordReadHandler(record.activity, record.time);
+        }
     }
-    return records;
 }
 
 BOOL mthSaveStackBacktraceToContext(MTHANRTracingBufferContext *context, mth_stack_backtrace *backtrace, NSTimeInterval time) {
@@ -203,38 +204,10 @@ BOOL mthSaveStackBacktraceToContext(MTHANRTracingBufferContext *context, mth_sta
     return YES;
 }
 
-// MAKR:
-NSDictionary *mthDictionaryFromANRTracingBufferContext(MTHANRTracingBufferContext *context) {
-    std::vector<MTHawkeyeRunloopActivityRecord> runloopRecords = mthReadRunloopActivitiesFromContext(context);
-    std::vector<MTHawkeyeAppLifeActivityRecord> applifeRecords = mthReadAppLifeActivitiesFromContext(context);
+void mthReadBacktraceRecordsFromContext(MTHANRTracingBufferContext *context, void (^backtraceRecordReadHandler)(NSArray<NSNumber *> *backtrace, NSTimeInterval time)) {
+    if (!backtraceRecordReadHandler) return;
 
-    NSMutableArray *runloopActivities = [NSMutableArray array];
-    for (NSInteger count = 0; count < kMTHawkeyeRunloopActivitiesBufferCount; ++count) {
-        NSInteger idx = (context->runloopActivitiesStartIndex + count) % kMTHawkeyeRunloopActivitiesBufferCount;
-        MTHawkeyeRunloopActivityRecord record = context->runloopActivities[idx];
-        if (record.time != 0) {
-            [runloopActivities addObject:@{
-                @"activity" : mthStringFromRunloopActivity(record.activity),
-                @"time" : @(record.time)
-            }];
-        }
-    }
-
-    NSMutableArray *applifeActivities = [NSMutableArray array];
-    for (NSInteger count = 0; count < kMTHawkeyeAppLifeActivitiesBufferCount; ++count) {
-        NSInteger idx = (context->appLifeActivitiesStartIndex + count) % kMTHawkeyeAppLifeActivitiesBufferCount;
-        MTHawkeyeAppLifeActivityRecord record = context->appLifeActivities[idx];
-        if (record.time != 0) {
-            [applifeActivities addObject:@{
-                @"activity" : mthStringFromAppLifeActivity(record.activity),
-                @"time" : @(record.time)
-            }];
-        }
-    }
-
-    NSMutableArray *stackbacktrace = [NSMutableArray array];
     for (NSInteger count = 0; count < kMTHawkeyeStackBacktracesBufferLimit; ++count) {
-
         // for each stack frames, it use (stackframes_size + 2) space to store the info.
         // - the first position store the size,
         // - the last position store the time.
@@ -245,34 +218,142 @@ NSDictionary *mthDictionaryFromANRTracingBufferContext(MTHANRTracingBufferContex
             continue;
         }
 
+        NSMutableArray<NSNumber *> *frames = [NSMutableArray array];
+
         // the first position store the count of the frame.
         size_t framesSize = context->stackBacktraces[startFrom];
-
-        NSMutableString *framesStr = [NSMutableString string];
         for (NSInteger idx = framesSize; idx > 0; --idx) {
             NSInteger i = (startFrom + idx) % kMTHawkeyeStackBacktracesBufferLimit;
-            [framesStr appendFormat:@"%p,", (void *)context->stackBacktraces[i]];
+            [frames addObject:@(context->stackBacktraces[i])];
         }
 
         // the last position store the time.
         NSTimeInterval time = context->stackBacktraces[(startFrom + framesSize + 1) % kMTHawkeyeStackBacktracesBufferLimit] / 1e6;
-        if (framesStr.length > 0) {
-            [stackbacktrace addObject:@{
-                @"time" : @(time),
-                @"frames" : [framesStr substringToIndex:framesStr.length - 1]
-            }];
+
+        if (frames.count > 0 && time != 0) {
+            backtraceRecordReadHandler([frames copy], time);
         }
 
         count += (framesSize + 1);
     }
-
-    NSDictionary *result = @{
-        @"runloop" : runloopActivities,
-        @"applife" : applifeActivities,
-        @"stackbacktrace" : stackbacktrace
-    };
-    return result;
 }
+
+// MARK: - MTHANRTracingBuffer
+
+@interface MTHANRTracingBuffer ()
+
+@property (nonatomic, assign) BOOL isAppStillActiveTheLastMoment;
+@property (nonatomic, assign) BOOL isDuringHardStall;
+@property (nonatomic, assign) NSTimeInterval hardStallDurationInSeconds;
+@property (nonatomic, assign) BOOL isLastAppActivityBackgroundTaskWillRunOutOfTime;
+
+@end
+
+@implementation MTHANRTracingBuffer
+
+- (instancetype)initWithRawContext:(MTHANRTracingBufferContext *)context {
+    if (self = [super init]) {
+        [self loadingBufferFromRawContext:context];
+    }
+    return self;
+}
+
+- (void)loadingBufferFromRawContext:(MTHANRTracingBufferContext *)context {
+    // runloop activities
+    NSMutableArray *runloopActivities = [NSMutableArray array];
+    NSMutableArray *runloopActivitiesTimes = [NSMutableArray array];
+
+    void (^runloopActivityReadHandler)(CFRunLoopActivity, NSTimeInterval) = ^(CFRunLoopActivity activity, NSTimeInterval time) {
+        [runloopActivities addObject:@(activity)];
+        [runloopActivitiesTimes addObject:@(time)];
+    };
+    mthReadRunloopActivitiesFromContext(context, runloopActivityReadHandler);
+
+    // applife activities
+    NSMutableArray *applifeActivities = [NSMutableArray array];
+    NSMutableArray *applifeActivitiesTimes = [NSMutableArray array];
+    void (^applifeActivityReadHandler)(MTHawkeyeAppLifeActivity, NSTimeInterval) = ^(MTHawkeyeAppLifeActivity activity, NSTimeInterval time) {
+        [applifeActivities addObject:@(activity)];
+        [applifeActivitiesTimes addObject:@(time)];
+    };
+    mthReadAppLifeActivitiesFromContext(context, applifeActivityReadHandler);
+
+    // backtrace records.
+    NSMutableArray *backtraceRecords = [NSMutableArray array];
+    NSMutableArray *backtraceRecordTimes = [NSMutableArray array];
+    void (^backtraceRecordReadHandler)(NSArray<NSNumber *> *, NSTimeInterval) = ^(NSArray<NSNumber *> *backtrace, NSTimeInterval time) {
+        [backtraceRecords addObject:backtrace];
+        [backtraceRecordTimes addObject:@(time)];
+    };
+    mthReadBacktraceRecordsFromContext(context, backtraceRecordReadHandler);
+
+    self.runloopActivities = [runloopActivities copy];
+    self.runloopActivitiesTimes = [runloopActivitiesTimes copy];
+    self.applifeActivities = [applifeActivities copy];
+    self.applifeActivitiesTimes = [applifeActivitiesTimes copy];
+    self.backtraceRecords = [backtraceRecords copy];
+    self.backtraceRecordTimes = [backtraceRecordTimes copy];
+
+    [self checkIfNormallyExistOrStalling];
+}
+
+- (void)checkIfNormallyExistOrStalling {
+    self.isDuringHardStall = NO;
+    BOOL isSessionActiveTheLastMoment = YES;
+    for (NSNumber *applifeActivityNum in [self.applifeActivities.reverseObjectEnumerator allObjects]) {
+        NSInteger activity = [applifeActivityNum integerValue];
+        if (activity == MTHawkeyeAppLifeActivityMemoryWarning) {
+            continue;
+        }
+
+        if (activity == MTHawkeyeAppLifeActivityBackgroundTaskWillOutOfTime) {
+            self.isLastAppActivityBackgroundTaskWillRunOutOfTime = YES;
+        } else if (activity == MTHawkeyeAppLifeActivityWillTerminate || activity == MTHawkeyeAppLifeActivityDidEnterBackground) {
+            isSessionActiveTheLastMoment = NO;
+            break;
+        } else {
+            // app is still active.
+            break;
+        }
+    }
+    self.isAppStillActiveTheLastMoment = isSessionActiveTheLastMoment;
+
+    if (!self.isAppStillActiveTheLastMoment) {
+        return;
+    }
+
+    if (self.backtraceRecordTimes.count == 0 || self.runloopActivitiesTimes.count == 0) {
+        return;
+    }
+
+    NSTimeInterval lastRunloopActivityTime = [self.runloopActivitiesTimes.lastObject doubleValue];
+    NSTimeInterval lastBacktraceTime = [self.backtraceRecordTimes.lastObject doubleValue];
+    NSTimeInterval fromLastRunloopActToLastBacktrace = lastBacktraceTime - lastRunloopActivityTime;
+    if (fromLastRunloopActToLastBacktrace <= 0) {
+        return;
+    }
+
+    self.hardStallDurationInSeconds = fromLastRunloopActToLastBacktrace;
+
+    // hard stall captured. (capture main thread running backtrace after the last runloop activity record)
+    self.isDuringHardStall = YES;
+}
+
+- (NSTimeInterval)lastRunloopAcvitityTime {
+    if (self.runloopActivitiesTimes.count == 0)
+        return 0;
+
+    return [self.runloopActivitiesTimes.lastObject doubleValue];
+}
+
+- (CFRunLoopActivity)lastRunloopActivity {
+    if (self.runloopActivities.count == 0)
+        return kCFRunLoopEntry;
+
+    return (CFRunLoopActivity)[self.runloopActivities.lastObject integerValue];
+}
+
+@end
 
 
 // MARK: - MTHANRTracingBuffer
@@ -283,10 +364,10 @@ static FILE *_file = NULL;
 static size_t _fileSize = 0;
 static NSString *_bufferFilePath = NULL;
 
-@interface MTHANRTracingBuffer ()
+@interface MTHANRTracingBufferRunner ()
 @end
 
-@implementation MTHANRTracingBuffer
+@implementation MTHANRTracingBufferRunner
 
 + (BOOL)enableTracingBufferAtPath:(NSString *)bufferFilePath {
     if (_tracingBufferRunning) {
@@ -356,28 +437,32 @@ static NSString *_bufferFilePath = NULL;
 
 // MARK: Read
 
-+ (void)readCurrentSessionBufferInDict:(void (^)(NSDictionary *_Nullable))completionHandler {
++ (void)readCurrentSessionBufferWithCompletionHandler:(void (^)(MTHANRTracingBuffer *_Nullable))completionHandler {
     if (!completionHandler) return;
 
     if (!_context) {
         completionHandler(nil);
     } else {
-        NSDictionary *resultInDict = mthDictionaryFromANRTracingBufferContext(_context);
-        completionHandler(resultInDict);
+        MTHANRTracingBuffer *buffer = [[MTHANRTracingBuffer alloc] initWithRawContext:_context];
+        completionHandler(buffer);
     }
 }
 
 + (void)readPreviousSessionBufferAtPath:(NSString *)bufferFilePath
-                       completionInDict:(void (^)(NSDictionary *_Nullable context))completionHandler {
+                      completionHandler:(void (^)(MTHANRTracingBuffer *_Nullable))completionHandler {
     if (!completionHandler) return;
 
     if (bufferFilePath.length == 0) {
         MTHLogWarn(@"bufferFilePath needed for load previous session buffer.");
         completionHandler(nil);
     } else {
-        MTHANRTracingBufferContext context = mthANRTracingBufferContextFromMmapFile(bufferFilePath);
-        NSDictionary *resultInDict = mthDictionaryFromANRTracingBufferContext(&context);
-        completionHandler(resultInDict);
+        MTHANRTracingBufferContext context;
+        if (mthANRTracingBufferContextFromMmapFile(bufferFilePath, &context)) {
+            MTHANRTracingBuffer *buffer = [[MTHANRTracingBuffer alloc] initWithRawContext:&context];
+            completionHandler(buffer);
+        } else {
+            completionHandler(nil);
+        }
     }
 }
 

@@ -58,13 +58,45 @@ typedef struct _MTHANRTracingBufferContext {
     uintptr_t stackBacktraces[kMTHawkeyeStackBacktracesBufferLimit];
 } MTHANRTracingBufferContext;
 
-extern NSDictionary *mthDictionaryFromANRTracingBufferContext(MTHANRTracingBufferContext *context);
-extern MTHANRTracingBufferContext mthANRTracingBufferContextFromMmapFile(NSString *filepath);
-
-
 #ifdef __cplusplus
 } // extern "C"
 #endif
+
+
+// MARK: -
+
+@interface MTHANRTracingBuffer : NSObject
+
+/// Will check the last applife activity, while equal to `willTerminate` or `didEnterBackground`,
+/// `isAppStillActiveTheLastMoment` is YES, which means normally exit as expected in that session.
+@property (nonatomic, assign, readonly) BOOL isAppStillActiveTheLastMoment;
+
+/// While ANRTracing capture the App is still active at the last time
+/// We'll check if there exist main thread backtrace after the last captured runloop activity
+/// If exist, `isDuringHardStall` is YES, else NO.
+@property (nonatomic, assign, readonly) BOOL isDuringHardStall;
+
+@property (nonatomic, assign, readonly) NSTimeInterval hardStallDurationInSeconds;
+
+@property (nonatomic, assign, readonly) BOOL isLastAppActivityBackgroundTaskWillRunOutOfTime;
+
+/*
+ make datastruct simple (reduce classes used), times & activities are in pair.
+ */
+@property (nonatomic, copy) NSArray<NSNumber *> *runloopActivitiesTimes;
+@property (nonatomic, copy) NSArray<NSNumber *> *runloopActivities;
+
+@property (nonatomic, copy) NSArray<NSNumber *> *applifeActivitiesTimes;
+@property (nonatomic, copy) NSArray<NSNumber *> *applifeActivities;
+
+@property (nonatomic, copy) NSArray<NSNumber *> *backtraceRecordTimes;
+@property (nonatomic, copy) NSArray<NSArray<NSNumber *> *> *backtraceRecords;
+
+- (NSTimeInterval)lastRunloopAcvitityTime;
+- (CFRunLoopActivity)lastRunloopActivity;
+
+@end
+
 
 // MARK: -
 
@@ -81,7 +113,7 @@ extern MTHANRTracingBufferContext mthANRTracingBufferContextFromMmapFile(NSStrin
  Memory Impact: for memory mmapping only works on entire pages of memory,
                 it would use 16KB ( pagesize() on 64bit devices ) mmapping memory.
  */
-@interface MTHANRTracingBuffer : NSObject
+@interface MTHANRTracingBufferRunner : NSObject
 
 + (BOOL)isTracingBufferRunning;
 + (BOOL)enableTracingBufferAtPath:(NSString *)bufferFilePath;
@@ -92,27 +124,10 @@ extern MTHANRTracingBufferContext mthANRTracingBufferContextFromMmapFile(NSStrin
 + (BOOL)traceStackBacktrace:(mth_stack_backtrace *)backtrace;
 
 
-/**
- Dictionary Example:
- {
-    "runloop": [
-        {"time": 1562313106.134135, "activity": "beforeWaiting"},
-        ...
-    ],
-    "applife": [
-        {"time": 1562313106.134135, "activity": "didEnterBackground"},
-        ...
-    ],
-    "stackbacktrace": [
-        {"time": 1562313106.134135, "frames": "0x10235125,0x10324534,0x10884281"},
-        ...
-    ]
- }
- */
-+ (void)readCurrentSessionBufferInDict:(void (^)(NSDictionary *_Nullable context))completionHandler;
++ (void)readCurrentSessionBufferWithCompletionHandler:(void (^)(MTHANRTracingBuffer *_Nullable buffer))completionHandler;
 
 + (void)readPreviousSessionBufferAtPath:(NSString *)bufferFilePath
-                       completionInDict:(void (^)(NSDictionary *_Nullable context))completionHandler;
+                      completionHandler:(void (^)(MTHANRTracingBuffer *_Nullable buffer))completionHandler;
 
 @end
 

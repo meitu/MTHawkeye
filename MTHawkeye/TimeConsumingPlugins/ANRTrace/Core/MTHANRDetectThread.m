@@ -104,7 +104,7 @@
                 if (self.enterBackgroundNotifyTime != 0) {
                     NSTimeInterval backgroundRunningTime = current - self.enterBackgroundNotifyTime;
                     if (backgroundRunningTime > 175) {
-                        [MTHANRTracingBuffer traceAppLifeActivity:MTHawkeyeAppLifeActivityBackgroundTaskWillOutOfTime];
+                        [MTHANRTracingBufferRunner traceAppLifeActivity:MTHawkeyeAppLifeActivityBackgroundTaskWillOutOfTime];
                         MTHLogWarn(@"background task will run out of time");
                     }
 
@@ -173,7 +173,7 @@
             memcpy(threadStack->stackframes, stackframes->frames, sizeof(uintptr_t) * stackframes->frames_size);
             threadStack->titleFrame = [self titleFrameForStackframes:stackframes->frames size:stackframes->frames_size];
 
-            [MTHANRTracingBuffer traceStackBacktrace:stackframes];
+            [MTHANRTracingBufferRunner traceStackBacktrace:stackframes];
         }
         mth_free_stack_backtrace(stackframes);
     }
@@ -209,7 +209,7 @@
                     usingBlock:^(NSNotification *_Nonnull note) {
                         self.appState = [UIApplication sharedApplication].applicationState;
 
-                        [MTHANRTracingBuffer traceAppLifeActivity:activity];
+                        [MTHANRTracingBufferRunner traceAppLifeActivity:activity];
 
                         if (activity == MTHawkeyeAppLifeActivityDidEnterBackground) {
                             self.enterBackgroundNotifyTime = [MTHawkeyeUtility currentTime];
@@ -248,7 +248,7 @@ static void mthanr_runLoopHighPriorityObserverCallBack(CFRunLoopObserverRef obse
                 object.runloopEventTime = [MTHawkeyeUtility currentTime];
             }
 
-            [MTHANRTracingBuffer traceRunloopActivity:activity];
+            [MTHANRTracingBufferRunner traceRunloopActivity:activity];
 
             object.runloopWorking = YES;
             break;
@@ -267,7 +267,7 @@ static void mthanr_lowPriorityObserverCallBack(CFRunLoopObserverRef observer, CF
                 object.runloopWorking = NO;
             }
 
-            [MTHANRTracingBuffer traceRunloopActivity:activity];
+            [MTHANRTracingBufferRunner traceRunloopActivity:activity];
 
             break;
         }
