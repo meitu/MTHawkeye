@@ -129,7 +129,6 @@
                     }
 
                     usleep(self.detectInterval * 1000 * 1000);
-                    continue;
                 } else {
                     MTHLogWarn(@"in background, but main thread still stalling.");
                 }
@@ -297,6 +296,68 @@
     }
 }
 
+static BOOL trySkippingHeaderActivitiesBeforeEnterForeground = NO;
+static BOOL skipedHeaderActivitiesBeforeEnterForeground = NO;
+static NSTimeInterval preActivityTimeBeforeEnterForeground = 0;
+static NSTimeInterval intervalBetweenLastTwoActivitiesBeforeEnterForeground = 0;
+
+static void resetSkipHeaderActivitiesBeforeEnterForegroundFlags(void) {
+    trySkippingHeaderActivitiesBeforeEnterForeground = NO;
+    preActivityTimeBeforeEnterForeground = 0;
+    intervalBetweenLastTwoActivitiesBeforeEnterForeground = 0;
+
+#if _MTHawkeyeANRTracingDebugEnabled
+    MTHLogInfo(@"ANR suspended runloop fix, reset");
+#endif
+}
+
+static BOOL skipHeaderActivitiesBeforeEnterForegroundIfNeeded(MTHANRDetectThread *object) {
+    // fix the wrong startFrom while suspend in the background.
+
+    if (skipedHeaderActivitiesBeforeEnterForeground) {
+        return NO;
+    }
+
+    BOOL result = NO;
+    trySkippingHeaderActivitiesBeforeEnterForeground = YES;
+    if (preActivityTimeBeforeEnterForeground == 0) {
+        preActivityTimeBeforeEnterForeground = object.curRunloopStartFrom;
+#if _MTHawkeyeANRTracingDebugEnabled
+        MTHLogInfo(@"ANR suspended runloop fix, start %@", @(preActivityTimeBeforeEnterForeground));
+#endif
+    }
+
+    NSTimeInterval curTime = [MTHawkeyeUtility currentTime];
+    NSTimeInterval diff = curTime - preActivityTimeBeforeEnterForeground;
+
+#if _MTHawkeyeANRTracingDebugEnabled
+    MTHLogInfo(@"ANR suspended runloop fix, diff: %.3fms, curTime: %.3f", diff * 1000, curTime);
+#endif
+
+    if (intervalBetweenLastTwoActivitiesBeforeEnterForeground <= DBL_EPSILON) {
+        intervalBetweenLastTwoActivitiesBeforeEnterForeground = diff;
+    } else {
+        // while the first increased sharply. move forward the `curRunloopStartFrom`.
+        // in case that `curRunloopStartFrom` is dirty (time before App suspended, it should be time after App suspended)
+        if (diff / intervalBetweenLastTwoActivitiesBeforeEnterForeground > 10 && diff > 0.1) {
+#if _MTHawkeyeANRTracingDebugEnabled
+            MTHLogInfo(@"ANR suspended runloop fix: found sharply increasing: %@", @(diff / intervalBetweenLastTwoActivitiesBeforeEnterForeground));
+            MTHLogInfo(@"ANR suspended runloop fix: And move `StartFrom` from:%@ to:%@ ", @(object.curRunloopStartFrom), @(curTime));
+#endif
+            skipedHeaderActivitiesBeforeEnterForeground = YES;
+            trySkippingHeaderActivitiesBeforeEnterForeground = NO;
+            object.curRunloopStartFrom = curTime;
+            result = YES;
+        }
+
+        if (diff > intervalBetweenLastTwoActivitiesBeforeEnterForeground)
+            intervalBetweenLastTwoActivitiesBeforeEnterForeground = diff;
+    }
+    preActivityTimeBeforeEnterForeground = curTime;
+
+    return result;
+}
+
 #pragma mark - Runloop Observer
 static void mthanr_runLoopHighPriorityObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info) {
     MTHANRDetectThread *object = (__bridge MTHANRDetectThread *)info;
@@ -312,7 +373,11 @@ static void mthanr_runLoopHighPriorityObserverCallBack(CFRunLoopObserverRef obse
                 object.curRunloopStartFrom = [MTHawkeyeUtility currentTime];
                 shouldTrace = YES;
 
-                // MTHLogInfo(@"---> start: %@, %@", @(object.curRunloopStartFrom), mthStringFromRunloopActivity(activity));
+                if (trySkippingHeaderActivitiesBeforeEnterForeground) {
+                    resetSkipHeaderActivitiesBeforeEnterForegroundFlags();
+                }
+            } else if (object.enterBackgroundNotifyTime != 0 || trySkippingHeaderActivitiesBeforeEnterForeground) {
+                skipHeaderActivitiesBeforeEnterForegroundIfNeeded(object);
             }
 
 #if _MTHawkeyeANRTracingDebugEnabled
@@ -348,9 +413,11 @@ static void mthanr_lowPriorityObserverCallBack(CFRunLoopObserverRef observer, CF
                     record.startFrom = runloopStartFrom;
                     record.durationInSeconds = runloopEndAt - runloopStartFrom;
                     [object enqueueNewRunloopStalling:record];
-
-                    // MTHLogInfo(@"---> end: %@, %@", @(runloopEndAt), mthStringFromRunloopActivity(activity));
                 }
+            }
+
+            if (trySkippingHeaderActivitiesBeforeEnterForeground) {
+                resetSkipHeaderActivitiesBeforeEnterForegroundFlags();
             }
 
 #if _MTHawkeyeANRTracingDebugEnabled
