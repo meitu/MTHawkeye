@@ -142,7 +142,7 @@
 
                               // show hardstall info even only exit unexpected captured.
                               self.previousSessionHardStallInfo = buffer;
-                              MTHLogWarn(@"Previous session exit unexpected.");
+                              MTHLogInfo(@"Previous session exit unexpected.");
 
                               if (buffer.isDuringHardStall) {
                                   MTHLogWarn(@"Captured hard stall on previous session.");
@@ -284,7 +284,7 @@
             cell.accessoryView = nil;
         }
     } else {
-        cell.detailTextLabel.text = @"No hard stall record captured.";
+        cell.detailTextLabel.text = @"None hard stalling event captured.";
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
 }
@@ -293,8 +293,8 @@
     MTHANRMainThreadStallingSnapshot *anrRecord = [self.records[indexPath.row].stallingSnapshots firstObject];
     NSString *title = nil;
     NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:anrRecord.time]];
-    if (self.records[indexPath.row].duration > 0.f) {
-        title = [NSString stringWithFormat:@"[%@] stalling %.2fs", time, self.records[indexPath.row].duration / 1000.f];
+    if (self.records[indexPath.row].durationInSeconds > 0.f) {
+        title = [NSString stringWithFormat:@"[%@] stalling %.2fs", time, self.records[indexPath.row].durationInSeconds / 1000.f];
     } else {
         title = [NSString stringWithFormat:@"[%@] stalling > %.2fs", time, [MTHANRTrace shared].thresholdInSeconds];
     }
@@ -570,7 +570,7 @@ static BOOL anrReportSymbolicsRemote = NO;
 - (void)readANRRecordIntoReadableText:(MTHANRRecord *)anrRecord completion:(void (^)(NSString *anrRecordDesc))completion {
     NSMutableString *content = [NSMutableString string];
 
-    CGFloat duration = anrRecord.duration / 1000.f;
+    CGFloat duration = anrRecord.durationInSeconds / 1000.f;
     NSString *stallingDesc = [NSString stringWithFormat:@"Stalling %.2f seconds\n", duration];
     [content appendString:stallingDesc];
 

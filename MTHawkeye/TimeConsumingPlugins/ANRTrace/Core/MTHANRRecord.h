@@ -26,6 +26,7 @@
 @interface MTHANRRecord : NSObject
 
 @property (nonatomic, strong) NSArray<MTHANRMainThreadStallingSnapshot *> *stallingSnapshots;
-@property (nonatomic, assign) NSTimeInterval duration;
+@property (nonatomic, assign) NSTimeInterval startFrom;
+@property (nonatomic, assign) NSTimeInterval durationInSeconds;
 
 @end

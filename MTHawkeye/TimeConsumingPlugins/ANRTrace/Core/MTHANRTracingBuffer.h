@@ -14,6 +14,15 @@
 
 #import <MTHawkeye/mth_stack_backtrace.h>
 
+#define MTHawkeyeANRTracingDebugEnabled 0
+
+#ifdef MTHawkeyeANRTracingDebugEnabled
+#define _MTHawkeyeANRTracingDebugEnabled MTHawkeyeANRTracingDebugEnabled
+#else
+#define _MTHawkeyeANRTracingDebugEnabled NO
+#endif
+
+
 NS_ASSUME_NONNULL_BEGIN
 
 
@@ -44,11 +53,17 @@ typedef struct _MTHawkeyeRunloopActivityRecord {
     NSTimeInterval time;
 } MTHawkeyeRunloopActivityRecord;
 
+
+#if _MTHawkeyeANRTracingDebugEnabled
+static const int kMTHawkeyeRunloopActivitiesBufferCount = 300;
+#else
 static const int kMTHawkeyeRunloopActivitiesBufferCount = 30;
+#endif
 static const int kMTHawkeyeAppLifeActivitiesBufferCount = 10;
 static const int kMTHawkeyeStackBacktracesBufferLimit = 500;
 
 typedef struct _MTHANRTracingBufferContext {
+    NSUInteger size; // use to detect whether the size has between two session.
     NSUInteger runloopActivitiesStartIndex;
     NSUInteger appLifeActivitiesStartIndex;
     NSUInteger stackFramesStartIndex;

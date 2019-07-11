@@ -19,8 +19,8 @@ typedef void (^MTHANRThreadResultBlock)(MTHANRRecord *anrRecord);
 
 @interface MTHANRDetectThread : NSThread
 
-@property (nonatomic, assign, readonly) float anrThreshold;   // defualt 0.4s
-@property (nonatomic, assign, readonly) float detectInterval; // default 0.1s, must be < anrThreshold otherwise can't detect correct
+@property (nonatomic, assign, readonly) float stallingThreshold; // defualt 0.4s
+@property (nonatomic, assign, readonly) float detectInterval;    // default 0.1s, must be < anrThreshold otherwise can't detect correct
 @property (nonatomic, assign) BOOL shouldCaptureBackTrace;
 @property (nonatomic, copy) MTHANRThreadResultBlock threadResultBlock;
 

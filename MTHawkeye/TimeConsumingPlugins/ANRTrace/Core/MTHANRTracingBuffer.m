@@ -108,9 +108,15 @@ BOOL mthANRTracingBufferContextFromMmapFile(NSString *filepath, MTHANRTracingBuf
     size_t filesize = 0;
     BOOL success = mthMmapANRTracingBufferContextOn(filepath, @"rb+", &context, &file, &filesize);
     if (success) {
-        memcpy(outContext, context, sizeof(MTHANRTracingBufferContext));
-        mthUmmapANRTracingBufferContextOn(context, file, filesize);
-        return YES;
+        if (context->size != sizeof(MTHANRTracingBufferContext)) {
+            MTHLogWarn(@"You have change the size of `MTHANRTracingBufferContext`, previous session data discarded.");
+            mthUmmapANRTracingBufferContextOn(context, file, filesize);
+            return NO;
+        } else {
+            memcpy(outContext, context, sizeof(MTHANRTracingBufferContext));
+            mthUmmapANRTracingBufferContextOn(context, file, filesize);
+            return YES;
+        }
     }
     return NO;
 }
@@ -353,6 +359,35 @@ void mthReadBacktraceRecordsFromContext(MTHANRTracingBufferContext *context, voi
     return (CFRunLoopActivity)[self.runloopActivities.lastObject integerValue];
 }
 
+- (NSString *)description {
+    NSMutableString *desc = [NSMutableString string];
+    [desc appendString:@"--- applife activities --- \n"];
+    for (NSInteger i = 0; i < self.applifeActivitiesTimes.count; ++i) {
+        NSNumber *applifeTime = self.applifeActivitiesTimes[i];
+        [desc appendFormat:@"%@: %@\n", applifeTime, mthStringFromAppLifeActivity((MTHawkeyeAppLifeActivity)[self.applifeActivities[i] integerValue])];
+    }
+
+    [desc appendString:@"\n--- runloop activities --- \n"];
+    for (NSInteger i = 0; i < self.runloopActivitiesTimes.count; ++i) {
+        NSNumber *runloopTime = self.runloopActivitiesTimes[i];
+        [desc appendFormat:@"%@: %@\n", runloopTime, mthStringFromRunloopActivity((CFRunLoopActivity)[self.runloopActivities[i] integerValue])];
+    }
+
+    [desc appendString:@"\n--- backtrace records --- \n"];
+    for (NSInteger i = 0; i < self.backtraceRecords.count; ++i) {
+        NSNumber *time = self.backtraceRecordTimes[i];
+        NSArray<NSNumber *> *backtrace = self.backtraceRecords[i];
+        NSMutableString *backtraceInStr = [NSMutableString string];
+        for (NSNumber *frame in backtrace) {
+            [backtraceInStr appendFormat:@"%p,", (void *)[frame integerValue]];
+        }
+        if (backtraceInStr.length > 1)
+            [desc appendFormat:@"%@: %@\n", time, [backtraceInStr substringToIndex:backtraceInStr.length - 1]];
+    }
+    [desc appendString:@"\n\n"];
+    return [desc copy];
+}
+
 @end
 
 
@@ -392,6 +427,7 @@ static NSString *_bufferFilePath = NULL;
     BOOL success = mthMmapANRTracingBufferContextOn(_bufferFilePath, @"wb+", &_context, &_file, &_fileSize);
     if (success) {
         bzero(_context, _fileSize);
+        _context->size = sizeof(MTHANRTracingBufferContext);
     }
 
     _tracingBufferRunning = YES;
