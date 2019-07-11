@@ -135,7 +135,7 @@
     NSString *curTime = [NSString stringWithFormat:@"%@", @([MTHawkeyeUtility currentTime])];
 
     NSMutableArray<NSDictionary *> *stacks = [NSMutableArray array];
-    for (MTHANRRecordRaw *rawRecord in anrRecord.rawRecords) {
+    for (MTHANRMainThreadStallingSnapshot *rawRecord in anrRecord.stallingSnapshots) {
         NSMutableString *stackInStr = [[NSMutableString alloc] init];
         for (int i = 0; i < rawRecord->stackframesSize; ++i) {
             [stackInStr appendFormat:@"%p,", (void *)rawRecord->stackframes[i]];
@@ -181,7 +181,7 @@
             NSMutableArray *rawReocrds = [NSMutableArray array];
             NSArray<NSDictionary *> *stacks = dict[@"stacks"];
             for (NSDictionary *stack in stacks) {
-                MTHANRRecordRaw *rawRecord = [[MTHANRRecordRaw alloc] init];
+                MTHANRMainThreadStallingSnapshot *rawRecord = [[MTHANRMainThreadStallingSnapshot alloc] init];
                 NSArray *stackInStr = [stack[@"stackframes"] componentsSeparatedByString:@","];
                 rawRecord->stackframesSize = stackInStr.count;
                 rawRecord->stackframes = malloc(sizeof(uintptr_t) * rawRecord->stackframesSize);
@@ -211,7 +211,7 @@
             }
 
             record.duration = [dict[@"duration"] doubleValue];
-            record.rawRecords = rawReocrds;
+            record.stallingSnapshots = rawReocrds;
             [anrRecords addObject:record];
         } else {
             MTHLogWarn(@"[storage] read anr record failed, %@", error);

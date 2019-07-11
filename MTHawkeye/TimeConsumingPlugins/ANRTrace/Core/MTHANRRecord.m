@@ -12,7 +12,7 @@
 
 #import "MTHANRRecord.h"
 
-@implementation MTHANRRecordRaw
+@implementation MTHANRMainThreadStallingSnapshot
 
 - (void)dealloc {
     if (self->stackframes) {

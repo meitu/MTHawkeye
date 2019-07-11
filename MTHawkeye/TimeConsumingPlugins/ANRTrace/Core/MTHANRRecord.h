@@ -11,7 +11,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MTHANRRecordRaw : NSObject {
+@interface MTHANRMainThreadStallingSnapshot : NSObject {
   @public
     uintptr_t titleFrame;
     uintptr_t *stackframes;
@@ -25,7 +25,7 @@
 
 @interface MTHANRRecord : NSObject
 
-@property (nonatomic, strong) NSArray<MTHANRRecordRaw *> *rawRecords;
+@property (nonatomic, strong) NSArray<MTHANRMainThreadStallingSnapshot *> *stallingSnapshots;
 @property (nonatomic, assign) NSTimeInterval duration;
 
 @end

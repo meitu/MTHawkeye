@@ -159,7 +159,7 @@
 - (void)symbolicateRecordTitles {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         for (NSInteger ri = 0; ri < self.records.count; ++ri) {
-            MTHANRRecordRaw *record = [self.records[ri].rawRecords firstObject];
+            MTHANRMainThreadStallingSnapshot *record = [self.records[ri].stallingSnapshots firstObject];
             NSString *riStr = [NSString stringWithFormat:@"%ld", (long)ri];
 
             @synchronized(self.recordTitles) {
@@ -273,7 +273,7 @@
 }
 
 - (void)_updateANRRecordCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    MTHANRRecordRaw *anrRecord = [self.records[indexPath.row].rawRecords firstObject];
+    MTHANRMainThreadStallingSnapshot *anrRecord = [self.records[indexPath.row].stallingSnapshots firstObject];
     NSString *title = nil;
     NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:anrRecord.time]];
     if (self.records[indexPath.row].duration > 0.f) {
@@ -559,7 +559,7 @@ static BOOL anrReportSymbolicsRemote = NO;
 
     if (anrReportSymbolicsRemote) {
         NSMutableArray *framesRaw = @[].mutableCopy;
-        for (MTHANRRecordRaw *rawRecord in anrRecord.rawRecords) {
+        for (MTHANRMainThreadStallingSnapshot *rawRecord in anrRecord.stallingSnapshots) {
             for (int i = 0; i < rawRecord->stackframesSize; ++i) {
                 uintptr_t frame = rawRecord->stackframes[i];
                 [framesRaw addObject:[NSString stringWithFormat:@"%p", (void *)frame]];
@@ -575,7 +575,7 @@ static BOOL anrReportSymbolicsRemote = NO;
                    } else {
                        NSMutableDictionary<NSString *, NSString *> *outFrameDict = @{}.mutableCopy;
                        [self formatRemoteSymolizedFramesDicts:symbolizedFrames intoOnlineFrame:outFrameDict];
-                       for (MTHANRRecordRaw *rawRecord in anrRecord.rawRecords) {
+                       for (MTHANRMainThreadStallingSnapshot *rawRecord in anrRecord.stallingSnapshots) {
                            NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:rawRecord.time]];
                            [content appendFormat:@"\n Timestamp:%@ \n", time];
                            for (int i = 0; i < rawRecord->stackframesSize; ++i) {
@@ -590,7 +590,7 @@ static BOOL anrReportSymbolicsRemote = NO;
                }];
 
     } else {
-        for (MTHANRRecordRaw *rawRecord in anrRecord.rawRecords) {
+        for (MTHANRMainThreadStallingSnapshot *rawRecord in anrRecord.stallingSnapshots) {
             NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:rawRecord.time]];
             [content appendFormat:@"\n Timestamp: %@ \n", time];
             for (int i = 0; i < rawRecord->stackframesSize; ++i) {

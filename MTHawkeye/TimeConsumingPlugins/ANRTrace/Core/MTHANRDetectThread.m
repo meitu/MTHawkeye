@@ -39,9 +39,9 @@
 @property (atomic, assign) NSTimeInterval enterBackgroundNotifyTime;
 @property (atomic, assign) UIApplicationState appState;
 
-@property (nonatomic, assign) NSTimeInterval anrStartTime;
-@property (nonatomic, strong) NSMutableArray<MTHANRRecordRaw *> *threadStacks;
-@property (nonatomic, assign) float anrThreshold;
+@property (nonatomic, assign) NSTimeInterval stallingStartTime;
+@property (nonatomic, strong) NSMutableArray<MTHANRMainThreadStallingSnapshot *> *stallingSnapshots;
+@property (nonatomic, assign) float stallingThreshold;
 @property (nonatomic, assign) float detectInterval;
 
 @end
@@ -54,22 +54,22 @@
     if (self) {
         self.shouldCaptureBackTrace = YES;
         self.detectInterval = 0.1f;
-        self.anrThreshold = 0.4f;
+        self.stallingThreshold = 0.4f;
         self.annealingStepInMS = 200;
         self.name = @"com.meitu.hawkeye.anr.observer";
-        self.threadStacks = [NSMutableArray array];
+        self.stallingSnapshots = [NSMutableArray array];
     }
     return self;
 }
 
-- (void)startWithDetectInterval:(float)detectInterval anrThreshold:(float)anrThreshold handler:(MTHANRThreadResultBlock)threadResultBlock {
-    if ([@(anrThreshold) compare:@(detectInterval)] != NSOrderedDescending) {
+- (void)startWithDetectInterval:(float)detectInterval anrThreshold:(float)stallingThreshold handler:(MTHANRThreadResultBlock)threadResultBlock {
+    if ([@(stallingThreshold) compare:@(detectInterval)] != NSOrderedDescending) {
         NSAssert(0, @"Detect Interval should be less than ANR Threshold");
     }
 
     self.threadResultBlock = threadResultBlock;
     self.detectInterval = detectInterval;
-    self.anrThreshold = anrThreshold;
+    self.stallingThreshold = stallingThreshold;
     self.runloopEventTime = 0;
     [self start];
 }
@@ -85,7 +85,7 @@
     [super cancel];
     [self unregisterObserver];
     [self unregisterNotification];
-    [self.threadStacks removeAllObjects];
+    [self.stallingSnapshots removeAllObjects];
 }
 
 - (void)main {
@@ -94,12 +94,13 @@
         main_thread = mach_thread_self();
     });
 
+    MTHANRMainThreadStallingSnapshot *stallingMainBacktrace = nil;
     while (self.isCancelled == false) {
         NSTimeInterval current = [MTHawkeyeUtility currentTime];
         NSTimeInterval runloopCycleStartTime = self.runloopEventTime;
         float diff = current - runloopCycleStartTime;
-        BOOL anrDetected = NO;
-        if (diff >= self.anrThreshold && current > runloopCycleStartTime) {
+        BOOL isStalling = NO;
+        if (diff >= self.stallingThreshold && current > runloopCycleStartTime) {
             if (self.appState == UIApplicationStateBackground) {
                 if (self.enterBackgroundNotifyTime != 0) {
                     NSTimeInterval backgroundRunningTime = current - self.enterBackgroundNotifyTime;
@@ -115,8 +116,9 @@
                 }
             }
 
-            anrDetected = YES;
-            [self.threadStacks addObject:[self recordThreadStack:main_thread]];
+            isStalling = YES;
+            [self.stallingSnapshots addObject:[self recordThreadStack:main_thread]];
+
         }
 
         if (anrDetected || self.anrStartTime != 0) {
@@ -128,15 +130,16 @@
                 continue;
             }
 
+            // ANR end
             if (self.shouldCaptureBackTrace && self.threadResultBlock) {
                 MTHANRRecord *record = [[MTHANRRecord alloc] init];
-                record.rawRecords = [NSArray arrayWithArray:self.threadStacks];
-                record.duration = runloopCycleStartTime - self.anrStartTime;
+                record.stallingSnapshots = [NSArray arrayWithArray:self.stallingSnapshots];
+                record.duration = runloopCycleStartTime - self.stallingStartTime;
                 self.threadResultBlock(record);
             }
 
-            [self.threadStacks removeAllObjects];
-            self.anrStartTime = 0;
+            [self.stallingSnapshots removeAllObjects];
+            self.stallingStartTime = 0;
         }
 
         usleep(self.detectInterval * 1000 * 1000);
@@ -158,9 +161,9 @@
     return 0;
 }
 
-- (MTHANRRecordRaw *)recordThreadStack:(thread_t)thread {
-    MTHANRRecordRaw *threadStack = nil;
-    threadStack = [[MTHANRRecordRaw alloc] init];
+- (MTHANRMainThreadStallingSnapshot *)recordThreadStack:(thread_t)thread {
+    MTHANRMainThreadStallingSnapshot *threadStack = nil;
+    threadStack = [[MTHANRMainThreadStallingSnapshot alloc] init];
     threadStack.cpuUsed = MTHawkeyeAppStat.cpuUsedByAllThreads * 100.0f;
     threadStack.time = [[NSDate new] timeIntervalSince1970];
     mth_stack_backtrace *stackframes = mth_malloc_stack_backtrace();
