@@ -26,6 +26,7 @@
 @interface MTHANRDetectThread ()
 
 @property (nonatomic, assign) float annealingStepInMS;
+@property (nonatomic, assign) NSInteger annealingStepCount;
 
 @property (nonatomic, assign) CFRunLoopObserverRef highPriorityObserverRef;
 @property (nonatomic, assign) CFRunLoopObserverRef lowPriorityObserverRef;
@@ -56,6 +57,7 @@
         self.detectInterval = 0.1f;
         self.stallingThreshold = 0.4f;
         self.annealingStepInMS = 200;
+        self.annealingStepCount = 1;
         self.name = @"com.meitu.hawkeye.anr.observer";
         self.stallingSnapshots = [NSMutableArray array];
     }
@@ -116,17 +118,32 @@
                 }
             }
 
+            stallingMainBacktrace = [self snapshotThreadBacktrace:main_thread];
             isStalling = YES;
-            [self.stallingSnapshots addObject:[self recordThreadStack:main_thread]];
-
         }
 
-        if (anrDetected || self.anrStartTime != 0) {
-            self.anrStartTime = self.anrStartTime == 0 ? runloopCycleStartTime : self.anrStartTime;
+        if (isStalling || self.stallingStartTime != 0) {
+            self.stallingStartTime = self.stallingStartTime == 0 ? runloopCycleStartTime : self.stallingStartTime;
+
+            MTHANRMainThreadStallingSnapshot *preStallingMainBacktrace = self.stallingSnapshots.lastObject;
+            if (preStallingMainBacktrace && stallingMainBacktrace) {
+                // annealing while stalling on the same backtrace.
+                if (preStallingMainBacktrace->titleFrame != stallingMainBacktrace->titleFrame) {
+                    [self.stallingSnapshots addObject:stallingMainBacktrace];
+                    self.annealingStepCount = 1;
+                } else {
+                    self.annealingStepCount += 1;
+                }
+            } else {
+                self.annealingStepCount = 1;
+
+                if (stallingMainBacktrace)
+                    [self.stallingSnapshots addObject:stallingMainBacktrace];
+            }
 
             // ANR is happening, wait for next normal one to report
-            if (self.anrStartTime == runloopCycleStartTime) {
-                usleep(self.detectInterval * 1000 * 1000 + (self.threadStacks.count - 1) * self.annealingStepInMS * 1000);
+            if (self.stallingStartTime == runloopCycleStartTime) {
+                usleep(self.detectInterval * 1000 * 1000 + (self.annealingStepCount - 1) * self.annealingStepInMS * 1000);
                 continue;
             }
 
@@ -161,7 +178,7 @@
     return 0;
 }
 
-- (MTHANRMainThreadStallingSnapshot *)recordThreadStack:(thread_t)thread {
+- (MTHANRMainThreadStallingSnapshot *)snapshotThreadBacktrace:(thread_t)thread {
     MTHANRMainThreadStallingSnapshot *threadStack = nil;
     threadStack = [[MTHANRMainThreadStallingSnapshot alloc] init];
     threadStack.cpuUsed = MTHawkeyeAppStat.cpuUsedByAllThreads * 100.0f;
