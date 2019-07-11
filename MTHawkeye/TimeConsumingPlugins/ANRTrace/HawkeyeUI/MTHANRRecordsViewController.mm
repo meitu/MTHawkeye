@@ -159,11 +159,28 @@
 - (void)symbolicateRecordTitles {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         for (NSInteger ri = 0; ri < self.records.count; ++ri) {
-            MTHANRMainThreadStallingSnapshot *record = [self.records[ri].stallingSnapshots firstObject];
+            uintptr_t highlightTitleFrame = 0;
+            if (self.records[ri].stallingSnapshots.count > 0 && self.records[ri].stallingSnapshots.count <= 2) {
+                highlightTitleFrame = ((MTHANRMainThreadStallingSnapshot *)[self.records[ri].stallingSnapshots lastObject])->titleFrame;
+            } else if (self.records[ri].stallingSnapshots.count > 0) {
+                NSCountedSet *titleFrameCounter = [NSCountedSet set];
+                for (MTHANRMainThreadStallingSnapshot *snapshot in self.records[ri].stallingSnapshots) {
+                    [titleFrameCounter addObject:@(snapshot->titleFrame)];
+                }
+
+                NSArray *sortedTitleFrame = [titleFrameCounter.allObjects sortedArrayUsingComparator:^NSComparisonResult(id _Nonnull obj1, id _Nonnull obj2) {
+                    NSUInteger n = [titleFrameCounter countForObject:obj1];
+                    NSUInteger m = [titleFrameCounter countForObject:obj2];
+                    return (n < m) ? NSOrderedAscending : NSOrderedDescending;
+                }];
+
+                highlightTitleFrame = [[sortedTitleFrame.reverseObjectEnumerator.allObjects firstObject] integerValue];
+            }
+
             NSString *riStr = [NSString stringWithFormat:@"%ld", (long)ri];
 
             @synchronized(self.recordTitles) {
-                self.recordTitles[riStr] = [self recordFrameStringFrom:record->titleFrame withoutFnameIfExistSname:YES];
+                self.recordTitles[riStr] = [self recordFrameStringFrom:highlightTitleFrame withoutFnameIfExistSname:YES];
             }
             dispatch_async(dispatch_get_main_queue(), ^(void) {
                 if ([self.tableView numberOfRowsInSection:1] < ri) {
