@@ -162,15 +162,20 @@
             if (self.shouldCaptureBackTrace && self.threadResultBlock) {
                 for (MTHANRRecord *record in curStallingRecords) {
                     NSMutableArray *matchedSnapshot = [NSMutableArray array];
+                    NSMutableArray *snapshotsOutOfDate = [NSMutableArray array];
                     for (MTHANRMainThreadStallingSnapshot *snapshot in self.stallingSnapshots) {
-                        // the snapshot before start, also add to the record.
-                        if (snapshot.time <= (record.startFrom + record.durationInSeconds)) {
+                        if (snapshot.time > record.startFrom && snapshot.time <= (record.startFrom + record.durationInSeconds)) {
                             [matchedSnapshot addObject:snapshot];
+                        } else if (snapshot.time < record.startFrom) {
+                            [snapshotsOutOfDate addObject:snapshot];
                         }
                     }
                     if (matchedSnapshot.count > 0) {
                         record.stallingSnapshots = [matchedSnapshot copy];
                         [self.stallingSnapshots removeObjectsInArray:record.stallingSnapshots];
+                    }
+                    if (snapshotsOutOfDate) {
+                        [self.stallingSnapshots removeObjectsInArray:snapshotsOutOfDate];
                     }
 
                     self.threadResultBlock(record);
