@@ -213,7 +213,7 @@
     MTHANRMainThreadStallingSnapshot *threadStack = nil;
     threadStack = [[MTHANRMainThreadStallingSnapshot alloc] init];
     threadStack.cpuUsed = MTHawkeyeAppStat.cpuUsedByAllThreads * 100.0f;
-    threadStack.time = [[NSDate new] timeIntervalSince1970];
+    threadStack.time = [MTHawkeyeUtility currentTime];
     mth_stack_backtrace *stackframes = mth_malloc_stack_backtrace();
 
     if (stackframes) {

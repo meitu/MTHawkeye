@@ -290,19 +290,20 @@
 }
 
 - (void)_updateANRRecordCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    MTHANRMainThreadStallingSnapshot *anrRecord = [self.records[indexPath.row].stallingSnapshots firstObject];
+    MTHANRRecord *stallingRecord = self.records[indexPath.row];
+    NSTimeInterval stallingStartFrom = stallingRecord.startFrom;
     NSString *title = nil;
-    NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:anrRecord.time]];
-    if (self.records[indexPath.row].durationInSeconds > 0.f) {
-        title = [NSString stringWithFormat:@"[%@] stalling %.2fs", time, self.records[indexPath.row].durationInSeconds / 1000.f];
+    NSString *startAtStr = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:stallingStartFrom]];
+    if (stallingRecord.durationInSeconds > 0.f) {
+        title = [NSString stringWithFormat:@"[%@] stalling %.2fs", startAtStr, stallingRecord.durationInSeconds / 1000.f];
     } else {
-        title = [NSString stringWithFormat:@"[%@] stalling > %.2fs", time, [MTHANRTrace shared].thresholdInSeconds];
+        title = [NSString stringWithFormat:@"[%@] stalling > %.2fs", startAtStr, [MTHANRTrace shared].thresholdInSeconds];
     }
     cell.textLabel.text = title;
     @synchronized(self.recordTitles) {
-        NSString *title = self.recordTitles[[NSString stringWithFormat:@"%ld", (long)indexPath.row]];
-        if (title.length > 0) {
-            cell.detailTextLabel.text = title;
+        NSString *detail = self.recordTitles[[NSString stringWithFormat:@"%ld", (long)indexPath.row]];
+        if (detail.length > 0) {
+            cell.detailTextLabel.text = detail;
         } else {
             cell.detailTextLabel.text = @"loading";
         }

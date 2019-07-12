@@ -154,6 +154,7 @@
 
     NSDictionary *dict = @{
         @"duration" : [NSString stringWithFormat:@"%@", @(anrRecord.durationInSeconds * 1000)],
+        @"startFrom" : @(anrRecord.startFrom),
         @"stacks" : stacks
     };
     NSError *error;
@@ -211,6 +212,7 @@
             }
 
             record.durationInSeconds = [dict[@"duration"] doubleValue];
+            record.startFrom = [dict[@"startFrom"] doubleValue];
             record.stallingSnapshots = rawReocrds;
             [anrRecords addObject:record];
         } else {
