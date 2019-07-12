@@ -117,7 +117,7 @@
     MTHawkeyeSettingSectionEntity *section = [[MTHawkeyeSettingSectionEntity alloc] init];
     section.tag = @"objc-call-trace";
     section.headerText = @"Objective-C Call Trace";
-    section.footerText = @"Objective-C method call trace is only for main thread, and will cover the backtrace, turn if off when unnecessary.";
+    section.footerText = @"Objective-C method call trace is only for main thread, and will dirty stack backtrace, turn if off when unnecessary.";
     section.cells = @[
         [MTHUITimeProfilerHawkeyeUI objcTraceSwitcherCell],
         [MTHUITimeProfilerHawkeyeUI objcCallTraceThresholdEditorCell],
@@ -154,7 +154,7 @@
 
         NSNumber *value = [[MTHawkeyeUserDefaults shared] objectForKey:@"com.meitu.hawkeye.calltrace.on.isAlert"];
         if (newValue && (value ? !value.boolValue : YES)) {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Notice" message:@"ObjC Method Time Trace will cover backtrace frames, you should only turn on this when necessary" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Notice" message:@"ObjC Method Time Trace will dirty stack backtrace frames, you should only turn on this when necessary" preferredStyle:UIAlertControllerStyleAlert];
             [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
             UIViewController *topController = [UIViewController mth_topViewController];
             [topController presentViewController:alert animated:YES completion:nil];

@@ -240,51 +240,109 @@ uintptr_t after_objc_msgSend() {
 
 #define ret() __asm volatile("ret\n");
 
+#define store_registers() \
+    __asm volatile("stp x29, x30, [sp, #-0x10]\n");
+
+#define setup_fp_sp()                         \
+    __asm volatile("str x0, [sp, #-0x20]\n"); \
+    __asm volatile("mov x0, sp\n"             \
+                   "sub x0, fp, x0\n");       \
+    __asm volatile(                           \
+        "mov fp, sp\n"                        \
+        "sub fp, fp, #0x10\n"                 \
+        "sub sp, fp, x0\n");                  \
+    __asm volatile("ldr x0, [fp, #-0x10]\n");
+
+#define mark_frame_layout()                 \
+    __asm volatile(".cfi_def_cfa w29, 16\n" \
+                   ".cfi_offset w30, -8\n"  \
+                   ".cfi_offset w29, -16\n");
+
+#define copy_stack_content()              \
+    __asm volatile("add x2, sp, #240\n"   \
+                   "sub x2, fp, x2\n");   \
+    __asm volatile("mov x3, #0x0\n"       \
+                   "add x7, fp, #0x10\n"  \
+                   "add x4, sp, #240\n"); \
+    __asm volatile("cmp x3, x2\n"         \
+                   "b.eq #24\n");         \
+    __asm volatile("ldr x5, [x7, x3]\n"   \
+                   "str x5, [x4, x3]\n"   \
+                   "add x3, x3, #0x8\n"   \
+                   "cmp x3, x2\n"         \
+                   "b.lt #-16\n");
+
+#define restore_fp_sp()                  \
+    __asm volatile("mov sp, fp\n"        \
+                   "add sp, sp, #0x10\n" \
+                   "ldr fp, [fp]\n");
+
+// https://blog.gocy.tech/2019/07/08/hook-msgSend-advance/
+
+// clang-format off
 __attribute__((__naked__)) static void hook_Objc_msgSend() {
-    // Save parameters.
+    // 1. Store fp, lr value at top of the stack
+    store_registers()
+
+    // 2. Setup new fp & sps
+    setup_fp_sp()
+
+    // 3. declare where we store our fp & lr, so that lldb can generate call stack.
+    // https://stackoverflow.com/questions/7534420/gas-explanation-of-cfi-def-cfa-offset
+    mark_frame_layout()
+
+    // 4. Save parameters. (Save register values)
     save()
 
-        __asm volatile("mov x2, lr\n");
-    __asm volatile("mov x3, x4\n");
+    // 5. copy the original stack frame
+    copy_stack_content()
 
-    // Call our before_objc_msgSend.
+    // 6. call before msgSend & msgSend & after msgSend
+    __asm volatile("mov x2, lr\n");
+
+    // 7. Call our before_objc_msgSend.
     call(blr, &before_objc_msgSend)
 
-        // Load parameters.
-        load()
-
-        // Call through to the original objc_msgSend.
-        call(blr, orig_objc_msgSend)
-
-        // Save original objc_msgSend return value.
-        save()
-
-        // Call our after_objc_msgSend.
-        call(blr, &after_objc_msgSend)
-
-        // restore lr
-        __asm volatile("mov lr, x0\n");
-
-    // Load original objc_msgSend return value.
+    // 8. Load parameters. (restore 4.)
     load()
 
-        // return
-        ret()
+    // 9. Call through to the original objc_msgSend.
+    call(blr, orig_objc_msgSend)
+
+    // 10. Save original objc_msgSend return value.
+    save()
+
+    // 11. Call our after_objc_msgSend.
+    call(blr, &after_objc_msgSend)
+
+    // 12. restore lr register, returned from after msgSend
+    __asm volatile("mov lr, x0\n");
+
+    // 13. Load original objc_msgSend return value. (retore 10.)
+    load()
+
+    // 14. restore
+    restore_fp_sp()
+
+    // 15. return
+    ret()
 }
 
 // MARK: public method
 
 void mth_calltraceStart(void) {
     _call_record_enabled = true;
+
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         pthread_key_create(&_thread_key, &release_thread_call_stack);
         rebind_symbols((struct rebinding[6]){
-                           {"objc_msgSend", (void *)hook_Objc_msgSend, (void **)&orig_objc_msgSend},
-                       },
-            1);
+            {"objc_msgSend", (void *)hook_Objc_msgSend, (void **)&orig_objc_msgSend},
+        }, 1);
     });
 }
+
+// clang-format on
 
 void mth_calltraceStop(void) {
     _call_record_enabled = false;
