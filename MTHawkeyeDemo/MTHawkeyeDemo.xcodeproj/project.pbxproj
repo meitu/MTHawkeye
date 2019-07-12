@@ -548,18 +548,18 @@
 		20D4CFF222647B2300F28B08 /* time-consuming */ = {
 			isa = PBXGroup;
 			children = (
-				20D4CFF322647B2300F28B08 /* ui-time-profiler-vclife.png */,
-				20D4CFF422647B2300F28B08 /* ui-time-profiler-objc-calltrace.png */,
-				20D4CFF522647B2300F28B08 /* anr-tracer.md */,
-				20D4CFF622647B2300F28B08 /* ui-time-profiler-xcode.png */,
-				20D4CFF722647B2300F28B08 /* anr-tracer-cn.md */,
-				20D4CFF822647B2300F28B08 /* ui-time-profiler.md */,
-				20D4CFF922647B2300F28B08 /* ui-time-profiler-launch-detail.png */,
-				20D4CFFA22647B2300F28B08 /* anr-record-list.png */,
-				20D4CFFB22647B2300F28B08 /* fps-tracer.md */,
 				20D4CFFC22647B2300F28B08 /* anr-record-detail.png */,
+				20D4CFFA22647B2300F28B08 /* anr-record-list.png */,
+				20D4CFF722647B2300F28B08 /* anr-tracer-cn.md */,
+				20D4CFF522647B2300F28B08 /* anr-tracer.md */,
+				20D4CFFB22647B2300F28B08 /* fps-tracer.md */,
 				20D4CFFD22647B2300F28B08 /* ui-time-profiler-cn.md */,
+				20D4CFF922647B2300F28B08 /* ui-time-profiler-launch-detail.png */,
 				20D4CFFE22647B2300F28B08 /* ui-time-profiler-main.png */,
+				20D4CFF422647B2300F28B08 /* ui-time-profiler-objc-calltrace.png */,
+				20D4CFF322647B2300F28B08 /* ui-time-profiler-vclife.png */,
+				20D4CFF622647B2300F28B08 /* ui-time-profiler-xcode.png */,
+				20D4CFF822647B2300F28B08 /* ui-time-profiler.md */,
 			);
 			path = "time-consuming";
 			sourceTree = "<group>";
