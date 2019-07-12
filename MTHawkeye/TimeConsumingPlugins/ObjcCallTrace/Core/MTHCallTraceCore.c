@@ -277,68 +277,72 @@ uintptr_t after_objc_msgSend() {
                    "add sp, sp, #0x10\n" \
                    "ldr fp, [fp]\n");
 
+// https://blog.gocy.tech/2019/07/08/hook-msgSend-advance/
+
+// clang-format off
 __attribute__((__naked__)) static void hook_Objc_msgSend() {
-    // 1. store fp, lr value at top of the stack
+    // 1. Store fp, lr value at top of the stack
     store_registers()
 
-        //2. setup new fp & sp
-        setup_fp_sp()
+    // 2. Setup new fp & sps
+    setup_fp_sp()
 
-        //4. declare where we store our fp & lr, so that lldb can generate call stack.
-        //https://stackoverflow.com/questions/7534420/gas-explanation-of-cfi-def-cfa-offset
-        mark_frame_layout()
+    // 3. declare where we store our fp & lr, so that lldb can generate call stack.
+    // https://stackoverflow.com/questions/7534420/gas-explanation-of-cfi-def-cfa-offset
+    mark_frame_layout()
 
-        //5. Save parameters. (Save register values)
-        save()
+    // 4. Save parameters. (Save register values)
+    save()
 
-        //6. copy the original stack frame
-        copy_stack_content()
+    // 5. copy the original stack frame
+    copy_stack_content()
 
-        // 7. call before msgSend & msgSend & after msgSend
-        __asm volatile("mov x2, lr\n");
+    // 6. call before msgSend & msgSend & after msgSend
+    __asm volatile("mov x2, lr\n");
 
-    // Call our before_objc_msgSend.
+    // 7. Call our before_objc_msgSend.
     call(blr, &before_objc_msgSend)
 
-        // Load parameters.
-        load()
-
-        // Call through to the original objc_msgSend.
-        call(blr, orig_objc_msgSend)
-
-        // Save original objc_msgSend return value.
-        save()
-
-        // Call our after_objc_msgSend.
-        call(blr, &after_objc_msgSend)
-
-        //9. restore lr register, returned from after msgSend
-        __asm volatile("mov lr, x0\n");
-
-    //10. Load original objc_msgSend return value.
+    // 8. Load parameters. (restore 4.)
     load()
 
-        //11. restore
-        restore_fp_sp()
+    // 9. Call through to the original objc_msgSend.
+    call(blr, orig_objc_msgSend)
 
-        //12. return
-        ret()
+    // 10. Save original objc_msgSend return value.
+    save()
+
+    // 11. Call our after_objc_msgSend.
+    call(blr, &after_objc_msgSend)
+
+    // 12. restore lr register, returned from after msgSend
+    __asm volatile("mov lr, x0\n");
+
+    // 13. Load original objc_msgSend return value. (retore 10.)
+    load()
+
+    // 14. restore
+    restore_fp_sp()
+
+    // 15. return
+    ret()
 }
 
 // MARK: public method
 
 void mth_calltraceStart(void) {
-
     _call_record_enabled = true;
+
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         pthread_key_create(&_thread_key, &release_thread_call_stack);
         rebind_symbols((struct rebinding[6]){
-                           {"objc_msgSend", (void *)hook_Objc_msgSend, (void **)&orig_objc_msgSend},
-                       },
-            1);
+            {"objc_msgSend", (void *)hook_Objc_msgSend, (void **)&orig_objc_msgSend},
+        }, 1);
     });
 }
+
+// clang-format on
 
 void mth_calltraceStop(void) {
     _call_record_enabled = false;
