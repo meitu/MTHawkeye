@@ -147,7 +147,8 @@
         NSDictionary *dict = @{
             @"time" : @(rawRecord.time),
             @"stackframes" : stackInStr.copy,
-            @"titleframe" : [NSString stringWithFormat:@"%p", (void *)rawRecord->titleFrame]
+            @"titleframe" : [NSString stringWithFormat:@"%p", (void *)rawRecord->titleFrame],
+            @"capturedCount" : @(rawRecord.capturedCount),
         };
         [stacks addObject:dict];
     }
@@ -155,6 +156,7 @@
     NSDictionary *dict = @{
         @"duration" : [NSString stringWithFormat:@"%@", @(anrRecord.durationInSeconds * 1000)],
         @"startFrom" : @(anrRecord.startFrom),
+        @"inBackground" : @(anrRecord.isInBackground),
         @"stacks" : stacks
     };
     NSError *error;
@@ -208,11 +210,13 @@
                 }
 
                 rawRecord.time = [stack[@"time"] doubleValue];
+                rawRecord.capturedCount = [stack[@"capturedCount"] integerValue];
                 [rawReocrds addObject:rawRecord];
             }
 
             record.durationInSeconds = [dict[@"duration"] doubleValue];
             record.startFrom = [dict[@"startFrom"] doubleValue];
+            record.isInBackground = [dict[@"inBackground"] boolValue];
             record.stallingSnapshots = rawReocrds;
             [anrRecords addObject:record];
         } else {

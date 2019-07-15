@@ -20,6 +20,8 @@
 
 @property (nonatomic, assign) NSTimeInterval time;
 @property (nonatomic, assign) float cpuUsed;
+@property (nonatomic, assign) NSInteger capturedCount;
+@property (nonatomic, assign) BOOL isInBackground;
 
 @end
 
@@ -28,5 +30,6 @@
 @property (nonatomic, strong) NSArray<MTHANRMainThreadStallingSnapshot *> *stallingSnapshots;
 @property (nonatomic, assign) NSTimeInterval startFrom;
 @property (nonatomic, assign) NSTimeInterval durationInSeconds;
+@property (nonatomic, assign) BOOL isInBackground;
 
 @end
