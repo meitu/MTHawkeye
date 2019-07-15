@@ -64,7 +64,7 @@
                  forKey:NSStringFromSelector(@selector(anrDetectInterval))
             withHandler:^(id _Nullable oldValue, id _Nullable newValue) {
                 if (fabsf([oldValue floatValue] - [newValue floatValue]) > FLT_EPSILON)
-                    [MTHANRTrace shared].detectInterval = [newValue floatValue];
+                    [MTHANRTrace shared].detectIntervalInSeconds = [newValue floatValue];
             }];
 }
 

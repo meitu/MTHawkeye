@@ -45,12 +45,12 @@
     self.detectThread.shouldCaptureBackTrace = shouldCaptureBackTrace;
 }
 
-- (void)startWithDetectInterval:(float)detectInterval anrThreshold:(float)anrThreshold {
+- (void)startWithDetectInterval:(float)detectIntervalInSeconds anrThreshold:(float)anrThresholdInSeconds {
     self.detectThread = [[MTHANRDetectThread alloc] init];
     self.detectThread.shouldCaptureBackTrace = self.shouldCaptureBackTrace;
     __weak typeof(self) weakSelf = self;
-    [self.detectThread startWithDetectInterval:detectInterval
-                                  anrThreshold:anrThreshold
+    [self.detectThread startWithDetectInterval:detectIntervalInSeconds
+                       stallThresholdInSeconds:anrThresholdInSeconds
                                        handler:^(MTHANRRecord *_Nonnull anrRecord) {
                                            if (weakSelf) {
                                                weakSelf.detectedHandler(weakSelf, anrRecord);

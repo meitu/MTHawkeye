@@ -45,8 +45,8 @@
 @property (nonatomic, strong) NSMutableArray<MTHANRRecord *> *curStallingRunloops;
 @property (nonatomic, strong) NSMutableArray<MTHANRMainThreadStallingSnapshot *> *stallingSnapshots;
 
-@property (nonatomic, assign) float stallingThreshold;
-@property (nonatomic, assign) float detectInterval;
+@property (nonatomic, assign) float stallingThresholdInSeconds;
+@property (nonatomic, assign) float detectIntervalInSeconds;
 
 @end
 
@@ -60,8 +60,8 @@
     (self = [super init]);
     if (self) {
         self.shouldCaptureBackTrace = YES;
-        self.detectInterval = 0.1f;
-        self.stallingThreshold = 0.4f;
+        self.detectIntervalInSeconds = 0.1f;
+        self.stallingThresholdInSeconds = 0.4f;
         self.annealingStepInMS = 200;
         self.annealingStepCount = 1;
         self.name = @"com.meitu.hawkeye.anr.observer";
@@ -69,14 +69,16 @@
     return self;
 }
 
-- (void)startWithDetectInterval:(float)detectInterval anrThreshold:(float)stallingThreshold handler:(MTHANRThreadResultBlock)threadResultBlock {
-    if ([@(stallingThreshold) compare:@(detectInterval)] != NSOrderedDescending) {
+- (void)startWithDetectInterval:(float)detectIntervalInSeconds
+        stallThresholdInSeconds:(float)stallingThresholdInSeconds
+                        handler:(MTHANRThreadResultBlock)threadResultBlock {
+    if ([@(stallingThresholdInSeconds) compare:@(detectIntervalInSeconds)] != NSOrderedDescending) {
         NSAssert(0, @"Detect Interval should be less than ANR Threshold");
     }
 
     self.threadResultBlock = threadResultBlock;
-    self.detectInterval = detectInterval;
-    self.stallingThreshold = stallingThreshold;
+    self.detectIntervalInSeconds = detectIntervalInSeconds;
+    self.stallingThresholdInSeconds = stallingThresholdInSeconds;
     self.curRunloopStartFrom = 0;
     self.curRunloopEndAt = 0;
 
@@ -117,7 +119,7 @@
 
         MTHANRMainThreadStallingSnapshot *stallingMainBacktrace = nil;
 
-        BOOL isStalling = ((now - curRunloopStartFrom) >= self.stallingThreshold);
+        BOOL isStalling = ((now - curRunloopStartFrom) >= self.stallingThresholdInSeconds);
         if (isStalling) {
             if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
                 [self processBackgroundStillRunningWithSnapshots:self.stallingSnapshots];
@@ -155,9 +157,9 @@
         }
 
         if (isStalling) {
-            usleep(self.detectInterval * 1000 * 1000 + (self.annealingStepCount - 1) * self.annealingStepInMS * 1000);
+            usleep(self.detectIntervalInSeconds * 1000 * 1000 + (self.annealingStepCount - 1) * self.annealingStepInMS * 1000);
         } else {
-            usleep(self.detectInterval * 1000 * 1000);
+            usleep(self.detectIntervalInSeconds * 1000 * 1000);
         }
     }
 }
@@ -213,7 +215,7 @@
         // recalculate time by snapshot, ignore original
         if (existBackgroundTask) {
             NSTimeInterval stallingDurationInMS = 0;
-            NSTimeInterval base = self.detectInterval * 1000;
+            NSTimeInterval base = self.detectIntervalInSeconds * 1000;
             NSTimeInterval start = 0;
             for (MTHANRMainThreadStallingSnapshot *snapshot in record.stallingSnapshots) {
                 if (start == 0)
@@ -470,7 +472,7 @@ static void mthanr_lowPriorityObserverCallBack(CFRunLoopObserverRef observer, CF
                 shouldTrace = YES;
 
                 NSTimeInterval runloopStartFrom = object.curRunloopStartFrom;
-                if (runloopStartFrom > 0 && (runloopEndAt - runloopStartFrom) > object.stallingThreshold) {
+                if (runloopStartFrom > 0 && (runloopEndAt - runloopStartFrom) > object.stallingThresholdInSeconds) {
                     MTHANRRecord *record = [[MTHANRRecord alloc] init];
                     record.startFrom = runloopStartFrom;
                     record.durationInSeconds = runloopEndAt - runloopStartFrom;
