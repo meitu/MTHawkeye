@@ -238,7 +238,7 @@
         }
 
         // ignore records without backtrace snapshots. (suspending event not yet completly excluded from `skipHeaderActivitiesBeforeEnterForegroundIfNeeded`)
-        if (record.durationInSeconds > self.stallingThresholdInSeconds) {
+        if (record.durationInSeconds > self.stallingThresholdInSeconds && (record.stallingSnapshots.count > 0 || !self.shouldCaptureBackTrace)) {
             self.threadResultBlock(record);
 #if _MTHawkeyeANRTracingDebugEnabled
             MTHLogInfo(@"ANR event captured: \n%@", record);
