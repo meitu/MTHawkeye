@@ -224,7 +224,9 @@
                 stallingDurationInMS += (base + (base + (snapshot.capturedCount - 1) * self.annealingStepInMS)) * snapshot.capturedCount / 2;
             }
 
-            if (start > 0) {
+            record.isInBackground = YES;
+
+            if (fabs(stallingDurationInMS - record.durationInSeconds * 1000) > self.detectIntervalInSeconds * 1000) {
 #if _MTHawkeyeANRTracingDebugEnabled
                 MTHLogInfo(@"\n\n fix background stalling events: \n    before: %@, \n\n    ====> after: startFrom: %f, duration: %.3fs\n\n", record, start, stallingDurationInMS / 1000);
 #else
@@ -232,12 +234,11 @@
 #endif
                 record.startFrom = start;
                 record.durationInSeconds = stallingDurationInMS / 1000;
-                record.isInBackground = YES;
             }
         }
 
         // ignore records without backtrace snapshots. (suspending event not yet completly excluded from `skipHeaderActivitiesBeforeEnterForegroundIfNeeded`)
-        if (record.stallingSnapshots.count > 0 || !self.shouldCaptureBackTrace) {
+        if (record.durationInSeconds > self.stallingThresholdInSeconds) {
             self.threadResultBlock(record);
 #if _MTHawkeyeANRTracingDebugEnabled
             MTHLogInfo(@"ANR event captured: \n%@", record);
