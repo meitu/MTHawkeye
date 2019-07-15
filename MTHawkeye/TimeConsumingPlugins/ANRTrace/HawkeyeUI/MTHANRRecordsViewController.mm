@@ -142,10 +142,15 @@
 
                               // show hardstall info even only exit unexpected captured.
                               self.previousSessionHardStallInfo = buffer;
-                              MTHLogInfo(@"Previous session exit unexpected.");
 
-                              if (buffer.isDuringHardStall) {
-                                  MTHLogWarn(@"Captured hard stall on previous session.");
+                              static BOOL didWarnInConsole = NO;
+                              if (!didWarnInConsole) {
+                                  didWarnInConsole = YES;
+                                  MTHLogInfo(@"Previous session exit unexpected.");
+
+                                  if (buffer.isDuringHardStall) {
+                                      MTHLogWarn(@"Captured hard stall on previous session.");
+                                  }
                               }
                           }
                       }];
@@ -294,11 +299,12 @@
     NSTimeInterval stallingStartFrom = stallingRecord.startFrom;
     NSString *title = nil;
     NSString *startAtStr = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:stallingStartFrom]];
-    if (stallingRecord.durationInSeconds > 0.f) {
-        title = [NSString stringWithFormat:@"[%@] stalling %.2fs", startAtStr, stallingRecord.durationInSeconds / 1000.f];
+    if (stallingRecord.isInBackground) {
+        title = [NSString stringWithFormat:@"[%@] bgTask %.2fs", startAtStr, stallingRecord.durationInSeconds / 1000.f];
     } else {
-        title = [NSString stringWithFormat:@"[%@] stalling > %.2fs", startAtStr, [MTHANRTrace shared].thresholdInSeconds];
+        title = [NSString stringWithFormat:@"[%@] stalling %.2fs", startAtStr, stallingRecord.durationInSeconds / 1000.f];
     }
+
     cell.textLabel.text = title;
     @synchronized(self.recordTitles) {
         NSString *detail = self.recordTitles[[NSString stringWithFormat:@"%ld", (long)indexPath.row]];
@@ -572,7 +578,12 @@ static BOOL anrReportSymbolicsRemote = NO;
     NSMutableString *content = [NSMutableString string];
 
     CGFloat duration = anrRecord.durationInSeconds / 1000.f;
-    NSString *stallingDesc = [NSString stringWithFormat:@"Stalling %.2f seconds\n", duration];
+    NSString *stallingDesc = nil;
+    if (anrRecord.isInBackground) {
+        stallingDesc = [NSString stringWithFormat:@"Background task running for %.2f seconds\n", duration];
+    } else {
+        stallingDesc = [NSString stringWithFormat:@"Stalling %.2f seconds\n", duration];
+    }
     [content appendString:stallingDesc];
 
     if (anrReportSymbolicsRemote) {
@@ -595,7 +606,7 @@ static BOOL anrReportSymbolicsRemote = NO;
                        [self formatRemoteSymolizedFramesDicts:symbolizedFrames intoOnlineFrame:outFrameDict];
                        for (MTHANRMainThreadStallingSnapshot *rawRecord in anrRecord.stallingSnapshots) {
                            NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:rawRecord.time]];
-                           [content appendFormat:@"\n Timestamp:%@ \n", time];
+                           [content appendFormat:@"\n -- at: %@, captured count: %@ -- \n", time, @(rawRecord.capturedCount)];
                            for (int i = 0; i < rawRecord->stackframesSize; ++i) {
                                uintptr_t frame = rawRecord->stackframes[i];
                                NSString *frameStr = [NSString stringWithFormat:@"%p", (void *)frame];
@@ -610,7 +621,7 @@ static BOOL anrReportSymbolicsRemote = NO;
     } else {
         for (MTHANRMainThreadStallingSnapshot *rawRecord in anrRecord.stallingSnapshots) {
             NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:rawRecord.time]];
-            [content appendFormat:@"\n Timestamp: %@ \n", time];
+            [content appendFormat:@"\n -- at: %@, captured count: %@ -- \n", time, @(rawRecord.capturedCount)];
             for (int i = 0; i < rawRecord->stackframesSize; ++i) {
                 uintptr_t frame = rawRecord->stackframes[i];
                 NSString *desc = [self recordFrameStringFrom:frame withoutFnameIfExistSname:NO];
