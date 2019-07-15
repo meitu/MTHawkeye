@@ -41,7 +41,6 @@
 @property (atomic, assign) NSTimeInterval curRunloopEndAt;
 
 @property (atomic, assign) NSTimeInterval enterBackgroundNotifyTime;
-@property (atomic, assign) UIApplicationState appState;
 
 @property (nonatomic, strong) NSMutableArray<MTHANRRecord *> *curStallingRunloops;
 @property (nonatomic, strong) NSMutableArray<MTHANRMainThreadStallingSnapshot *> *stallingSnapshots;
@@ -120,21 +119,13 @@
 
         BOOL isStalling = ((now - curRunloopStartFrom) >= self.stallingThreshold);
         if (isStalling) {
-            if (self.appState == UIApplicationStateBackground) {
-                if (self.enterBackgroundNotifyTime != 0) {
-                    NSTimeInterval backgroundRunningTime = now - self.enterBackgroundNotifyTime;
-                    if (backgroundRunningTime > 175) {
-                        [MTHANRTracingBufferRunner traceAppLifeActivity:MTHawkeyeAppLifeActivityBackgroundTaskWillOutOfTime];
-                        MTHLogWarn(@"background task will run out of time");
-                    }
-
-                    usleep(self.detectInterval * 1000 * 1000);
-                } else {
-                    MTHLogWarn(@"in background, but main thread still stalling.");
-                }
+            if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+                [self processBackgroundStillRunningWithSnapshots:self.stallingSnapshots];
             }
 
-            stallingMainBacktrace = [self snapshotThreadBacktrace:main_thread];
+            if (self.shouldCaptureBackTrace) {
+                stallingMainBacktrace = [self snapshotThreadBacktrace:main_thread];
+            }
 
             // annealing if needed, record stalling snapshot if need.
             {
@@ -146,6 +137,7 @@
                         self.annealingStepCount = 1;
                     } else {
                         self.annealingStepCount += 1;
+                        preStallingMainBacktrace.capturedCount += 1;
                     }
                 } else {
                     self.annealingStepCount = 1;
@@ -156,40 +148,98 @@
             }
         }
 
-        // need to deal with stalling record.
+        // output stalling records if need
         NSArray<MTHANRRecord *> *curStallingRecords = [self dequeueAllStallingRunloopRecords];
-        if (curStallingRecords.count > 0) {
-            if (self.shouldCaptureBackTrace && self.threadResultBlock) {
-                for (MTHANRRecord *record in curStallingRecords) {
-                    NSMutableArray *matchedSnapshot = [NSMutableArray array];
-                    NSMutableArray *snapshotsOutOfDate = [NSMutableArray array];
-                    for (MTHANRMainThreadStallingSnapshot *snapshot in self.stallingSnapshots) {
-                        if (snapshot.time > record.startFrom && snapshot.time <= (record.startFrom + record.durationInSeconds)) {
-                            [matchedSnapshot addObject:snapshot];
-                        } else if (snapshot.time < record.startFrom) {
-                            [snapshotsOutOfDate addObject:snapshot];
-                        }
-                    }
-                    if (matchedSnapshot.count > 0) {
-                        record.stallingSnapshots = [matchedSnapshot copy];
-                        [self.stallingSnapshots removeObjectsInArray:record.stallingSnapshots];
-                    }
-                    if (snapshotsOutOfDate) {
-                        [self.stallingSnapshots removeObjectsInArray:snapshotsOutOfDate];
-                    }
-
-                    self.threadResultBlock(record);
-#if _MTHawkeyeANRTracingDebugEnabled
-                    MTHLogInfo(@"ANR event captured: \n%@", record);
-#endif
-                }
-            }
+        if (curStallingRecords.count > 0 && self.threadResultBlock) {
+            [self outputStallingRecordFrom:curStallingRecords withSnapshots:self.stallingSnapshots];
         }
 
         if (isStalling) {
             usleep(self.detectInterval * 1000 * 1000 + (self.annealingStepCount - 1) * self.annealingStepInMS * 1000);
         } else {
             usleep(self.detectInterval * 1000 * 1000);
+        }
+    }
+}
+
+- (void)processBackgroundStillRunningWithSnapshots:(NSArray *)stallingSnapshots {
+    // background notify may not yet callback.
+    static NSTimeInterval prevWarnTime = 0;
+    NSTimeInterval curTime = [MTHawkeyeUtility currentTime];
+    if (self.enterBackgroundNotifyTime == 0.f && curTime - prevWarnTime > 5.f) {
+        prevWarnTime = curTime;
+        MTHLogInfo(@"in background, but DidEnterBackground not yet received.");
+        return;
+    }
+
+    NSTimeInterval backgroundRunningDuration = curTime - self.enterBackgroundNotifyTime;
+    if (backgroundRunningDuration > 175) {
+        [MTHANRTracingBufferRunner traceAppLifeActivity:MTHawkeyeAppLifeActivityBackgroundTaskWillOutOfTime];
+
+        MTHANRRecord *record = [[MTHANRRecord alloc] init];
+        record.startFrom = self.enterBackgroundNotifyTime;
+        record.durationInSeconds = backgroundRunningDuration;
+        record.isInBackground = YES;
+        [self outputStallingRecordFrom:@[ record ] withSnapshots:self.stallingSnapshots];
+
+        MTHLogWarn(@"background task will run out of time, already running %@s.", @(backgroundRunningDuration));
+    }
+}
+
+- (void)outputStallingRecordFrom:(NSArray<MTHANRRecord *> *)stallingRecords
+                   withSnapshots:(NSMutableArray<MTHANRMainThreadStallingSnapshot *> *)stallingSnapshots {
+    for (MTHANRRecord *record in stallingRecords) {
+        NSMutableArray *matchedSnapshot = [NSMutableArray array];
+        NSMutableArray *snapshotsOutOfDate = [NSMutableArray array];
+        BOOL existBackgroundTask = NO;
+        for (MTHANRMainThreadStallingSnapshot *snapshot in stallingSnapshots) {
+            if (snapshot.isInBackground)
+                existBackgroundTask = YES;
+
+            if (snapshot.time > record.startFrom && snapshot.time <= (record.startFrom + record.durationInSeconds)) {
+                [matchedSnapshot addObject:snapshot];
+            } else if (snapshot.time < record.startFrom) {
+                [snapshotsOutOfDate addObject:snapshot];
+            }
+        }
+        if (matchedSnapshot.count > 0) {
+            record.stallingSnapshots = [matchedSnapshot copy];
+            [stallingSnapshots removeObjectsInArray:record.stallingSnapshots];
+        }
+        if (snapshotsOutOfDate) {
+            [stallingSnapshots removeObjectsInArray:snapshotsOutOfDate];
+        }
+
+        // recalculate time by snapshot, ignore original
+        if (existBackgroundTask) {
+            NSTimeInterval stallingDurationInMS = 0;
+            NSTimeInterval base = self.detectInterval * 1000;
+            NSTimeInterval start = 0;
+            for (MTHANRMainThreadStallingSnapshot *snapshot in record.stallingSnapshots) {
+                if (start == 0)
+                    start = snapshot.time;
+                // (m(1) + m(n)) * n / 2
+                stallingDurationInMS += (base + (base + (snapshot.capturedCount - 1) * self.annealingStepInMS)) * snapshot.capturedCount / 2;
+            }
+
+            if (start > 0) {
+#if _MTHawkeyeANRTracingDebugEnabled
+                MTHLogInfo(@"\n\n fix background stalling events: \n    before: %@, \n\n    ====> after: startFrom: %f, duration: %.3fs\n\n", record, start, stallingDurationInMS / 1000);
+#else
+                MTHLogInfo(@"\n\n fix background stalling events: \n    before: startFrom: %f, duration:%.3f\n    after: startFrom: %f, duration: %.3fs\n\n", record.startFrom, record.durationInSeconds, start, stallingDurationInMS / 1000);
+#endif
+                record.startFrom = start;
+                record.durationInSeconds = stallingDurationInMS / 1000;
+                record.isInBackground = YES;
+            }
+        }
+
+        // ignore records without backtrace snapshots. (suspending event not yet completly excluded from `skipHeaderActivitiesBeforeEnterForegroundIfNeeded`)
+        if (record.stallingSnapshots.count > 0 || !self.shouldCaptureBackTrace) {
+            self.threadResultBlock(record);
+#if _MTHawkeyeANRTracingDebugEnabled
+            MTHLogInfo(@"ANR event captured: \n%@", record);
+#endif
         }
     }
 }
@@ -210,10 +260,18 @@
 }
 
 - (MTHANRMainThreadStallingSnapshot *)snapshotThreadBacktrace:(thread_t)thread {
+#if _MTHawkeyeANRTracingDebugEnabled
+    MTHLogInfo(@"main thread backtrace fired, appState: %@", @([UIApplication sharedApplication].applicationState));
+#endif
+
     MTHANRMainThreadStallingSnapshot *threadStack = nil;
     threadStack = [[MTHANRMainThreadStallingSnapshot alloc] init];
     threadStack.cpuUsed = MTHawkeyeAppStat.cpuUsedByAllThreads * 100.0f;
     threadStack.time = [MTHawkeyeUtility currentTime];
+    threadStack.capturedCount = 1;
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+        threadStack.isInBackground = YES;
+    }
     mth_stack_backtrace *stackframes = mth_malloc_stack_backtrace();
 
     if (stackframes) {
@@ -274,8 +332,7 @@
                         object:nil
                          queue:nil
                     usingBlock:^(NSNotification *_Nonnull note) {
-                        self.appState = [UIApplication sharedApplication].applicationState;
-
+                        // MTHLogInfo(@"%@", mthStringFromAppLifeActivity(activity));
                         [MTHANRTracingBufferRunner traceAppLifeActivity:activity];
 
                         if (activity == MTHawkeyeAppLifeActivityDidEnterBackground) {
@@ -328,7 +385,7 @@ static BOOL skipHeaderActivitiesBeforeEnterForegroundIfNeeded(MTHANRDetectThread
     if (preActivityTimeBeforeEnterForeground == 0) {
         preActivityTimeBeforeEnterForeground = object.curRunloopStartFrom;
 #if _MTHawkeyeANRTracingDebugEnabled
-        MTHLogInfo(@"ANR suspended runloop fix, start %@", @(preActivityTimeBeforeEnterForeground));
+        MTHLogInfo(@"ANR suspended runloop fix, start %@, appState: %@", @(preActivityTimeBeforeEnterForeground), @([UIApplication sharedApplication].applicationState));
 #endif
     }
 
@@ -336,7 +393,7 @@ static BOOL skipHeaderActivitiesBeforeEnterForegroundIfNeeded(MTHANRDetectThread
     NSTimeInterval diff = curTime - preActivityTimeBeforeEnterForeground;
 
 #if _MTHawkeyeANRTracingDebugEnabled
-    MTHLogInfo(@"ANR suspended runloop fix, diff: %.3fms, curTime: %.3f", diff * 1000, curTime);
+    MTHLogInfo(@"ANR suspended runloop fix, diff: %.3fms, curTime: %.3f, appState: %@", diff * 1000, curTime, @([UIApplication sharedApplication].applicationState));
 #endif
 
     if (intervalBetweenLastTwoActivitiesBeforeEnterForeground <= DBL_EPSILON) {
@@ -386,7 +443,7 @@ static void mthanr_runLoopHighPriorityObserverCallBack(CFRunLoopObserverRef obse
             }
 
 #if _MTHawkeyeANRTracingDebugEnabled
-            // MTHLogInfo(@"%@", mthStringFromRunloopActivity(activity));
+            //MTHLogInfo(@"%@", mthStringFromRunloopActivity(activity));
             [MTHANRTracingBufferRunner traceRunloopActivity:activity];
 #else
             if (shouldTrace)
@@ -426,7 +483,7 @@ static void mthanr_lowPriorityObserverCallBack(CFRunLoopObserverRef observer, CF
             }
 
 #if _MTHawkeyeANRTracingDebugEnabled
-            // MTHLogInfo(@"%@", mthStringFromRunloopActivity(activity));
+            //MTHLogInfo(@"%@", mthStringFromRunloopActivity(activity));
             [MTHANRTracingBufferRunner traceRunloopActivity:activity];
 #else
             if (shouldTrace)
