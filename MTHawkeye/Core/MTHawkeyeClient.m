@@ -36,6 +36,7 @@
 @implementation MTHawkeyeClient
 
 - (void)dealloc {
+    [self unobserveAppActivity];
     [self unobserveUserDefaultsChange];
 }
 
@@ -51,6 +52,7 @@
 - (instancetype)init {
     if ((self = [super init])) {
         [self observeUserDefaultsChange];
+        [self observeAppActivity];
     }
     return self;
 }
@@ -225,6 +227,33 @@
             [[MTHawkeyeStorage shared] asyncStoreValue:cpuUsageStr withKey:time inCollection:@"cpu"];
         }
     }
+}
+
+// MARK: - AppLife Observe
+- (void)observeAppActivity {
+    [[NSNotificationCenter defaultCenter]
+        addObserverForName:UIApplicationDidEnterBackgroundNotification
+                    object:nil
+                     queue:nil
+                usingBlock:^(NSNotification *_Nonnull note) {
+                    [self stopStatusFlushTimer];
+                }];
+
+    [[NSNotificationCenter defaultCenter]
+        addObserverForName:UIApplicationWillEnterForegroundNotification
+                    object:nil
+                     queue:nil
+                usingBlock:^(NSNotification *_Nonnull note) {
+                    if ([MTHawkeyeUserDefaults shared].hawkeyeOn) {
+                        [self stopStatusFlushTimer];
+                        [self startStatusFlushTimer];
+                    }
+                }];
+}
+
+- (void)unobserveAppActivity {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
 // MARK: - UserDefaults Observe
