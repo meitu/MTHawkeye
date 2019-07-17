@@ -122,29 +122,7 @@ static const void *const kMTHawkeyeViewControllerWillDealloc = &kMTHawkeyeViewCo
 }
 
 - (BOOL)mth_shouldObjectAlive {
-    if (![self isViewLoaded])
-        return NO;
-
-    BOOL shouldAlive = YES;
-    BOOL visibleOnScreen = NO;
-
-    UIView *v = self.view.window;
-
-    if ([v isKindOfClass:[UIWindow class]]) {
-        visibleOnScreen = YES;
-    }
-
-    BOOL beingHeld = NO;
-    if (self.navigationController != nil || self.presentingViewController != nil || self.tabBarController != nil) {
-        beingHeld = YES;
-    }
-
-    // not visible, not in view stack.
-    if (visibleOnScreen == NO && beingHeld == NO) {
-        shouldAlive = NO;
-    }
-
-    return shouldAlive;
+    return [super mth_shouldObjectAlive];
 }
 
 @end
