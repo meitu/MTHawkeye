@@ -88,8 +88,6 @@ MTHawkeyeStoreDirectoryOption gMTHawkeyeStoreDirectoryRoot = MTHawkeyeStoreDirec
         NSString *formattedDateString = [self currentStorePathLastComponent];
         storeDirectory = [hawkeyePath stringByAppendingPathComponent:formattedDateString];
     });
-    NSString *pre = [self previousSessionStorePath];
-
     return storeDirectory;
 }
 
