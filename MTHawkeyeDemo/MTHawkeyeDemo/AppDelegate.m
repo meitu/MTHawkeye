@@ -8,10 +8,10 @@
 
 #import "AppDelegate.h"
 
-#ifdef DEBUG
+//#ifdef DEBUG
 #import <MTHawkeye/MTHStackFrameSymbolicsRemote.h>
 #import <MTHawkeye/MTRunHawkeyeInOneLine.h>
-#endif
+//#endif
 
 
 @interface AppDelegate ()
@@ -21,14 +21,14 @@
 @implementation AppDelegate
 
 - (BOOL)application:(__unused UIApplication *)application didFinishLaunchingWithOptions:(__unused NSDictionary *)launchOptions {
-#ifdef DEBUG
+    //#ifdef DEBUG
     [self startHawkeye];
-#endif
+    //#endif
 
     return YES;
 }
 
-#ifdef DEBUG
+//#ifdef DEBUG
 - (void)startHawkeye {
 #if 1
     [self startDefaultHawkeye];
@@ -84,6 +84,6 @@
         [[MTHawkeyeUIClient shared] startServer];
     });
 }
-#endif
+//#endif
 
 @end

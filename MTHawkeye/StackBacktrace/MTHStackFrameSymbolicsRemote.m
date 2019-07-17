@@ -92,8 +92,8 @@ static NSTimeInterval symbolicsTaskTimeoutInSeconds = 20;
                 }
 
                 NSArray *frameDicts = resultJsonDict[@"stack_frames"];
-                if (frameDicts.count == 0) {
-                    NSString *msg = [NSString stringWithFormat:@"response frames empty: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]];
+                if (![frameDicts isKindOfClass:[NSArray class]] || frameDicts.count == 0) {
+                    NSString *msg = [NSString stringWithFormat:@"response frames empty/unexpected: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]];
                     completionHandler(nil, [self errorWithMessage:msg code:-4]);
                     return;
                 }

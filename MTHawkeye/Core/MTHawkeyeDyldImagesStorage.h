@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSDictionary *)cachedDyldImagesInfo;
 
++ (NSDictionary *)previousSessionCachedDyldImagesInfo;
+
 @end
 
 NS_ASSUME_NONNULL_END

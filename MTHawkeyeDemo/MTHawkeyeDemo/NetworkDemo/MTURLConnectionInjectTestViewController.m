@@ -77,17 +77,16 @@
 }
 
 - (void)URLSession:(NSURLSession *)session
-          dataTask:(NSURLSessionDataTask *)dataTask
-didReceiveResponse:(NSURLResponse *)response
- completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler {
-    
+              dataTask:(NSURLSessionDataTask *)dataTask
+    didReceiveResponse:(NSURLResponse *)response
+     completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler {
+
     if (completionHandler) {
         completionHandler(NSURLSessionResponseAllow);
     }
 }
 
 - (void)connection:(NSURLConnection *)connection
-didReceiveResponse:(NSURLResponse *)response {
-    
+    didReceiveResponse:(NSURLResponse *)response {
 }
 @end

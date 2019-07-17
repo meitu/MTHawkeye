@@ -12,15 +12,15 @@ def hawkeye
   #< Since the podfile dependency doesn't support environment configuration, 
   #< the dependent pods also need to be explicitly configured as Debug.
   
-  pod 'MTHawkeye/DefaultPlugins', :path => '../', :configurations => 'Debug'
+  pod 'MTHawkeye/DefaultPlugins', :path => '../'#, :configurations => 'Debug'
 
-  pod 'FLEX', :configurations => ['Debug']
-  pod 'FBRetainCycleDetector', :configurations => ['Debug']
-  pod 'fishhook', :configurations => ['Debug']
-  pod 'CocoaLumberjack', :configurations => ['Debug'] # CocoaLumberjack is optional, change to `MTHawkeye/DefaultPluginsWithoutLog` if don't need.
-  pod 'MTGLDebug', :configurations => ['Debug'] # MTGLDebug is exclude by default, change `MTHawkeye` to `MTHawkeye/DefaultPlugins` to include.
+  pod 'FLEX'#, :configurations => ['Debug']
+  pod 'FBRetainCycleDetector'#, :configurations => ['Debug']
+  pod 'fishhook'#, :configurations => ['Debug']
+  pod 'CocoaLumberjack'#, :configurations => ['Debug'] # CocoaLumberjack is optional, change to `MTHawkeye/DefaultPluginsWithoutLog` if don't need.
+  pod 'MTGLDebug'#, :configurations => ['Debug'] # MTGLDebug is exclude by default, change `MTHawkeye` to `MTHawkeye/DefaultPlugins` to include.
 
-  pod 'MTAppenderFile', '~> 0.4.0', :configurations => ['Debug'], :inhibit_warnings => false
+  pod 'MTAppenderFile', '~> 0.4.0'#, :configurations => ['Debug'], :inhibit_warnings => false
 end
 
 target 'MTHawkeyeDemo' do

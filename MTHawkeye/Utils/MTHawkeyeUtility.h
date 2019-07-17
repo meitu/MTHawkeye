@@ -45,5 +45,6 @@ extern MTHawkeyeStoreDirectoryOption gMTHawkeyeStoreDirectoryRoot; /**< default 
 + (NSString *)hawkeyeStoreDirectory;           /**< Hawkeye Cache Files Root: default /Document/com.meitu.hawkeye/, see gMTHawkeyeStoreDirectoryRoot for detail */
 + (NSString *)currentStoreDirectoryNameFormat; /**< yyyy-MM-dd_HH:mm:ss+SSS */
 + (NSString *)currentStorePath;                /**< Current Session Hawkeye cache directory, default /Document/com.meitu.hawkeye/yyyy-MM-dd_HH:mm:ss+SSS */
++ (NSString *)previousSessionStorePath;        /**< Previous session Hawkeye cache directory, find by convert directory name into time in desc order. */
 
 @end

@@ -49,6 +49,7 @@
 		208C21AD1F189D6700289CE6 /* MTHawkeyeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 208C21AC1F189D6700289CE6 /* MTHawkeyeTests.m */; };
 		20BCE4242202F96A009E5CCF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20BCE4232202F96A009E5CCF /* XCTest.framework */; };
 		20BCE4262203E048009E5CCF /* MTHawkeyeClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BCE4252203E048009E5CCF /* MTHawkeyeClientTests.m */; };
+		20C628B322CDD5850001C8B2 /* ANRDetectingMmapBufferTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C628B222CDD5850001C8B2 /* ANRDetectingMmapBufferTests.m */; };
 		20D1869A1F551C1100091A19 /* NetworkURLSessionDelegateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 20D186991F551C1100091A19 /* NetworkURLSessionDelegateTests.m */; };
 		20DC169B1ECDAAD500694EB9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DC169A1ECDAAD500694EB9 /* main.m */; };
 		20DC169E1ECDAAD500694EB9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DC169D1ECDAAD500694EB9 /* AppDelegate.m */; };
@@ -157,6 +158,7 @@
 		20C1D3451F70FFAA00A06CC0 /* Readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = Readme.md; path = ../Readme.md; sourceTree = "<group>"; };
 		20C1D3491F70FFB400A06CC0 /* podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		20C1D34A1F70FFB500A06CC0 /* Podfile.lock */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile.lock; sourceTree = "<group>"; };
+		20C628B222CDD5850001C8B2 /* ANRDetectingMmapBufferTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANRDetectingMmapBufferTests.m; sourceTree = "<group>"; };
 		20D186991F551C1100091A19 /* NetworkURLSessionDelegateTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NetworkURLSessionDelegateTests.m; sourceTree = "<group>"; };
 		20D33D27223A51B700942274 /* Contributing.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = Contributing.md; path = ../Contributing.md; sourceTree = "<group>"; };
 		20D4CFBE225F422700F28B08 /* Readme-cn.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = "Readme-cn.md"; path = "../Readme-cn.md"; sourceTree = "<group>"; };
@@ -655,6 +657,7 @@
 				2053F1CC2074787E00ED57F8 /* CallTraceTests.m */,
 				205D1E4621EF205C0053735D /* MTHawkeyeUserDefaultsTests.m */,
 				20BCE4252203E048009E5CCF /* MTHawkeyeClientTests.m */,
+				20C628B222CDD5850001C8B2 /* ANRDetectingMmapBufferTests.m */,
 			);
 			path = MTHawkeyeDemoTests;
 			sourceTree = "<group>";
@@ -873,6 +876,7 @@
 				203AA50C1F53A924006790E2 /* NetworkURLConnectionDelegateTests.m in Sources */,
 				20D1869A1F551C1100091A19 /* NetworkURLSessionDelegateTests.m in Sources */,
 				20841F7F1F3B017B002CA705 /* NetworkMonitorViewModelTests.m in Sources */,
+				20C628B322CDD5850001C8B2 /* ANRDetectingMmapBufferTests.m in Sources */,
 				20E6714A218ACEC90078DAAF /* mtha_splay_tree_test.m in Sources */,
 				2053F1CD2074787E00ED57F8 /* CallTraceTests.m in Sources */,
 				208C21AD1F189D6700289CE6 /* MTHawkeyeTests.m in Sources */,

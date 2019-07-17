@@ -12,6 +12,7 @@
 
 #import "MTHANRHawkeyeAdaptor.h"
 #import "MTHANRTrace.h"
+#import "MTHANRTracingBuffer.h"
 #import "MTHawkeyeUserDefaults+ANRMonitor.h"
 
 #import <MTHawkeye/MTHANRRecord.h>
@@ -63,7 +64,7 @@
                  forKey:NSStringFromSelector(@selector(anrDetectInterval))
             withHandler:^(id _Nullable oldValue, id _Nullable newValue) {
                 if (fabsf([oldValue floatValue] - [newValue floatValue]) > FLT_EPSILON)
-                    [MTHANRTrace shared].detectInterval = [newValue floatValue];
+                    [MTHANRTrace shared].detectIntervalInSeconds = [newValue floatValue];
             }];
 }
 
@@ -93,6 +94,12 @@
     if ([[MTHANRTrace shared] isRunning])
         return;
 
+    // enable anr trace buffer, needed for tracing hard stall(stall then killed by watchdog or user)
+    if (![MTHANRTracingBufferRunner isTracingBufferRunning]) {
+        NSString *path = [[MTHawkeyeUtility currentStorePath] stringByAppendingPathComponent:@"anr_tracing_buffer"];
+        [MTHANRTracingBufferRunner enableTracingBufferAtPath:path];
+    }
+
     [MTHANRTrace shared].thresholdInSeconds = [MTHawkeyeUserDefaults shared].anrThresholdInSeconds;
     [MTHANRTrace shared].shouldCaptureBackTrace = YES;
 
@@ -109,6 +116,10 @@
     if (![[MTHANRTrace shared] isRunning])
         return;
 
+    if ([MTHANRTracingBufferRunner isTracingBufferRunning]) {
+        [MTHANRTracingBufferRunner disableTracingBuffer];
+    }
+
     [[MTHANRTrace shared] removeDelegate:self];
     [[MTHANRTrace shared] stop];
     MTHLogInfo(@"ANR trace stop");
@@ -124,7 +135,7 @@
     NSString *curTime = [NSString stringWithFormat:@"%@", @([MTHawkeyeUtility currentTime])];
 
     NSMutableArray<NSDictionary *> *stacks = [NSMutableArray array];
-    for (MTHANRRecordRaw *rawRecord in anrRecord.rawRecords) {
+    for (MTHANRMainThreadStallingSnapshot *rawRecord in anrRecord.stallingSnapshots) {
         NSMutableString *stackInStr = [[NSMutableString alloc] init];
         for (int i = 0; i < rawRecord->stackframesSize; ++i) {
             [stackInStr appendFormat:@"%p,", (void *)rawRecord->stackframes[i]];
@@ -136,14 +147,16 @@
         NSDictionary *dict = @{
             @"time" : @(rawRecord.time),
             @"stackframes" : stackInStr.copy,
-            @"titleframe" : [NSString stringWithFormat:@"%p", (void *)rawRecord->titleFrame]
+            @"titleframe" : [NSString stringWithFormat:@"%p", (void *)rawRecord->titleFrame],
+            @"capturedCount" : @(rawRecord.capturedCount),
         };
         [stacks addObject:dict];
     }
 
     NSDictionary *dict = @{
-        @"duration" : [NSString stringWithFormat:@"%@", @(anrRecord.duration * 1000)],
-        @"biases" : [NSString stringWithFormat:@"%@", @(anrRecord.biases * 1000)],
+        @"duration" : [NSString stringWithFormat:@"%@", @(anrRecord.durationInSeconds * 1000)],
+        @"startFrom" : @(anrRecord.startFrom),
+        @"inBackground" : @(anrRecord.isInBackground),
         @"stacks" : stacks
     };
     NSError *error;
@@ -171,7 +184,7 @@
             NSMutableArray *rawReocrds = [NSMutableArray array];
             NSArray<NSDictionary *> *stacks = dict[@"stacks"];
             for (NSDictionary *stack in stacks) {
-                MTHANRRecordRaw *rawRecord = [[MTHANRRecordRaw alloc] init];
+                MTHANRMainThreadStallingSnapshot *rawRecord = [[MTHANRMainThreadStallingSnapshot alloc] init];
                 NSArray *stackInStr = [stack[@"stackframes"] componentsSeparatedByString:@","];
                 rawRecord->stackframesSize = stackInStr.count;
                 rawRecord->stackframes = malloc(sizeof(uintptr_t) * rawRecord->stackframesSize);
@@ -197,12 +210,14 @@
                 }
 
                 rawRecord.time = [stack[@"time"] doubleValue];
+                rawRecord.capturedCount = [stack[@"capturedCount"] integerValue];
                 [rawReocrds addObject:rawRecord];
             }
 
-            record.duration = [dict[@"duration"] doubleValue];
-            record.biases = [dict[@"biases"] doubleValue];
-            record.rawRecords = rawReocrds;
+            record.durationInSeconds = [dict[@"duration"] doubleValue];
+            record.startFrom = [dict[@"startFrom"] doubleValue];
+            record.isInBackground = [dict[@"inBackground"] boolValue];
+            record.stallingSnapshots = rawReocrds;
             [anrRecords addObject:record];
         } else {
             MTHLogWarn(@"[storage] read anr record failed, %@", error);

@@ -11,7 +11,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MTHANRRecordRaw : NSObject {
+@interface MTHANRMainThreadStallingSnapshot : NSObject {
   @public
     uintptr_t titleFrame;
     uintptr_t *stackframes;
@@ -20,10 +20,16 @@
 
 @property (nonatomic, assign) NSTimeInterval time;
 @property (nonatomic, assign) float cpuUsed;
+@property (nonatomic, assign) NSInteger capturedCount;
+@property (nonatomic, assign) BOOL isInBackground;
+
 @end
 
 @interface MTHANRRecord : NSObject
-@property (nonatomic, strong) NSArray<MTHANRRecordRaw *> *rawRecords;
-@property (nonatomic, assign) NSTimeInterval duration;
-@property (nonatomic, assign) NSTimeInterval biases;
+
+@property (nonatomic, strong) NSArray<MTHANRMainThreadStallingSnapshot *> *stallingSnapshots;
+@property (nonatomic, assign) NSTimeInterval startFrom;
+@property (nonatomic, assign) NSTimeInterval durationInSeconds;
+@property (nonatomic, assign) BOOL isInBackground;
+
 @end
