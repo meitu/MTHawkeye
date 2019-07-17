@@ -102,37 +102,7 @@
 }
 
 - (BOOL)mth_shouldObjectAlive {
-    BOOL shouldBeAlive = NO;
-
-    if (self.window != nil) {
-        shouldBeAlive = YES;
-    }
-
-    if (!shouldBeAlive && self.superview != nil && self.window != nil) {
-        shouldBeAlive = YES;
-    }
-
-    if (!shouldBeAlive) {
-        UIResponder *responder = self.nextResponder;
-        while (responder) {
-            if (responder.nextResponder == nil) {
-                break;
-            } else {
-                responder = responder.nextResponder;
-            }
-
-            if ([responder isKindOfClass:[UIViewController class]]) {
-                break;
-            }
-        }
-
-        // if controller is active, view should be considered alive too.
-        if ([responder isKindOfClass:[UIViewController class]]) {
-            shouldBeAlive = YES;
-        }
-    }
-
-    return shouldBeAlive;
+    return [super mth_shouldObjectAlive];
 }
 
 @end
