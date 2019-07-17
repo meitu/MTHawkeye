@@ -93,16 +93,40 @@ NSString *const kMTHawkeyeCollectionKeyValueRecordsFileName = @"records";
 }
 
 - (void)syncStoreValue:(NSString *)value withKey:(NSString *)key inCollection:(NSString *)collection {
-    NSString *line = [NSString stringWithFormat:@"%@,%@,%@", collection, key, value];
+    // don't use [NSString stringWithFormat] here, while in background,
+    // it may cause to call autoreleasepoolNoPage. and sometimes it would crash.
+    // (anonymous namespace)::AutoreleasePoolPage::autoreleaseNoPage(objc_object*) + 144
+
+    NSInteger lineLength = value.length + 1 + key.length + 1 + collection.length + 1;
+    char *line = (char *)malloc(lineLength);
+    memset(line, 0, lineLength);
+
+    NSInteger offset = 0;
+    strncpy(line + offset, [collection UTF8String], collection.length);
+    offset += collection.length;
+
+    line[offset] = ',';
+    offset++;
+
+    strncpy(line + offset, [key UTF8String], key.length);
+    offset += key.length;
+
+    line[offset] = ',';
+    offset++;
+
+    strncpy(line + offset, [value UTF8String], value.length);
+    offset += value.length;
+
+    line[offset] = '\0';
 
 #ifdef DEBUG
-    NSAssert([line lengthOfBytesUsingEncoding:NSUTF8StringEncoding] < 16 * 1024, @"line lenght should less than 16KB");
+    NSAssert(lineLength < 16 * 1024, @"line lenght should less than 16KB");
 #endif
 
-    [self.collectionKeyValueFile appendText:line];
+    [self.collectionKeyValueFile appendUTF8Text:line];
 
     // 记录每一行字符的长度,'\n'占一个字节
-    [self.recordByteLength addObject:@([line dataUsingEncoding:NSUTF8StringEncoding].length + 1)];
+    [self.recordByteLength addObject:@(lineLength)];
 }
 
 - (NSUInteger)readKeyValuesInCollection:(NSString *)collection
