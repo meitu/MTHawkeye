@@ -22,6 +22,7 @@
 @property (nonatomic, assign) float cpuUsed;
 @property (nonatomic, assign) NSInteger capturedCount;
 @property (nonatomic, assign) BOOL isInBackground;
+@property (nonatomic, assign) NSInteger totalThreadCount;
 
 @end
 

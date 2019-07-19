@@ -118,6 +118,7 @@
         NSTimeInterval curRunloopStartFrom = self.curRunloopStartFrom;
 
         MTHANRMainThreadStallingSnapshot *stallingMainBacktrace = nil;
+        NSUInteger threadCount = 0;
 
         BOOL isStalling = ((now - curRunloopStartFrom) >= self.stallingThresholdInSeconds);
         if (isStalling) {
@@ -126,6 +127,7 @@
             }
 
             if (self.shouldCaptureBackTrace) {
+                threadCount = [self currentThreadCount];
                 stallingMainBacktrace = [self snapshotThreadBacktrace:main_thread];
             }
 
@@ -135,17 +137,24 @@
                 if (preStallingMainBacktrace && stallingMainBacktrace) {
                     // annealing while stalling on the same backtrace.
                     if (preStallingMainBacktrace->titleFrame != stallingMainBacktrace->titleFrame) {
+                        stallingMainBacktrace.totalThreadCount = threadCount;
                         [self.stallingSnapshots addObject:stallingMainBacktrace];
                         self.annealingStepCount = 1;
                     } else {
                         self.annealingStepCount += 1;
                         preStallingMainBacktrace.capturedCount += 1;
+                        // keep the max total thread count.
+                        if (preStallingMainBacktrace.totalThreadCount < threadCount) {
+                            preStallingMainBacktrace.totalThreadCount = threadCount;
+                        }
                     }
                 } else {
                     self.annealingStepCount = 1;
 
-                    if (stallingMainBacktrace)
+                    if (stallingMainBacktrace) {
+                        stallingMainBacktrace.totalThreadCount = threadCount;
                         [self.stallingSnapshots addObject:stallingMainBacktrace];
+                    }
                 }
             }
         }
@@ -291,6 +300,22 @@
     }
 
     return threadStack;
+}
+
+- (NSUInteger)currentThreadCount {
+    thread_act_array_t threads;
+    mach_msg_type_number_t threadCount;
+
+    if (task_threads(mach_task_self(), &threads, &threadCount) != KERN_SUCCESS) {
+        return 0;
+    }
+
+    for (mach_msg_type_number_t i = 0; i < threadCount; i++) {
+        mach_port_deallocate(mach_task_self(), threads[i]);
+    }
+    vm_deallocate(mach_task_self(), (vm_address_t)threads, sizeof(thread_t) * threadCount);
+
+    return threadCount;
 }
 
 - (void)enqueueNewRunloopStalling:(MTHANRRecord *)anrRecord {

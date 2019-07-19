@@ -149,6 +149,7 @@
             @"stackframes" : stackInStr.copy,
             @"titleframe" : [NSString stringWithFormat:@"%p", (void *)rawRecord->titleFrame],
             @"capturedCount" : @(rawRecord.capturedCount),
+            @"threadCount" : @(rawRecord.totalThreadCount),
         };
         [stacks addObject:dict];
     }
@@ -211,6 +212,7 @@
 
                 rawRecord.time = [stack[@"time"] doubleValue];
                 rawRecord.capturedCount = [stack[@"capturedCount"] integerValue];
+                rawRecord.totalThreadCount = [stack[@"threadCount"] integerValue];
                 [rawReocrds addObject:rawRecord];
             }
 

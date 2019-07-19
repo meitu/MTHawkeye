@@ -606,7 +606,9 @@ static BOOL anrReportSymbolicsRemote = NO;
                        [self formatRemoteSymolizedFramesDicts:symbolizedFrames intoOnlineFrame:outFrameDict];
                        for (MTHANRMainThreadStallingSnapshot *rawRecord in anrRecord.stallingSnapshots) {
                            NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:rawRecord.time]];
-                           [content appendFormat:@"\n -- at: %@, captured count: %@ -- \n", time, @(rawRecord.capturedCount)];
+                           [content appendFormat:@"\n -- at: %@ -- \n", time];
+                           [content appendFormat:@" -- total thread count: %@ -- \n", @(rawRecord.totalThreadCount)];
+                           [content appendFormat:@" -- stalling main thread captured count: -- %@ \n", @(rawRecord.capturedCount)];
                            for (int i = 0; i < rawRecord->stackframesSize; ++i) {
                                uintptr_t frame = rawRecord->stackframes[i];
                                NSString *frameStr = [NSString stringWithFormat:@"%p", (void *)frame];
@@ -621,7 +623,9 @@ static BOOL anrReportSymbolicsRemote = NO;
     } else {
         for (MTHANRMainThreadStallingSnapshot *rawRecord in anrRecord.stallingSnapshots) {
             NSString *time = [self.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:rawRecord.time]];
-            [content appendFormat:@"\n -- at: %@, captured count: %@ -- \n", time, @(rawRecord.capturedCount)];
+            [content appendFormat:@"\n -- at: %@ -- \n", time];
+            [content appendFormat:@" -- total thread count: %@ -- \n", @(rawRecord.totalThreadCount)];
+            [content appendFormat:@" -- stalling main thread captured count: %@ -- \n", @(rawRecord.capturedCount)];
             for (int i = 0; i < rawRecord->stackframesSize; ++i) {
                 uintptr_t frame = rawRecord->stackframes[i];
                 NSString *desc = [self recordFrameStringFrom:frame withoutFnameIfExistSname:NO];
