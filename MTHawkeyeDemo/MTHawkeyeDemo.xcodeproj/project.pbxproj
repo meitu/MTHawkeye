@@ -743,7 +743,6 @@
 					20DC16AE1ECDAAD500694EB9 = {
 						CreatedOnToolsVersion = 8.3.2;
 						ProvisioningStyle = Manual;
-						TestTargetID = 20DC16951ECDAAD500694EB9;
 					};
 				};
 			};
@@ -1181,7 +1180,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8C058A273E14786B71715136 /* Pods-MTHawkeyeDemo-MTHawkeyeDemoTests.debug.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Liling Wang (6SU7YYMSBL)";
 				CODE_SIGN_STYLE = Manual;
@@ -1192,7 +1190,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MTHawkeyeDemo.app/MTHawkeyeDemo";
 			};
 			name = Debug;
 		};
@@ -1200,7 +1197,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D8EDDBEBD6271B7BA2582197 /* Pods-MTHawkeyeDemo-MTHawkeyeDemoTests.release.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Liling Wang (6SU7YYMSBL)";
 				CODE_SIGN_STYLE = Manual;
@@ -1211,7 +1207,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MTHawkeyeDemo.app/MTHawkeyeDemo";
 			};
 			name = Release;
 		};
