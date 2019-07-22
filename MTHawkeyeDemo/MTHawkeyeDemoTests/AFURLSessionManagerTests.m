@@ -507,7 +507,11 @@
 
     IMP taskResumeImp = [self _implementationForClass:class selector:@selector(resume)];
     IMP taskSuspendImp = [self _implementationForClass:class selector:@selector(suspend)];
-    XCTAssertEqual(originalAFResumeIMP, taskResumeImp, @"resume has not been properly swizzled for %@", NSStringFromClass(class));
+
+    // `resume` has also swizzled by MTHNetworkObserver `injectIntoNSURLSessionTaskResume:`
+    // and af_resumeIMP is now point to `hawkeyeResumeIMP`
+    XCTAssertNotEqual(originalAFResumeIMP, taskResumeImp, @"resume has not been properly swizzled for %@", NSStringFromClass(class));
+
     XCTAssertEqual(originalAFSuspendIMP, taskSuspendImp, @"suspend has not been properly swizzled for %@", NSStringFromClass(class));
 
     IMP taskAFResumeImp = [self _implementationForClass:class selector:@selector(af_resume)];
