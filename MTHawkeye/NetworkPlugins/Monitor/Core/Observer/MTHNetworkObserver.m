@@ -230,30 +230,30 @@ static BOOL networkObserverEnabled = NO;
             NSURLSessionDataTask *localDataTask = [session dataTaskWithURL:nil];
 #pragma clang diagnostic pop
             Class currentClass = [localDataTask class];
-            if (currentClass) {
-                if ([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 9) {
-                    currentClass = NSClassFromString([@[ @"__", @"NSC", @"FURLS", @"ession", @"Task" ] componentsJoinedByString:@""]);
-                }
-            }
+
+            SEL selector = @selector(resume);
+            SEL swizzledSelector = [MTHawkeyeHooking swizzledSelectorForSelector:selector];
+            void (^swizzleBlock)(NSURLSessionTask *) = ^(NSURLSessionTask *slf) {
+                [[MTHNetworkObserver sharedObserver] URLSessionTaskWillResume:slf];
+                ((void (*)(id, SEL))objc_msgSend)(slf, swizzledSelector);
+            };
+            IMP hawkeyeResumeIMP = imp_implementationWithBlock(swizzleBlock);
 
             while (class_getInstanceMethod(currentClass, @selector(resume))) {
+                Class superClass = [currentClass superclass];
+                IMP classResumeIMP = method_getImplementation(class_getInstanceMethod(currentClass, @selector(resume)));
+                IMP superclassResumeIMP = method_getImplementation(class_getInstanceMethod(superClass, @selector(resume)));
 
-                SEL selector = @selector(resume);
-                SEL swizzledSelector = [MTHawkeyeHooking swizzledSelectorForSelector:selector];
-
-                Method originalResume = class_getInstanceMethod(currentClass, selector);
-
-                void (^swizzleBlock)(NSURLSessionTask *) = ^(NSURLSessionTask *slf) {
-                    [[MTHNetworkObserver sharedObserver] URLSessionTaskWillResume:slf];
-                    ((void (*)(id, SEL))objc_msgSend)(slf, swizzledSelector);
-                };
-
-                IMP implementation = imp_implementationWithBlock(swizzleBlock);
-                if (!class_addMethod(currentClass, swizzledSelector, implementation, method_getTypeEncoding(originalResume))) {
-                    MTHLogWarn(@"failed add %@ to %@", NSStringFromSelector(swizzledSelector), NSStringFromClass(currentClass));
+                // only swizzling the up most (some child will invoke [super resume]).
+                if (classResumeIMP != superclassResumeIMP && hawkeyeResumeIMP != classResumeIMP) {
+                    Method originalResume = class_getInstanceMethod(currentClass, selector);
+                    if (class_addMethod(currentClass, swizzledSelector, hawkeyeResumeIMP, method_getTypeEncoding(originalResume))) {
+                        Method newResume = class_getInstanceMethod(currentClass, swizzledSelector);
+                        method_exchangeImplementations(originalResume, newResume);
+                    } else {
+                        MTHLogWarn(@"failed add %@ to %@", NSStringFromSelector(swizzledSelector), NSStringFromClass(currentClass));
+                    }
                 }
-                Method newResume = class_getInstanceMethod(currentClass, swizzledSelector);
-                method_exchangeImplementations(originalResume, newResume);
 
                 currentClass = [currentClass superclass];
             }
