@@ -24,6 +24,7 @@
 #import "AFTestCase.h"
 
 #import "AFURLSessionManager.h"
+#import "MTHNetworkObserver.h"
 
 #ifdef __MAC_OS_X_VERSION_MIN_REQUIRED
 #define NSFoundationVersionNumber_With_Fixed_28588583_bug 0.0
@@ -47,6 +48,9 @@
 
 - (void)setUp {
     [super setUp];
+
+    [MTHNetworkObserver setEnabled:YES];
+
     self.localManager = [[AFURLSessionManager alloc] init];
     [self.localManager.session.configuration.URLCache removeAllCachedResponses];
 
