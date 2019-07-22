@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		203AA50C1F53A924006790E2 /* NetworkURLConnectionDelegateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 203AA50B1F53A924006790E2 /* NetworkURLConnectionDelegateTests.m */; };
 		203AA5131F53F46C006790E2 /* MTURLConnectionInjectTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 203AA5121F53F46C006790E2 /* MTURLConnectionInjectTestViewController.m */; };
+		2046108222E5A44100CB27E3 /* AFURLSessionManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2046108122E5A44100CB27E3 /* AFURLSessionManagerTests.m */; };
+		2046108722E5A47200CB27E3 /* AFTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2046108622E5A47200CB27E3 /* AFTestCase.m */; };
 		204BBD801F43DE7800A1E419 /* ALeakingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 204BBD5F1F43DE7800A1E419 /* ALeakingViewController.m */; };
 		204BBD811F43DE7800A1E419 /* ALeakingViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 204BBD611F43DE7800A1E419 /* ALeakingViewModel.m */; };
 		204BBD821F43DE7800A1E419 /* AlertRetainedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 204BBD631F43DE7800A1E419 /* AlertRetainedViewController.m */; };
@@ -84,6 +86,9 @@
 		203AA5111F53F46C006790E2 /* MTURLConnectionInjectTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MTURLConnectionInjectTestViewController.h; sourceTree = "<group>"; };
 		203AA5121F53F46C006790E2 /* MTURLConnectionInjectTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MTURLConnectionInjectTestViewController.m; sourceTree = "<group>"; };
 		203B69862240853F00537A2D /* MTHawkeyeDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MTHawkeyeDemo.entitlements; sourceTree = "<group>"; };
+		2046108122E5A44100CB27E3 /* AFURLSessionManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManagerTests.m; sourceTree = "<group>"; };
+		2046108522E5A47200CB27E3 /* AFTestCase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFTestCase.h; sourceTree = "<group>"; };
+		2046108622E5A47200CB27E3 /* AFTestCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFTestCase.m; sourceTree = "<group>"; };
 		204BBD5E1F43DE7700A1E419 /* ALeakingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALeakingViewController.h; sourceTree = "<group>"; };
 		204BBD5F1F43DE7800A1E419 /* ALeakingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALeakingViewController.m; sourceTree = "<group>"; };
 		204BBD601F43DE7800A1E419 /* ALeakingViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALeakingViewModel.h; sourceTree = "<group>"; };
@@ -658,6 +663,9 @@
 				205D1E4621EF205C0053735D /* MTHawkeyeUserDefaultsTests.m */,
 				20BCE4252203E048009E5CCF /* MTHawkeyeClientTests.m */,
 				20C628B222CDD5850001C8B2 /* ANRDetectingMmapBufferTests.m */,
+				2046108122E5A44100CB27E3 /* AFURLSessionManagerTests.m */,
+				2046108522E5A47200CB27E3 /* AFTestCase.h */,
+				2046108622E5A47200CB27E3 /* AFTestCase.m */,
 			);
 			path = MTHawkeyeDemoTests;
 			sourceTree = "<group>";
@@ -870,11 +878,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2046108722E5A47200CB27E3 /* AFTestCase.m in Sources */,
 				20BCE4262203E048009E5CCF /* MTHawkeyeClientTests.m in Sources */,
 				205D1E4721EF205C0053735D /* MTHawkeyeUserDefaultsTests.m in Sources */,
 				20841F7E1F3B017B002CA705 /* NetworkTransactionsFilterTests.m in Sources */,
 				203AA50C1F53A924006790E2 /* NetworkURLConnectionDelegateTests.m in Sources */,
 				20D1869A1F551C1100091A19 /* NetworkURLSessionDelegateTests.m in Sources */,
+				2046108222E5A44100CB27E3 /* AFURLSessionManagerTests.m in Sources */,
 				20841F7F1F3B017B002CA705 /* NetworkMonitorViewModelTests.m in Sources */,
 				20C628B322CDD5850001C8B2 /* ANRDetectingMmapBufferTests.m in Sources */,
 				20E6714A218ACEC90078DAAF /* mtha_splay_tree_test.m in Sources */,
