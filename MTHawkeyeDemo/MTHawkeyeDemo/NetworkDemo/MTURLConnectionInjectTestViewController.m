@@ -25,6 +25,7 @@
         @"URLConnection Without delegate",
         @"URLSession Without delegate",
         @"Bad URL Request",
+        @"Download Task",
     ];
 
     self.request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]];
@@ -51,6 +52,8 @@
         [self urlSessionWithouDelegate];
     } else if (indexPath.row == 2) {
         [self badURLRequestDemo];
+    } else if (indexPath.row == 3) {
+        [self urlDownloadTask];
     }
 }
 
@@ -73,6 +76,14 @@
     NSURL *url = [NSURL URLWithString:@" http://www.host.com"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     NSURLSessionTask *task = [session dataTaskWithRequest:request];
+    [task resume];
+}
+
+- (void)urlDownloadTask {
+    NSURLSessionConfiguration *cfg = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:cfg delegate:self delegateQueue:nil];
+    NSURL *url = [NSURL URLWithString:@"http://www.baidu.com"];
+    NSURLSessionDownloadTask *task = [session downloadTaskWithURL:url];
     [task resume];
 }
 
