@@ -54,13 +54,13 @@ script:
   - xcodebuild -version
   - xcodebuild -showsdks
 
-  - fastlane test_ci --env $FASTLANE_ENV
+  - fastlane test_ci
 
-  - fastlane build_demo --env $FASTLANE_ENV
+  - fastlane build_demo
 
   # Run `pod lib lint` if specified
   - if [ $POD_LINT == "YES" ]; then
-      fastlane lint
+      fastlane lint;
     fi
 
 after_failure:
