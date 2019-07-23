@@ -4,6 +4,7 @@
 [![License](https://img.shields.io/github/license/meitu/MTHawkeye.svg?style=flat)](https://github.com/meitu/MTHawkeye/blob/master/LICENSE) 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/meitu/MTHawkeye/pulls) 
 [![Version](https://img.shields.io/cocoapods/v/MTHawkeye.svg?style=flat)](http://cocoapods.org/pods/MTHawkeye)
+[![CI](https://img.shields.io/travis/meitu/MTHawkeye.svg?label=test%20%26%26%20pod%20lint)](https://travis-ci.org/meitu/MTHawkeye)
 
 [Readme 中文版本](./Readme-cn.md)
 
