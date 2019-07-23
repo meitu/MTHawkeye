@@ -1,0 +1,68 @@
+os: osx
+language: objective-c
+osx_image:
+  - xcode10.2.1
+
+xcode_workspace: ./MTHawkeyeDemo/MTHawkeye.xcworkspace
+xcode_scheme: MTHawkeyeTests
+podfile: ./MTHawkeyeDemo/Podfile
+
+env:
+  global:
+    - LC_CTYPE=en_US.UTF-8
+    - LANG=en_US.UTF-8
+    - LANGUAGE=en_US.UTF-8
+    - WORKSPACE="./MTHawkeyeDemo/MTHawkeye.xcworkspace"
+    - TEST_SCHEME="MTHawkeyeTests"
+    - DEMO_SCHEME="MTHawkeyeDemo"
+    - DESTINATION="OS=8.0,name=iPhone 5" POD_LINT="NO"
+    - DESTINATION="OS=9.0,name=iPhone 6s" POD_LINT="NO"
+    - DESTINATION="OS=10.0,name=iPhone 6s" POD_LINT="NO"
+    - DESTINATION="OS=11.0,name=iPhone 7" POD_LINT="NO"
+    - DESTINATION="OS=11.4,name=iPhone 7" POD_LINT="NO"
+    - DESTINATION="OS=12.0,name=iPhone X" POD_LINT="NO"
+    - DESTINATION="OS=12.3,name=iPhone X" POD_LINT="YES"
+  matrix:
+    include:
+      - osx_image: xcode9.3      
+        env: DESTINATION="OS=11.4,name=iPhone 7" POD_LINT="NO"
+      - osx_image: xcode10.2
+        env: DESTINATION="OS=8.0,name=iPhone 5" POD_LINT="NO"
+      - osx_image: xcode10.2
+        env: DESTINATION="OS=9.0,name=iPhone 6s" POD_LINT="NO"
+      - osx_image: xcode10.2
+        env: DESTINATION="OS=10.0,name=iPhone 6s" POD_LINT="NO"
+      - osx_image: xcode10.2
+        env: DESTINATION="OS=11.0,name=iPhone 7" POD_LINT="NO"
+      - osx_image: xcode10.2
+        env: DESTINATION="OS=11.4,name=iPhone 7" POD_LINT="NO"
+      - osx_image: xcode10.2
+        env: DESTINATION="OS=12.0,name=iPhone X" POD_LINT="NO"
+      - osx_image: xcode10.2
+        env: DESTINATION="OS=12.3,name=iPhone X" POD_LINT="YES"
+
+before_install:
+  # Force bundler 1.12.5 because version 1.13 has issues, see https://github.com/fastlane/fastlane/issues/6065#issuecomment-246044617
+  - gem uninstall bundler -v '>1.12.5' --force --executables || echo "bundler >1.12.5 is not installed"
+  - gem install bundler -v 1.12.5 --no-rdoc --no-ri --no-document --quiet
+  - gem install fastlane --no-rdoc --no-ri --no-document --quiet
+  - gem install cocoapods --no-rdoc --no-ri --no-document --quiet
+
+script:
+  - set -o pipefail
+  - xcodebuild -version
+  - xcodebuild -showsdks
+
+  - fastlane test_ci --env $FASTLANE_ENV
+
+  - fastlane build_demo --env $FASTLANE_ENV
+
+  # Run `pod lib lint` if specified
+  - if [ $POD_LINT == "YES" ]; then
+      fastlane lint
+    fi
+
+after_failure:
+ - cat -n ~/Library/Logs/scan/*
+ - cat -n $TMPDIR/com.apple.dt.XCTest-status/Session*.log
+ - cat -n ~/Library/Logs/DiagnosticReports/xctest*.crash

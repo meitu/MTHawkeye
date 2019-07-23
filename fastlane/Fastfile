@@ -1,0 +1,35 @@
+fastlane_version "2.125.2"
+
+default_platform :ios
+
+platform :ios do
+  desc "run all tests"
+  lane :tests do
+    test(workspace: "./MTHawkeyeDemo/MTHawkeye.xcworkspace", scheme: "MTHawkeyeTests")
+  end
+
+  lane :test do |options|
+    scan(workspace: options[:workspace], scheme: options[:scheme], destination: options[:destination], clean: true)
+  end
+
+  lane :test_ci do
+    test(workspace: ENV["WORKSPACE"], scheme: ENV["TEST_SCHEME"], destination:["DESTINATION"])
+  end
+
+  desc "build demo"
+  lane :build_demo do
+    xcodebuild(workspace: ENV["WORKSPACE"], scheme: ENV["DEMO_SCHEME"], destination:["DESTINATION"])
+  end
+
+  desc "lint"
+  lane :lint do
+    pod_lib_lint
+  end
+
+  # release new version
+
+  # pod push
+
+  # doc
+
+end

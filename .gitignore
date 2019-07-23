@@ -5,6 +5,10 @@
 
 .vscode/
 
+### Fastlane ###
+/fastlane/test_output/
+/fastlane/README.md
+
 ### Ruby ###
 *.gem
 *.rbc
