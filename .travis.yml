@@ -37,16 +37,16 @@ script:
   - xcodebuild -version
   - xcodebuild -showsdks
 
-  - if [ $RUN_TEST == "YES" ]; then
+  - if [ "$RUN_TEST" == "YES" ]; then
       fastlane test_ci;
     fi
 
-  - if [ $BUILD_DEMO == "YES" ]; then
+  - if [ "$BUILD_DEMO" == "YES" ]; then
       fastlane build_demo;
     fi
 
   # Run `pod lib lint` if specified
-  - if [ $POD_LINT == "YES" ]; then
+  - if [ "$POD_LINT" == "YES" ]; then
       fastlane lint;
     fi
 
