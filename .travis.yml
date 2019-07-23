@@ -15,31 +15,14 @@ env:
     - WORKSPACE="./MTHawkeyeDemo/MTHawkeye.xcworkspace"
     - TEST_SCHEME="MTHawkeyeTests"
     - DEMO_SCHEME="MTHawkeyeDemo"
-    - DESTINATION="OS=8.0,name=iPhone 5" POD_LINT="NO"
-    - DESTINATION="OS=9.0,name=iPhone 6s" POD_LINT="NO"
-    - DESTINATION="OS=10.0,name=iPhone 6s" POD_LINT="NO"
-    - DESTINATION="OS=11.0,name=iPhone 7" POD_LINT="NO"
-    - DESTINATION="OS=11.4,name=iPhone 7" POD_LINT="NO"
-    - DESTINATION="OS=12.0,name=iPhone X" POD_LINT="NO"
-    - DESTINATION="OS=12.3,name=iPhone X" POD_LINT="YES"
   matrix:
     include:
       - osx_image: xcode9.3      
-        env: DESTINATION="OS=11.4,name=iPhone 7" POD_LINT="NO"
+        env: devices="iPhone 5 (8.0),iPhone 6s (9.0),iPhone 6s (10.0),iPhone 7 (11.0),iPhone X (12.0)" RUN_TEST="YES"
       - osx_image: xcode10.2
-        env: DESTINATION="OS=8.0,name=iPhone 5" POD_LINT="NO"
+        env: devices="iPhone 5 (8.0),iPhone 6s (9.0),iPhone 6s (10.0),iPhone 7 (11.0),iPhone X (12.0)" RUN_TEST="YES"
       - osx_image: xcode10.2
-        env: DESTINATION="OS=9.0,name=iPhone 6s" POD_LINT="NO"
-      - osx_image: xcode10.2
-        env: DESTINATION="OS=10.0,name=iPhone 6s" POD_LINT="NO"
-      - osx_image: xcode10.2
-        env: DESTINATION="OS=11.0,name=iPhone 7" POD_LINT="NO"
-      - osx_image: xcode10.2
-        env: DESTINATION="OS=11.4,name=iPhone 7" POD_LINT="NO"
-      - osx_image: xcode10.2
-        env: DESTINATION="OS=12.0,name=iPhone X" POD_LINT="NO"
-      - osx_image: xcode10.2
-        env: DESTINATION="OS=12.3,name=iPhone X" POD_LINT="YES"
+        env: devices="OS=12.3,name=iPhone X" BUILD_DEMO="YES" POD_LINT="YES"
 
 before_install:
   # Force bundler 1.12.5 because version 1.13 has issues, see https://github.com/fastlane/fastlane/issues/6065#issuecomment-246044617
@@ -54,9 +37,13 @@ script:
   - xcodebuild -version
   - xcodebuild -showsdks
 
-  - fastlane test_ci
+  - if [ $RUN_TEST == "YES" ]; then
+      fastlane test_ci;
+    fi
 
-  - fastlane build_demo
+  - if [ $BUILD_DEMO == "YES" ]; then
+      fastlane build_demo
+    fi
 
   # Run `pod lib lint` if specified
   - if [ $POD_LINT == "YES" ]; then

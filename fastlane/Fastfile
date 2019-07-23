@@ -9,16 +9,16 @@ platform :ios do
   end
 
   lane :test do |options|
-    scan(workspace: options[:workspace], scheme: options[:scheme], destination: options[:destination], clean: true)
+    scan(workspace: options[:workspace], scheme: options[:scheme], devices: options[:devices], clean: true)
   end
 
   lane :test_ci do
-    test(workspace: ENV["WORKSPACE"], scheme: ENV["TEST_SCHEME"], destination:["DESTINATION"])
+    test(workspace: ENV["WORKSPACE"], scheme: ENV["TEST_SCHEME"], devices:["DEVICES"])
   end
 
   desc "build demo"
   lane :build_demo do
-    xcodebuild(workspace: ENV["WORKSPACE"], scheme: ENV["DEMO_SCHEME"], destination:["DESTINATION"])
+    xcodebuild(workspace: ENV["WORKSPACE"], scheme: ENV["DEMO_SCHEME"])
   end
 
   desc "lint"
