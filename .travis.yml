@@ -47,6 +47,7 @@ before_install:
   - gem install bundler -v 1.12.5 --no-rdoc --no-ri --no-document --quiet
   - gem install fastlane --no-rdoc --no-ri --no-document --quiet
   - gem install cocoapods --no-rdoc --no-ri --no-document --quiet
+  - pod install --project-directory=MTHawkeyeDemo --repo-update
 
 script:
   - set -o pipefail
