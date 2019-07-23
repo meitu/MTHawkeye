@@ -42,7 +42,7 @@ script:
     fi
 
   - if [ $BUILD_DEMO == "YES" ]; then
-      fastlane build_demo
+      fastlane build_demo;
     fi
 
   # Run `pod lib lint` if specified
