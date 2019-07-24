@@ -21,9 +21,8 @@ matrix:
       env: RUN_TEST="YES" BUILD_DEMO="YES" POD_LINT="YES"
 
 before_install:
-  - gem install bundler --no-rdoc --no-document --quiet
-  - gem install fastlane --no-rdoc --no-document --quiet
-  - gem install cocoapods --no-rdoc --no-document --quiet
+  - gem install fastlane
+  - gem install cocoapods
   - pod install --project-directory=MTHawkeyeDemo --repo-update
 
 script:
