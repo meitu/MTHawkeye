@@ -3,9 +3,21 @@ fastlane_version "2.125.2"
 default_platform :ios
 
 platform :ios do
+
   desc "run all tests"
   lane :tests do
     test(workspace: "./MTHawkeyeDemo/MTHawkeye.xcworkspace", scheme: "MTHawkeyeTests")
+  end
+
+  lane :hawkeye_ci do
+    $env_runtest = ENV["RUN_TEST"]
+    test_ci() unless $env_runtest.to_s != "YES"
+    
+    $env_podlint = ENV["POD_LINT"]
+    lint() unless $env_podlint.to_s != "YES"
+
+    $env_builddemo = ENV["BUILD_DEMO"]
+    build_demo() unless $env_builddemo.to_s != "YES"
   end
 
   lane :test do |options|
