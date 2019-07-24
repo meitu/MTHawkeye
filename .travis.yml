@@ -1,7 +1,5 @@
 os: osx
 language: objective-c
-osx_image:
-  - xcode10.2.1
 
 xcode_workspace: ./MTHawkeyeDemo/MTHawkeye.xcworkspace
 xcode_scheme: MTHawkeyeTests
@@ -18,11 +16,9 @@ env:
 matrix:
   include:
     - osx_image: xcode9.3
-      env: devices="iPhone 5 (8.0),iPhone 6s (9.0),iPhone 6s (10.0),iPhone 7 (11.0),iPhone X (12.0)" RUN_TEST="YES" BUILD_DEMO="NO" POD_LINT="NO"
+      env: RUN_TEST="YES" BUILD_DEMO="NO" POD_LINT="NO"
     - osx_image: xcode10.2
-      env: devices="iPhone 5 (8.0),iPhone 6s (9.0),iPhone 6s (10.0),iPhone 7 (11.0),iPhone X (12.0)" RUN_TEST="YES" BUILD_DEMO="NO" POD_LINT="NO"
-    - osx_image: xcode10.2
-      env: devices="OS=12.3,name=iPhone X" RUN_TEST="NO" BUILD_DEMO="YES" POD_LINT="YES"
+      env: RUN_TEST="YES" BUILD_DEMO="YES" POD_LINT="YES"
 
 before_install:
   - gem install bundler --no-rdoc --no-document --quiet

@@ -21,11 +21,11 @@ platform :ios do
   end
 
   lane :test do |options|
-    scan(workspace: options[:workspace], scheme: options[:scheme], devices: options[:devices], clean: true)
+    scan(workspace: options[:workspace], scheme: options[:scheme], clean: true)
   end
 
   lane :test_ci do
-    test(workspace: ENV["WORKSPACE"], scheme: ENV["TEST_SCHEME"], devices:["DEVICES"])
+    test(workspace: ENV["WORKSPACE"], scheme: ENV["TEST_SCHEME"])
   end
 
   desc "build demo"
