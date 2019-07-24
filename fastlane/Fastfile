@@ -35,7 +35,7 @@ platform :ios do
 
   desc "lint"
   lane :lint do
-    pod_lib_lint
+    pod_lib_lint(verbose: true, use_libraries: true, allow_warnings: true)
   end
 
   # release new version
