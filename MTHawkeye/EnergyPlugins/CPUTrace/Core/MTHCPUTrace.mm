@@ -61,6 +61,8 @@
 }
 
 - (void)dealloc {
+    [self unobserveAppActivity];
+
     if (_threadIdAndUsageBuffers) {
         free(_threadIdAndUsageBuffers);
         _threadIdAndUsageBuffers = nil;
@@ -93,6 +95,8 @@
 
         _threadIdAndUsageBuffersLength = 128;
         _threadIdAndUsageBuffers = (MTH_CPUTraceThreadIdAndUsage *)malloc(sizeof(MTH_CPUTraceThreadIdAndUsage) * _threadIdAndUsageBuffersLength);
+
+        [self observeAppActivity];
     }
     return self;
 }
@@ -408,6 +412,33 @@
     if (p_threadsCount) {
         *p_threadsCount = count;
     }
+}
+
+// MARK: -
+- (void)observeAppActivity {
+    [[NSNotificationCenter defaultCenter]
+        addObserverForName:UIApplicationDidEnterBackgroundNotification
+                    object:nil
+                     queue:nil
+                usingBlock:^(NSNotification *_Nonnull note) {
+                    [self stopTimerIfNeed];
+                }];
+
+    [[NSNotificationCenter defaultCenter]
+        addObserverForName:UIApplicationWillEnterForegroundNotification
+                    object:nil
+                     queue:nil
+                usingBlock:^(NSNotification *_Nonnull note) {
+                    if (self.isTracing) {
+                        [self stopTimerIfNeed];
+                        [self startTracing];
+                    }
+                }];
+}
+
+- (void)unobserveAppActivity {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
 @end
