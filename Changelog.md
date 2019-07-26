@@ -1,5 +1,12 @@
 # MTHawkeye
 
+## 0.11.6
+
+### bugfix
+- fix crash bug on iOS8 while tracing NSURLSessionDownloadTask. #32
+- improve stability while writing records
+- use custom model to avoid MTHURLSessionTaskMetrics crash under iOS13 #22
+
 ## 0.11.5
 
 ### bugfix
