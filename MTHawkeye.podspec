@@ -393,11 +393,16 @@ Pod::Spec.new do |s|
     bg.subspec 'Core' do |core|
       core.public_header_files = 'MTHawkeye/EnergyPlugins/BackgroundTaskTrace/Core/*.{h}'
       core.source_files = 'MTHawkeye/EnergyPlugins/BackgroundTaskTrace/Core/*.{h,m}'
+      core.dependency 'MTHawkeye/Utils'
     end
 
     bg.subspec 'HawkeyeCore' do |hc|
       hc.public_header_files = 'MTHawkeye/EnergyPlugins/BackgroundTaskTrace/HawkeyeCore/*.{h}'
       hc.source_files = 'MTHawkeye/EnergyPlugins/BackgroundTaskTrace/HawkeyeCore/*.{h,m}'
+      hc.dependency 'MTHawkeye/Core'
+      hc.dependency 'MTHawkeye/StackBacktrace'
+      hc.dependency 'MTHawkeye/BackgroundTaskTrace/Core'
+
     end
   end
 
