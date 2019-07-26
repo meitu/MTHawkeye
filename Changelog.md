@@ -1,5 +1,18 @@
 # MTHawkeye
 
+## 0.12.0
+### feature
+- new ANR Trace with more reliable implement, support record hard stalling events. 
+- new UIBackgroundTaskIdentifier tracing plugin BackgroundTaskTrace.
+
+### improve
+- thread stack frame visible from now while `ObjcCallTrace` turn on.
+
+### bugfix
+- fix crash bug on iOS8 while tracing NSURLSessionDownloadTask.
+- improve stability while writing records
+- 
+
 ## 0.11.5
 
 ### bugfix

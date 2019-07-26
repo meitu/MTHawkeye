@@ -113,6 +113,10 @@ After enabling the plug-in on the automated test or online phase, without other 
 
 FLEX is commonly used in daily development, MTHawkeye adds it as a plugin and extends the use of AirDrop for sandboxed files.
 
+##### # BackgroundTask Trace
+
+BackgoundTask trace plugin will tracing the begin/end of UIBackgroundTaskIdentifier, it would be useful when try to find out the cause of crash 0xbada5e47. (see the code for usage directly)
+
 ### Desktop Extension
 
 If you need to extend the plugin to the desktop, such as viewing and processing the data on the desktop collected by the plugins, you can get the data based on the interface provided by each plugin, and then bridge to the protocol provided by the third-party desktop client. Such as
