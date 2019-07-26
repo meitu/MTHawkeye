@@ -309,7 +309,7 @@ NSString *const kMTHawkeyeCollectionKeyValueRecordsFileName = @"records";
 
     NSString *mmapString = [NSString stringWithContentsOfFile:mmapPath usedEncoding:NULL error:nil];
     // mmap 被转储到日志文件后，mmap 第一个字可能会被直接标为 | \0 |
-    if (mmapString && [mmapString characterAtIndex:0] != '\0') {
+    if (mmapString.length && [mmapString characterAtIndex:0] != '\0') {
         // mmap2 contains dirty data after \r line. see ptrbuffer.cc PtrBuffer::Write
         NSRange range = [mmapString rangeOfString:@"\r"];
         if (range.location != NSNotFound) {
