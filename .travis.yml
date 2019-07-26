@@ -18,7 +18,7 @@ matrix:
     - osx_image: xcode9.3
       env: RUN_TEST="YES" BUILD_DEMO="NO" POD_LINT="NO"
     - osx_image: xcode10.2
-      env: RUN_TEST="YES" BUILD_DEMO="YES" POD_LINT="NO"
+      env: RUN_TEST="YES" BUILD_DEMO="NO" POD_LINT="NO"
 
 before_install:
   - gem install fastlane
