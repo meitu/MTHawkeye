@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		203AA50C1F53A924006790E2 /* NetworkURLConnectionDelegateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 203AA50B1F53A924006790E2 /* NetworkURLConnectionDelegateTests.m */; };
 		203AA5131F53F46C006790E2 /* MTURLConnectionInjectTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 203AA5121F53F46C006790E2 /* MTURLConnectionInjectTestViewController.m */; };
+		2046108222E5A44100CB27E3 /* AFURLSessionManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2046108122E5A44100CB27E3 /* AFURLSessionManagerTests.m */; };
+		2046108722E5A47200CB27E3 /* AFTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2046108622E5A47200CB27E3 /* AFTestCase.m */; };
 		204BBD801F43DE7800A1E419 /* ALeakingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 204BBD5F1F43DE7800A1E419 /* ALeakingViewController.m */; };
 		204BBD811F43DE7800A1E419 /* ALeakingViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 204BBD611F43DE7800A1E419 /* ALeakingViewModel.m */; };
 		204BBD821F43DE7800A1E419 /* AlertRetainedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 204BBD631F43DE7800A1E419 /* AlertRetainedViewController.m */; };
@@ -49,6 +51,7 @@
 		208C21AD1F189D6700289CE6 /* MTHawkeyeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 208C21AC1F189D6700289CE6 /* MTHawkeyeTests.m */; };
 		20BCE4242202F96A009E5CCF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20BCE4232202F96A009E5CCF /* XCTest.framework */; };
 		20BCE4262203E048009E5CCF /* MTHawkeyeClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BCE4252203E048009E5CCF /* MTHawkeyeClientTests.m */; };
+		20C628B322CDD5850001C8B2 /* ANRDetectingMmapBufferTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C628B222CDD5850001C8B2 /* ANRDetectingMmapBufferTests.m */; };
 		20D1869A1F551C1100091A19 /* NetworkURLSessionDelegateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 20D186991F551C1100091A19 /* NetworkURLSessionDelegateTests.m */; };
 		20DC169B1ECDAAD500694EB9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DC169A1ECDAAD500694EB9 /* main.m */; };
 		20DC169E1ECDAAD500694EB9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DC169D1ECDAAD500694EB9 /* AppDelegate.m */; };
@@ -83,6 +86,9 @@
 		203AA5111F53F46C006790E2 /* MTURLConnectionInjectTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MTURLConnectionInjectTestViewController.h; sourceTree = "<group>"; };
 		203AA5121F53F46C006790E2 /* MTURLConnectionInjectTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MTURLConnectionInjectTestViewController.m; sourceTree = "<group>"; };
 		203B69862240853F00537A2D /* MTHawkeyeDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MTHawkeyeDemo.entitlements; sourceTree = "<group>"; };
+		2046108122E5A44100CB27E3 /* AFURLSessionManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManagerTests.m; sourceTree = "<group>"; };
+		2046108522E5A47200CB27E3 /* AFTestCase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFTestCase.h; sourceTree = "<group>"; };
+		2046108622E5A47200CB27E3 /* AFTestCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFTestCase.m; sourceTree = "<group>"; };
 		204BBD5E1F43DE7700A1E419 /* ALeakingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALeakingViewController.h; sourceTree = "<group>"; };
 		204BBD5F1F43DE7800A1E419 /* ALeakingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALeakingViewController.m; sourceTree = "<group>"; };
 		204BBD601F43DE7800A1E419 /* ALeakingViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALeakingViewModel.h; sourceTree = "<group>"; };
@@ -157,6 +163,7 @@
 		20C1D3451F70FFAA00A06CC0 /* Readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = Readme.md; path = ../Readme.md; sourceTree = "<group>"; };
 		20C1D3491F70FFB400A06CC0 /* podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		20C1D34A1F70FFB500A06CC0 /* Podfile.lock */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile.lock; sourceTree = "<group>"; };
+		20C628B222CDD5850001C8B2 /* ANRDetectingMmapBufferTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANRDetectingMmapBufferTests.m; sourceTree = "<group>"; };
 		20D186991F551C1100091A19 /* NetworkURLSessionDelegateTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NetworkURLSessionDelegateTests.m; sourceTree = "<group>"; };
 		20D33D27223A51B700942274 /* Contributing.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = Contributing.md; path = ../Contributing.md; sourceTree = "<group>"; };
 		20D4CFBE225F422700F28B08 /* Readme-cn.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = "Readme-cn.md"; path = "../Readme-cn.md"; sourceTree = "<group>"; };
@@ -548,18 +555,18 @@
 		20D4CFF222647B2300F28B08 /* time-consuming */ = {
 			isa = PBXGroup;
 			children = (
-				20D4CFF322647B2300F28B08 /* ui-time-profiler-vclife.png */,
-				20D4CFF422647B2300F28B08 /* ui-time-profiler-objc-calltrace.png */,
-				20D4CFF522647B2300F28B08 /* anr-tracer.md */,
-				20D4CFF622647B2300F28B08 /* ui-time-profiler-xcode.png */,
-				20D4CFF722647B2300F28B08 /* anr-tracer-cn.md */,
-				20D4CFF822647B2300F28B08 /* ui-time-profiler.md */,
-				20D4CFF922647B2300F28B08 /* ui-time-profiler-launch-detail.png */,
-				20D4CFFA22647B2300F28B08 /* anr-record-list.png */,
-				20D4CFFB22647B2300F28B08 /* fps-tracer.md */,
 				20D4CFFC22647B2300F28B08 /* anr-record-detail.png */,
+				20D4CFFA22647B2300F28B08 /* anr-record-list.png */,
+				20D4CFF722647B2300F28B08 /* anr-tracer-cn.md */,
+				20D4CFF522647B2300F28B08 /* anr-tracer.md */,
+				20D4CFFB22647B2300F28B08 /* fps-tracer.md */,
 				20D4CFFD22647B2300F28B08 /* ui-time-profiler-cn.md */,
+				20D4CFF922647B2300F28B08 /* ui-time-profiler-launch-detail.png */,
 				20D4CFFE22647B2300F28B08 /* ui-time-profiler-main.png */,
+				20D4CFF422647B2300F28B08 /* ui-time-profiler-objc-calltrace.png */,
+				20D4CFF322647B2300F28B08 /* ui-time-profiler-vclife.png */,
+				20D4CFF622647B2300F28B08 /* ui-time-profiler-xcode.png */,
+				20D4CFF822647B2300F28B08 /* ui-time-profiler.md */,
 			);
 			path = "time-consuming";
 			sourceTree = "<group>";
@@ -655,6 +662,10 @@
 				2053F1CC2074787E00ED57F8 /* CallTraceTests.m */,
 				205D1E4621EF205C0053735D /* MTHawkeyeUserDefaultsTests.m */,
 				20BCE4252203E048009E5CCF /* MTHawkeyeClientTests.m */,
+				20C628B222CDD5850001C8B2 /* ANRDetectingMmapBufferTests.m */,
+				2046108122E5A44100CB27E3 /* AFURLSessionManagerTests.m */,
+				2046108522E5A47200CB27E3 /* AFTestCase.h */,
+				2046108622E5A47200CB27E3 /* AFTestCase.m */,
 			);
 			path = MTHawkeyeDemoTests;
 			sourceTree = "<group>";
@@ -867,12 +878,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2046108722E5A47200CB27E3 /* AFTestCase.m in Sources */,
 				20BCE4262203E048009E5CCF /* MTHawkeyeClientTests.m in Sources */,
 				205D1E4721EF205C0053735D /* MTHawkeyeUserDefaultsTests.m in Sources */,
 				20841F7E1F3B017B002CA705 /* NetworkTransactionsFilterTests.m in Sources */,
 				203AA50C1F53A924006790E2 /* NetworkURLConnectionDelegateTests.m in Sources */,
 				20D1869A1F551C1100091A19 /* NetworkURLSessionDelegateTests.m in Sources */,
+				2046108222E5A44100CB27E3 /* AFURLSessionManagerTests.m in Sources */,
 				20841F7F1F3B017B002CA705 /* NetworkMonitorViewModelTests.m in Sources */,
+				20C628B322CDD5850001C8B2 /* ANRDetectingMmapBufferTests.m in Sources */,
 				20E6714A218ACEC90078DAAF /* mtha_splay_tree_test.m in Sources */,
 				2053F1CD2074787E00ED57F8 /* CallTraceTests.m in Sources */,
 				208C21AD1F189D6700289CE6 /* MTHawkeyeTests.m in Sources */,
