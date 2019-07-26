@@ -13,8 +13,12 @@
 #import <MTHawkeye/MTRunHawkeyeInOneLine.h>
 //#endif
 
+#import <MTHawkeye/MTHBackgroundTaskTraceAdaptor.h>
+
 
 @interface AppDelegate ()
+
+@property (nonatomic, strong) MTHBackgroundTaskTraceAdaptor *bgtaskTrace;
 
 @end
 
@@ -47,17 +51,23 @@
 }
 
 - (void)startCustomHawkeye {
+    // Background is not include in `MTHawkeye` by default, you need to add it explicitly.
+
     [[MTHawkeyeClient shared]
         setPluginsSetupHandler:^(NSMutableArray<id<MTHawkeyePlugin>> *_Nonnull plugins) {
             [MTHawkeyeDefaultPlugins addDefaultClientPluginsInto:plugins];
 
             // add your additional plugins here.
+            self.bgtaskTrace = [[MTHBackgroundTaskTraceAdaptor alloc] init];
+            [plugins addObject:self.bgtaskTrace];
         }
         pluginsCleanHandler:^(NSMutableArray<id<MTHawkeyePlugin>> *_Nonnull plugins) {
             // if you don't want to free plugins memory, remove this line.
             [MTHawkeyeDefaultPlugins cleanDefaultClientPluginsFrom:plugins];
 
             // clean your additional plugins if need.
+            [plugins removeObject:self.bgtaskTrace];
+            self.bgtaskTrace = nil;
         }];
 
     [[MTHawkeyeClient shared] startServer];

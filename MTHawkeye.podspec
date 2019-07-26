@@ -388,6 +388,19 @@ Pod::Spec.new do |s|
       flex.libraries = "sqlite3"
   end
 
+  # ――― BacktroundTask Tracing ―――――――――――――――――――――――――――――――――――――――――――――――――0――――――――― #
+  s.subspec 'BackgroundTaskTrace' do |bg|
+    bg.subspec 'Core' do |core|
+      core.public_header_files = 'MTHawkeye/EnergyPlugins/BackgroundTaskTrace/Core/*.{h}'
+      core.source_files = 'MTHawkeye/EnergyPlugins/BackgroundTaskTrace/Core/*.{h,m}'
+    end
+
+    bg.subspec 'HawkeyeCore' do |hc|
+      hc.public_header_files = 'MTHawkeye/EnergyPlugins/BackgroundTaskTrace/HawkeyeCore/*.{h}'
+      hc.source_files = 'MTHawkeye/EnergyPlugins/BackgroundTaskTrace/HawkeyeCore/*.{h,m}'
+    end
+  end
+
   s.requires_arc = true
 
 end

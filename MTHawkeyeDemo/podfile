@@ -14,6 +14,8 @@ def hawkeye
   
   pod 'MTHawkeye/DefaultPlugins', :path => '../'#, :configurations => 'Debug'
 
+  pod 'MTHawkeye/BackgroundTaskTrace', :path => '../'
+
   pod 'FLEX'#, :configurations => ['Debug']
   pod 'FBRetainCycleDetector'#, :configurations => ['Debug']
   pod 'fishhook'#, :configurations => ['Debug']

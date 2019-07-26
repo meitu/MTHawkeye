@@ -34,6 +34,11 @@ PODS:
     - MTGLDebug/MRC
   - MTGLDebug/MRC (3.1.1):
     - fishhook (~> 0.2)
+  - MTHawkeye/BackgroundTaskTrace (0.11.5):
+    - MTHawkeye/BackgroundTaskTrace/Core (= 0.11.5)
+    - MTHawkeye/BackgroundTaskTrace/HawkeyeCore (= 0.11.5)
+  - MTHawkeye/BackgroundTaskTrace/Core (0.11.5)
+  - MTHawkeye/BackgroundTaskTrace/HawkeyeCore (0.11.5)
   - MTHawkeye/Core (0.11.5):
     - MTHawkeye/Utils
   - MTHawkeye/DefaultPlugins (0.11.5):
@@ -226,6 +231,7 @@ DEPENDENCIES:
   - GYHttpMock
   - MTAppenderFile (~> 0.4.0)
   - MTGLDebug
+  - MTHawkeye/BackgroundTaskTrace (from `../`)
   - MTHawkeye/DefaultPlugins (from `../`)
 
 SPEC REPOS:
@@ -254,8 +260,8 @@ SPEC CHECKSUMS:
   GYHttpMock: ad08e55ce8bde4e7f7b4d0cbc79ff23c1311658b
   MTAppenderFile: c7db8f33a8140ee2275a6200305fd11e609fae33
   MTGLDebug: a65833811c1e8b84b2100dfb6b41c29c029254d6
-  MTHawkeye: eb0c5d0bfb9a3d5088a2818434b8780a121c1ebe
+  MTHawkeye: 2d1fd6c2a910b7fdb8b282ebb5d2fb61bc1dd8e9
 
-PODFILE CHECKSUM: d772bcb03da95f4f4008f493d829ba2e9bda6f98
+PODFILE CHECKSUM: d38354cf1ef618c2dd09b7228bb0c995f7d7c949
 
-COCOAPODS: 1.7.2
+COCOAPODS: 1.7.5
