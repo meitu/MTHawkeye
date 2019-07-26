@@ -202,6 +202,7 @@ Pod::Spec.new do |s|
         core.source_files = 'MTHawkeye/TimeConsumingPlugins/ANRTrace/Core/*.{h,m,mm}'
         core.dependency 'MTHawkeye/Utils'
         core.dependency 'MTHawkeye/StackBacktrace'
+        core.dependency 'MTHawkeye/Core' # AppStat.
       end
 
       anr.subspec 'HawkeyeCore' do |hc|
