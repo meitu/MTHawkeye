@@ -38,7 +38,7 @@
 #ifdef MTHLivingObjectDebug
     MTHLogDebug(@" mth_castShadowOver: %@:%@", [self class], self);
 #endif
-    if (mtha_addr_is_in_sys_libraries((vm_address_t)self.class) || [self isKindOfClass:[MTHLivingObjectGroupInClass class]]) {
+    if (object_isClass(self) || mtha_addr_is_in_sys_libraries((vm_address_t)self.class) || [self isKindOfClass:[MTHLivingObjectGroupInClass class]]) {
         return NO;
     }
 
