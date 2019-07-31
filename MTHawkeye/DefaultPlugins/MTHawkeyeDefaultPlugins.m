@@ -28,7 +28,7 @@
 #import <MTHawkeye/MTHUITimeProfilerHawkeyeAdaptor.h>
 #import <MTHawkeye/MTHUITimeProfilerHawkeyeUI.h>
 #import <MTHawkeye/MTHawkeyeUserDefaults+UITimeProfiler.h>
-#import <MTHawkeye/UIViewController+MTHProfile.h>
+#import <MTHawkeye/MTHUIViewControllerProfile.h>
 
 #import <MTHawkeye/MTHCPUTraceHawkeyeAdaptor.h>
 #import <MTHawkeye/MTHCPUTraceHawkeyeUI.h>
@@ -95,7 +95,7 @@ static NSMutableArray<id<MTHawkeyeFloatingWidgetPlugin>> *defaultdefaultFloating
         [MTHAppLaunchStepTracer traceSteps];
 
         if ([MTHawkeyeUserDefaults shared].vcLifeTraceOn) {
-            [UIViewController startVCProfile];
+            [MTHUIViewControllerProfile startVCProfile];
         }
 
         if ([MTHawkeyeUserDefaults shared].allocationsTraceOn) {
