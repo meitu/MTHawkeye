@@ -155,7 +155,7 @@
     }
 
     NSDictionary *dict = @{
-        @"duration" : [NSString stringWithFormat:@"%@", @(anrRecord.durationInSeconds * 1000)],
+        @"duration" : @(anrRecord.durationInSeconds * 1000),
         @"startFrom" : @(anrRecord.startFrom),
         @"inBackground" : @(anrRecord.isInBackground),
         @"stacks" : stacks
