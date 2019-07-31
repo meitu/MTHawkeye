@@ -16,7 +16,7 @@
 #import "MTHawkeyeLogMacros.h"
 #import "MTHawkeyeStorage.h"
 #import "MTHawkeyeUserDefaults+UITimeProfiler.h"
-#import "UIViewController+MTHProfile.h"
+#import "MTHUIViewControllerProfile.h"
 
 #import <MTHawkeye/MTHawkeyeDyldImagesUtils.h>
 #import <MTHawkeye/MTHawkeyeHooking.h>
@@ -37,10 +37,6 @@ BOOL mthawkeye_VCTraceIgnoreSystemVC = YES;
         return;
 
     [MTHAppLaunchStepTracer traceSteps];
-
-    if ([MTHawkeyeUserDefaults shared].vcLifeTraceOn) {
-        [UIViewController startVCProfile];
-    }
 }
 
 - (instancetype)init {
@@ -71,7 +67,7 @@ BOOL mthawkeye_VCTraceIgnoreSystemVC = YES;
         return;
 
     // start if needed.
-    [UIViewController startVCProfile];
+    [MTHUIViewControllerProfile startVCProfile];
     [MTHTimeIntervalRecorder shared].blacklistFilter = ^BOOL(UIViewController *vc) {
         if (mthawkeye_VCTraceIgnoreSystemVC && mtha_addr_is_in_sys_libraries((vm_address_t)vc.class)) {
             return YES;

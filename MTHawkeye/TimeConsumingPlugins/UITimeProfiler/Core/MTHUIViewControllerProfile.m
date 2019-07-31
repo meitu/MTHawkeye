@@ -18,7 +18,7 @@
 #import <MTHawkeye/MTHawkeyeUtility.h>
 
 #import "MTHTimeIntervalRecorder.h"
-#import "UIViewController+MTHProfile.h"
+#import "MTHUIViewControllerProfile.h"
 
 
 static char const kAssociatedRemoverKey;
@@ -146,7 +146,7 @@ static void mth_viewDidAppear(UIViewController *kvo_self, SEL _sel, BOOL animate
 
 #pragma mark -
 
-@implementation UIViewController (VCDetector)
+@implementation MTHUIViewControllerProfile
 
 + (void)startVCProfile {
     static dispatch_once_t onceToken;
@@ -162,14 +162,14 @@ static void mth_viewDidAppear(UIViewController *kvo_self, SEL _sel, BOOL animate
             swizzleInstanceMethod:initSEL1
                           inClass:class
                     newImpFactory:^id(MTH_RSSwizzleInfo *swizzleInfo) {
-                        return ^id(__unsafe_unretained id self, NSString *nibNameOrNil, NSBundle *nibBundleOrNil) {
+                        return ^id(__unsafe_unretained id vc, NSString *nibNameOrNil, NSBundle *nibBundleOrNil) {
                             id (*originalIMP)(__unsafe_unretained id, SEL, NSString *, NSBundle *);
                             originalIMP = (__typeof(originalIMP))[swizzleInfo getOriginalImplementation];
 
-                            [UIViewController mth_createAndHookKVOClassFor:self];
-                            originalIMP(self, initSEL1, nibNameOrNil, nibBundleOrNil);
-                            [[MTHTimeIntervalRecorder shared] recordViewController:self processInStep:MTHViewControllerLifeCycleStepInitExit];
-                            return self;
+                            [MTHUIViewControllerProfile mth_createAndHookKVOClassFor:vc];
+                            originalIMP(vc, initSEL1, nibNameOrNil, nibBundleOrNil);
+                            [[MTHTimeIntervalRecorder shared] recordViewController:vc processInStep:MTHViewControllerLifeCycleStepInitExit];
+                            return vc;
                         };
                     }
                              mode:MTH_RSSwizzleModeOncePerClass
@@ -180,14 +180,14 @@ static void mth_viewDidAppear(UIViewController *kvo_self, SEL _sel, BOOL animate
             swizzleInstanceMethod:initSEL2
                           inClass:class
                     newImpFactory:^id(MTH_RSSwizzleInfo *swizzleInfo) {
-                        return ^id(__unsafe_unretained id self, NSCoder *coder) {
+                        return ^id(__unsafe_unretained id vc, NSCoder *coder) {
                             id (*originalIMP)(__unsafe_unretained id, SEL, NSCoder *);
                             originalIMP = (__typeof(originalIMP))[swizzleInfo getOriginalImplementation];
 
-                            [UIViewController mth_createAndHookKVOClassFor:self];
-                            originalIMP(self, initSEL2, coder);
-                            [[MTHTimeIntervalRecorder shared] recordViewController:self processInStep:MTHViewControllerLifeCycleStepInitExit];
-                            return self;
+                            [MTHUIViewControllerProfile mth_createAndHookKVOClassFor:vc];
+                            originalIMP(vc, initSEL2, coder);
+                            [[MTHTimeIntervalRecorder shared] recordViewController:vc processInStep:MTHViewControllerLifeCycleStepInitExit];
+                            return vc;
                         };
                     }
                              mode:MTH_RSSwizzleModeOncePerClass

@@ -29,7 +29,7 @@
 
 #pragma mark -
 
-@interface UIViewController (VCDetector)
+@interface MTHUIViewControllerProfile: NSObject
 
 + (void)startVCProfile;
 
