@@ -29,49 +29,36 @@ When the app run into hard stall, it may killed without any logs, you can use `M
 ANR records is store under [Records file](./../hawkeye-storage.md#0x02-built-in-plugin-data-storage-instructions). Use a `collection` name `anr`, `key` as the time stalling event generated, `value` is a JSON string with the following fields:
 
 - `duration`: stalling duration, in millisecond
+- `inBackground`: whether it is running in the background
 - `stacks`: all stack frame during stalling event 
-- `titleframe`: stall event stack title string
-- `time`: the time stalling event generated
-- `stackframes`: sampling stack frame when the stalling event captured (symbolic needed), hexadecimal address string separated by `,`
+    - `capturedCount`: the number of times recorded, the same record will be deduplicated
+    - `stackframes`: sampling stack frame when the stalling event captured (symbolic needed), hexadecimal address string separated by `,`
+    - `threadCount`: current thread count
+    - `time`: the time stalling event generated
+    - `titleframe`: stall event stack title string
+- `startFrom`: stalling start time, in millisecond
 
 examples:
 
 ```json
-
 {
-    duration = "7352.797031402588";
-    stacks = [
-        {
-            stackframes = 0x10d1f64ae;
-            time = "1561618437.344688";
-            titleframe = 0x10d1f64ae;
+    duration = "610.3181838989258";
+    inBackground = 0;
+    stacks = {
+            capturedCount = 1;
+            stackframes = "0x10d8fe55e,0x10d896497,0x108455f9a,0x108455c01,0x108455620,0x116a5d3d4,0x116a5d7b1,0x116888611,0x11687945f,0x1168a8865,0x10d8c4856,0x10d8bf2ed,0x10d8bf969,0x10d8bf055,0x10fa8fbaf,0x11687f88c,0x108460821,0x10e0084ac";
+            threadCount = 6;
+            time = "1565256930.870066";
+            titleframe = 0x108455f9a;
         },
         {
-            stackframes = "0x10d1f5b1f,0x10d1efe7f,0x10d19c407,0x107203a1e,0x107203717,0x1072031dd,0x107203119,0x11545e418,0x11545e62c,0x11524ecc8,0x11523e198,0x11526b32a,0x10d1b80f6,0x10d1b25bd,0x10d1b2c30,0x10d1b2301,0x10ecf02fd,0x115243ba1,0x10720e2e1,0x10d877540";
-            time = "1561618437.448422";
-            titleframe = 0x107203a1e;
-        },
-        {
-            stackframes = "0x10d1efc16,0x10d19c407,0x107203a1e,0x107203717,0x1072031dd,0x107203119,0x11545e418,0x11545e62c,0x11524ecc8,0x11523e198,0x11526b32a,0x10d1b80f6,0x10d1b25bd,0x10d1b2c30,0x10d1b2301,0x10ecf02fd,0x115243ba1,0x10720e2e1,0x10d877540";
-            time = "1561618437.601369";
-            titleframe = 0x107203a1e;
-        },
-        {
-            stackframes = "0x10bd64660,0x107203717,0x1072031dd,0x107203119,0x11545e418,0x11545e62c,0x11524ecc8,0x11523e198,0x11526b32a,0x10d1b80f6,0x10d1b25bd,0x10d1b2c30,0x10d1b2301,0x10ecf02fd,0x115243ba1,0x10720e2e1,0x10d877540";
-            time = "1561618437.803538";
-            titleframe = 0x107203717;
-        },
-        {
-            stackframes = "0x1072039e9,0x107203717,0x1072031dd,0x107203119,0x11545e418,0x11545e62c,0x11524ecc8,0x11523e198,0x11526b32a,0x10d1b80f6,0x10d1b25bd,0x10d1b2c30,0x10d1b2301,0x10ecf02fd,0x115243ba1,0x10720e2e1,0x10d877540";
-            time = "1561618438.056277";
-            titleframe = 0x1072039e9;
-        },
-                {
-            stackframes = "0x10dbd8ce4,0x10d1e0853,0x10d1efedd,0x10d19c407,0x107203a1e,0x107203717,0x1072031dd,0x107203119,0x11545e418,0x11545e62c,0x11524ecc8,0x11523e198,0x11526b32a,0x10d1b80f6,0x10d1b25bd,0x10d1b2c30,0x10d1b2301,0x10ecf02fd,0x115243ba1,0x10720e2e1,0x10d877540";
-            time = "1561618438.359641";
-            titleframe = 0x107203a1e;
+            capturedCount = 1;
+            stackframes = "0x10d90461b,0x10d8fe6f5";
+            threadCount = 6;
+            time = "1565256930.975193";
+            titleframe = 0x10d90461b;
         }
-    ]
+    startFrom = "1565256930.414564";
 }
 ```
 
