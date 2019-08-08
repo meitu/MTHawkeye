@@ -171,6 +171,7 @@ PODS:
     - MTHawkeye/TimeConsumingPlugins/ANRTrace/HawkeyeCore (= 0.12.0)
     - MTHawkeye/TimeConsumingPlugins/ANRTrace/HawkeyeUI (= 0.12.0)
   - MTHawkeye/TimeConsumingPlugins/ANRTrace/Core (0.12.0):
+    - MTHawkeye/Core
     - MTHawkeye/StackBacktrace
     - MTHawkeye/Utils
   - MTHawkeye/TimeConsumingPlugins/ANRTrace/HawkeyeCore (0.12.0):
@@ -264,7 +265,7 @@ SPEC CHECKSUMS:
   GYHttpMock: ad08e55ce8bde4e7f7b4d0cbc79ff23c1311658b
   MTAppenderFile: c7db8f33a8140ee2275a6200305fd11e609fae33
   MTGLDebug: a65833811c1e8b84b2100dfb6b41c29c029254d6
-  MTHawkeye: 1b069c957eb6af153b9f11e0e07d247f9246ec30
+  MTHawkeye: edcb63752c3241d84d6c8f284f2b6089a25e42f7
 
 PODFILE CHECKSUM: d38354cf1ef618c2dd09b7228bb0c995f7d7c949
 
