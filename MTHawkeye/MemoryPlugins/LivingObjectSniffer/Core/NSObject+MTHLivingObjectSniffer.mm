@@ -14,7 +14,7 @@
 #import "MTHLivingObjectInfo.h"
 #import "MTHawkeyeLogMacros.h"
 #import "MTHawkeyePropertyBox.h"
-#import "MTObjectStrongReferenceCollector.h"
+#import "MTHLivingObjectReferenceCollector.h"
 #import "NSObject+MTHLivingObjectSniffer.h"
 
 #import <MTHawkeye/MTHawkeyeDyldImagesUtils.h>
@@ -51,7 +51,7 @@
 
     MTHSignpostStart(511);
 
-    MTObjectStrongReferenceCollector *collector = [[MTObjectStrongReferenceCollector alloc] initWithObject:self];
+    MTHLivingObjectReferenceCollector *collector = [[MTHLivingObjectReferenceCollector alloc] initWithObject:self];
     collector.stopForClsBlock = ^BOOL(Class  _Nonnull __unsafe_unretained cls) {
         return mtha_addr_is_in_sys_libraries((vm_address_t)cls);
     };
