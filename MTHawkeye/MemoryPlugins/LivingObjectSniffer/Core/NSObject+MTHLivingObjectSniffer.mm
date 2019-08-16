@@ -14,6 +14,7 @@
 #import "MTHLivingObjectInfo.h"
 #import "MTHawkeyeLogMacros.h"
 #import "MTHawkeyePropertyBox.h"
+#import "MTObjectStrongReferenceCollector.h"
 #import "NSObject+MTHLivingObjectSniffer.h"
 
 #import <MTHawkeye/MTHawkeyeDyldImagesUtils.h>
@@ -50,40 +51,12 @@
 
     MTHSignpostStart(511);
 
-    NSMutableArray *subObjects = @[].mutableCopy;
-
-    Class curLevelClass = self.class;
-    while (curLevelClass) {
-        // skip not our own classes
-        if (mtha_addr_is_in_sys_libraries((vm_address_t)curLevelClass))
-            break;
-
-        unsigned int i, count = 0;
-        objc_property_t *properties = class_copyPropertyList(curLevelClass, &count);
-        for (i = 0; i < count; i++) {
-            objc_property_t property = properties[i];
-            mthawkeye_property_box property_box = mthawkeye_extract_property(property);
-            if ((!property_box.is_copy && !property_box.is_strong) || property_box.ivar_name[0] == '\0')
-                continue;
-
-            @try {
-                Ivar ivar = class_getInstanceVariable([self class], property_box.ivar_name);
-                const char *type = ivar_getTypeEncoding(ivar);
-                if (type != NULL && type[0] != '@') {
-                    continue;
-                }
-                id obj = object_getIvar(self, ivar);
-                if (!obj) {
-                    continue;
-                }
-                [subObjects addObject:obj];
-            } @catch (NSException *e) {
-            }
-        }
-        free(properties);
-
-        curLevelClass = curLevelClass.superclass;
-    }
+    MTObjectStrongReferenceCollector *collector = [[MTObjectStrongReferenceCollector alloc] initWithObject:self];
+    collector.stopForClsBlock = ^BOOL(Class  _Nonnull __unsafe_unretained cls) {
+        return mtha_addr_is_in_sys_libraries((vm_address_t)cls);
+    };
+    
+    NSArray *subObjects = collector.strongReferences;
 
     MTHSignpostEnd(511);
 
