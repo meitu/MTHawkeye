@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MTObjectStrongReferenceCollector : NSObject
+@interface MTHLivingObjectReferenceCollector : NSObject
 @property (weak, nonatomic, readonly) id object;
 @property (copy, nonatomic, readonly) NSArray *strongReferences;
 @property (copy, nonatomic) BOOL (^stopForClsBlock)(Class cls);

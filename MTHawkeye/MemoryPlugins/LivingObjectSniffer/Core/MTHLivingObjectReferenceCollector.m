@@ -10,12 +10,12 @@
 //
 
 
-#import "MTObjectStrongReferenceCollector.h"
+#import "MTHLivingObjectReferenceCollector.h"
 
 #import <MTHawkeye/MTHawkeyeDyldImagesUtils.h>
 #import <objc/runtime.h>
 
-@interface MTIvarInfo : NSObject
+@interface MTHLivingObjectIvarInfo : NSObject
 @property (copy, nonatomic, readonly) NSString *name;
 @property (assign, nonatomic, readonly) ptrdiff_t offset;
 @property (assign, nonatomic, readonly) NSInteger index;
@@ -26,7 +26,7 @@
 - (id)referenceFromObject:(id)object;
 @end
 
-@implementation MTIvarInfo
+@implementation MTHLivingObjectIvarInfo
 - (instancetype)initWithIvar:(Ivar)ivar {
     if (self = [super init]) {
         _ivar = ivar;
@@ -44,7 +44,7 @@
 }
 @end
 
-@implementation MTObjectStrongReferenceCollector
+@implementation MTHLivingObjectReferenceCollector
 @synthesize strongReferences = _strongReferences;
 
 - (instancetype)initWithObject:(id)object {
@@ -57,15 +57,15 @@
 - (NSArray *)collectStrongObjectIvarsForClass:(Class)cls {
     unsigned int count = 0;
     Ivar *ivars = class_copyIvarList(cls, &count);
-    NSMutableArray <MTIvarInfo *> *infos = [NSMutableArray array];
+    NSMutableArray <MTHLivingObjectIvarInfo *> *infos = [NSMutableArray array];
     
     for (int i = 0; i < count; i++) {
         Ivar ivar = ivars[i];
-        MTIvarInfo *ivarInfo = [[MTIvarInfo alloc] initWithIvar:ivar];
+        MTHLivingObjectIvarInfo *ivarInfo = [[MTHLivingObjectIvarInfo alloc] initWithIvar:ivar];
         [infos addObject:ivarInfo];
     }
     
-    NSArray *objectIvars = [infos filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(MTIvarInfo *info, NSDictionary<NSString *,id> * _Nullable bindings) {
+    NSArray *objectIvars = [infos filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(MTHLivingObjectIvarInfo *info, NSDictionary<NSString *,id> * _Nullable bindings) {
         return info.isObject;
     }]];
     const uint8_t *layout = class_getIvarLayout(cls);
@@ -80,7 +80,7 @@
     }
     
     NSIndexSet *strongIvarIndexes = [self strongIvarIndexesForLayout:layout ivarLocation:ivarLocation];
-    NSArray *strongObjectIvars = [objectIvars filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(MTIvarInfo *info, NSDictionary<NSString *,id> * _Nullable bindings) {
+    NSArray *strongObjectIvars = [objectIvars filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(MTHLivingObjectIvarInfo *info, NSDictionary<NSString *,id> * _Nullable bindings) {
         return [strongIvarIndexes containsIndex:info.index];
     }]];
     
@@ -106,7 +106,7 @@
     return indexes;
 }
 
-- (NSArray <MTIvarInfo *> *)wrappedIvarList {
+- (NSArray <MTHLivingObjectIvarInfo *> *)wrappedIvarList {
     Class curLevelClass = [_object class];
     NSMutableArray *ivarInfos = [NSMutableArray array];
     
@@ -127,7 +127,7 @@
     if (!_strongReferences) {
         NSMutableArray *objects = [NSMutableArray array];
         NSArray *ivarInfos = [self wrappedIvarList];
-        for (MTIvarInfo *info in ivarInfos) {
+        for (MTHLivingObjectIvarInfo *info in ivarInfos) {
             id reference = [info referenceFromObject:_object];
             if (reference) {
                 [objects addObject:reference];
