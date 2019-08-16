@@ -57,34 +57,36 @@
 - (NSArray *)collectStrongObjectIvarsForClass:(Class)cls {
     unsigned int count = 0;
     Ivar *ivars = class_copyIvarList(cls, &count);
-    NSMutableArray <MTHLivingObjectIvarInfo *> *infos = [NSMutableArray array];
+    NSMutableArray <MTHLivingObjectIvarInfo *> *objectIvarInfos = [NSMutableArray array];
     
+    NSInteger ivarLocation = 1;
     for (int i = 0; i < count; i++) {
-        Ivar ivar = ivars[i];
-        MTHLivingObjectIvarInfo *ivarInfo = [[MTHLivingObjectIvarInfo alloc] initWithIvar:ivar];
-        [infos addObject:ivarInfo];
+        MTHLivingObjectIvarInfo *ivarInfo = [[MTHLivingObjectIvarInfo alloc] initWithIvar:ivars[i]];
+        
+        if (!i) {
+            ivarLocation = ivarInfo.index;
+        }
+        
+        if (ivarInfo.isObject) {
+            [objectIvarInfos addObject:ivarInfo];
+        }
     }
     
-    NSArray *objectIvars = [infos filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(MTHLivingObjectIvarInfo *info, NSDictionary<NSString *,id> * _Nullable bindings) {
-        return info.isObject;
-    }]];
     const uint8_t *layout = class_getIvarLayout(cls);
-    
     if (!layout) {
         return @[];
     }
     
-    NSInteger ivarLocation = 1;
-    if (infos.count > 0) {
-        ivarLocation = infos.firstObject.index;
+    NSIndexSet *strongIvarIndexes = [self strongIvarIndexesForLayout:layout ivarLocation:ivarLocation];
+    
+    NSMutableArray *strongObjectIvarInfos = [NSMutableArray array];
+    for (MTHLivingObjectIvarInfo *ivarInfo in objectIvarInfos) {
+        if ([strongIvarIndexes containsIndex:ivarInfo.index]) {
+            [strongObjectIvarInfos addObject:ivarInfo];
+        }
     }
     
-    NSIndexSet *strongIvarIndexes = [self strongIvarIndexesForLayout:layout ivarLocation:ivarLocation];
-    NSArray *strongObjectIvars = [objectIvars filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(MTHLivingObjectIvarInfo *info, NSDictionary<NSString *,id> * _Nullable bindings) {
-        return [strongIvarIndexes containsIndex:info.index];
-    }]];
-    
-    return strongObjectIvars;
+    return strongObjectIvarInfos;
 }
 
 - (NSIndexSet *)strongIvarIndexesForLayout:(const uint8_t *)layout ivarLocation:(NSInteger)ivarLocation {
