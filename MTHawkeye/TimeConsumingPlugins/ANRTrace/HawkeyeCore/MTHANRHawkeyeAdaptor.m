@@ -137,8 +137,11 @@
     // if total strings > 16kB should seperate it
     NSMutableArray<NSDictionary *> *safeLengthStacks = [NSMutableArray array];
     NSMutableArray<NSMutableArray<NSDictionary *> *> *safeLengthStacksArrary =[NSMutableArray array];
-    NSUInteger estimateLength = 0;
-    for (MTHANRMainThreadStallingSnapshot *rawRecord in anrRecord.stallingSnapshots) {
+    NSMutableArray<NSNumber *> *stacksDurationArrary = [NSMutableArray array];
+    NSUInteger estimateLength = 0, currentDuration = 0;
+    
+    for (NSUInteger index = 0; index < anrRecord.stallingSnapshots.count; index++) {
+        MTHANRMainThreadStallingSnapshot *rawRecord = anrRecord.stallingSnapshots[index];
         NSMutableString *stackInStr = [[NSMutableString alloc] init];
         for (int i = 0; i < rawRecord->stackframesSize; ++i) {
             [stackInStr appendFormat:@"%p,", (void *)rawRecord->stackframes[i]];
@@ -158,20 +161,39 @@
         estimateLength += 150 + stackInStr.length; // other string estimate length in 150 Bytes
         
         if (kMTHawkeyeLogStoreMaxLength <= estimateLength) {
-            estimateLength = 0;
+            NSTimeInterval startFrom = ((NSNumber *)[[safeLengthStacks firstObject] objectForKey:@"time"]).doubleValue;
+            NSTimeInterval duration = 0;
+            if (index + 1 < anrRecord.stallingSnapshots.count) {
+                duration = anrRecord.stallingSnapshots[index + 1].time - startFrom;
+            } else {
+                duration = anrRecord.durationInSeconds - currentDuration;
+            }
+            [stacksDurationArrary addObject:@(duration)];
             [safeLengthStacksArrary addObject:safeLengthStacks];
+
+            currentDuration += duration;
+            estimateLength = 0;
             safeLengthStacks = [NSMutableArray array];
         }
     }
     
     if ([safeLengthStacks count]) {
+        [stacksDurationArrary addObject:@(anrRecord.durationInSeconds - currentDuration)];
         [safeLengthStacksArrary addObject:safeLengthStacks];
     }
     
-    for (NSMutableArray<NSDictionary *> *stacks in safeLengthStacksArrary) {
+    NSTimeInterval durationInSeconds = anrRecord.durationInSeconds;
+    NSTimeInterval startFromInSeconds = anrRecord.startFrom;
+    for (NSUInteger index = 0; index < safeLengthStacksArrary.count; index++) {
+        NSMutableArray<NSDictionary *> *stacks = safeLengthStacksArrary[index];
+        if (safeLengthStacksArrary.count > 1) {
+            startFromInSeconds = ((NSNumber *)[[stacks firstObject] objectForKey:@"time"]).doubleValue;
+            durationInSeconds = [stacksDurationArrary objectAtIndex:index].doubleValue;
+        }
+        
         NSDictionary *dict = @{
-            @"duration" : @(anrRecord.durationInSeconds * 1000),
-            @"startFrom" : @(anrRecord.startFrom),
+            @"duration" : @(durationInSeconds * 1000),
+            @"startFrom" : @(startFromInSeconds),
             @"inBackground" : @(anrRecord.isInBackground),
             @"stacks" : stacks
         };
