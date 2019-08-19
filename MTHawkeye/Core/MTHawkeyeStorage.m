@@ -42,6 +42,7 @@
 
 NSTimeInterval kMTHawkeyeLogExpiredTime = 7 * 24 * 60 * 60;
 NSString *const kMTHawkeyeCollectionKeyValueRecordsFileName = @"records";
+NSUInteger kMTHawkeyeLogStoreMaxLength = 16 * 1024;
 
 @interface MTHawkeyeStorage ()
 
@@ -120,7 +121,7 @@ NSString *const kMTHawkeyeCollectionKeyValueRecordsFileName = @"records";
     line[offset] = '\0';
 
 #ifdef DEBUG
-    NSAssert(lineLength < 16 * 1024, @"line lenght should less than 16KB");
+    NSAssert(lineLength < kMTHawkeyeLogStoreMaxLength, @"line length should less than 16KB");
 #endif
 
     [self.collectionKeyValueFile appendUTF8Text:line];

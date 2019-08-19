@@ -134,7 +134,10 @@
 - (void)storeANRRecord:(MTHANRRecord *)anrRecord {
     NSString *curTime = [NSString stringWithFormat:@"%@", @([MTHawkeyeUtility currentTime])];
 
-    NSMutableArray<NSDictionary *> *stacks = [NSMutableArray array];
+    // if total strings > 16kB should seperate it
+    NSMutableArray<NSDictionary *> *safeLengthStacks = [NSMutableArray array];
+    NSMutableArray<NSMutableArray<NSDictionary *> *> *safeLengthStacksArrary =[NSMutableArray array];
+    NSUInteger estimateLength = 1024;
     for (MTHANRMainThreadStallingSnapshot *rawRecord in anrRecord.stallingSnapshots) {
         NSMutableString *stackInStr = [[NSMutableString alloc] init];
         for (int i = 0; i < rawRecord->stackframesSize; ++i) {
@@ -151,22 +154,35 @@
             @"capturedCount" : @(rawRecord.capturedCount),
             @"threadCount" : @(rawRecord.totalThreadCount),
         };
-        [stacks addObject:dict];
+        [safeLengthStacks addObject:dict];
+        estimateLength += stackInStr.length;
+        
+        if (kMTHawkeyeLogStoreMaxLength <= estimateLength) {
+            estimateLength = 1024;
+            [safeLengthStacksArrary addObject:safeLengthStacks];
+            safeLengthStacks = [NSMutableArray array];
+        }
     }
-
-    NSDictionary *dict = @{
-        @"duration" : @(anrRecord.durationInSeconds * 1000),
-        @"startFrom" : @(anrRecord.startFrom),
-        @"inBackground" : @(anrRecord.isInBackground),
-        @"stacks" : stacks
-    };
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict.copy options:0 error:&error];
-    if (!error) {
-        NSString *value = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        [[MTHawkeyeStorage shared] asyncStoreValue:value withKey:curTime inCollection:@"anr"];
-    } else {
-        MTHLogWarn(@"[storage] store anr record failed: %@", error.localizedDescription);
+    
+    if ([safeLengthStacks count]) {
+        [safeLengthStacksArrary addObject:safeLengthStacks];
+    }
+    
+    for (NSMutableArray<NSDictionary *> *stacks in safeLengthStacksArrary) {
+        NSDictionary *dict = @{
+            @"duration" : @(anrRecord.durationInSeconds * 1000),
+            @"startFrom" : @(anrRecord.startFrom),
+            @"inBackground" : @(anrRecord.isInBackground),
+            @"stacks" : stacks
+        };
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict.copy options:0 error:&error];
+        if (!error) {
+            NSString *value = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            [[MTHawkeyeStorage shared] asyncStoreValue:value withKey:curTime inCollection:@"anr"];
+        } else {
+            MTHLogWarn(@"[storage] store anr record failed: %@", error.localizedDescription);
+        }
     }
 }
 
