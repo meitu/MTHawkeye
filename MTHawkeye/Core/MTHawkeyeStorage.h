@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSTimeInterval kMTHawkeyeLogExpiredTime;                     /**< default: 1 week */
 extern NSString *const kMTHawkeyeCollectionKeyValueRecordsFileName; /**< "records" */
-
+extern NSUInteger kMTHawkeyeLogStoreMaxLength;// Limit in 16 KB for each one append action
 
 /****************************************************************************/
 #pragma mark -
