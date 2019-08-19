@@ -137,7 +137,7 @@
     // if total strings > 16kB should seperate it
     NSMutableArray<NSDictionary *> *safeLengthStacks = [NSMutableArray array];
     NSMutableArray<NSMutableArray<NSDictionary *> *> *safeLengthStacksArrary =[NSMutableArray array];
-    NSUInteger estimateLength = 1024;
+    NSUInteger estimateLength = 0;
     for (MTHANRMainThreadStallingSnapshot *rawRecord in anrRecord.stallingSnapshots) {
         NSMutableString *stackInStr = [[NSMutableString alloc] init];
         for (int i = 0; i < rawRecord->stackframesSize; ++i) {
@@ -155,10 +155,10 @@
             @"threadCount" : @(rawRecord.totalThreadCount),
         };
         [safeLengthStacks addObject:dict];
-        estimateLength += stackInStr.length;
+        estimateLength += 150 + stackInStr.length; // other string estimate length in 150 Bytes
         
         if (kMTHawkeyeLogStoreMaxLength <= estimateLength) {
-            estimateLength = 1024;
+            estimateLength = 0;
             [safeLengthStacksArrary addObject:safeLengthStacks];
             safeLengthStacks = [NSMutableArray array];
         }
