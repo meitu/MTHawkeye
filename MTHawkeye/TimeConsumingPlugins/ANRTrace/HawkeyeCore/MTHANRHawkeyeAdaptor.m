@@ -157,7 +157,6 @@
             @"capturedCount" : @(rawRecord.capturedCount),
             @"threadCount" : @(rawRecord.totalThreadCount),
         };
-        [safeLengthStacks addObject:dict];
         estimateLength += 150 + stackInStr.length; // other string estimate length in 150 Bytes
         
         if (kMTHawkeyeLogStoreMaxLength <= estimateLength) {
@@ -175,6 +174,8 @@
             estimateLength = 0;
             safeLengthStacks = [NSMutableArray array];
         }
+        
+        [safeLengthStacks addObject:dict];
     }
     
     if ([safeLengthStacks count]) {
