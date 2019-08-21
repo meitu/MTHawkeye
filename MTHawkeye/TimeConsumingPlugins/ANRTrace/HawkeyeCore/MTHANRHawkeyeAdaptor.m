@@ -211,12 +211,14 @@
 }
 
 + (NSArray<MTHANRRecord *> *)readANRRecords {
-    NSArray *times;
+    NSArray *keys;
     NSArray *anrRecordsInJSON;
-    [[MTHawkeyeStorage shared] readKeyValuesInCollection:@"anr" keys:&times values:&anrRecordsInJSON];
+    [[MTHawkeyeStorage shared] readKeyValuesInCollection:@"anr" keys:&keys values:&anrRecordsInJSON];
 
     NSMutableArray *anrRecords = @[].mutableCopy;
-    for (NSString *recordInJSON in anrRecordsInJSON) {
+    NSMutableArray *anrRecordKeys = [NSMutableArray arrayWithArray:keys];
+    for (NSUInteger index = 0; index < anrRecordsInJSON.count; index++) {
+        NSString *recordInJSON = anrRecordsInJSON[index];
         NSData *data = [recordInJSON dataUsingEncoding:NSUTF8StringEncoding];
         NSError *error;
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
@@ -262,11 +264,55 @@
             record.stallingSnapshots = rawReocrds;
             [anrRecords addObject:record];
         } else {
+            [anrRecordKeys removeObjectAtIndex:index];
             MTHLogWarn(@"[storage] read anr record failed, %@", error);
         }
     }
+    
+    NSArray<MTHANRRecord *> *records = anrRecords.copy;
+    NSMutableDictionary<NSString *, NSMutableArray *> *dic = [NSMutableDictionary dictionary];
+    for (NSUInteger index = 0; index < anrRecordKeys.count; index++) {
+        NSString *anrKey = anrRecordKeys[index];
+        NSString *timeKey = [[anrKey componentsSeparatedByString:@"_"] firstObject];
+        NSMutableArray *sametimeRecords = [dic objectForKey:timeKey];
+        if (!sametimeRecords) {
+            sametimeRecords = [NSMutableArray array];
+            [dic setObject:sametimeRecords forKey:timeKey];
+        }
+        [sametimeRecords addObject:records[index]];
+    }
+    
+    NSMutableArray<MTHANRRecord *> *resultRecords = [NSMutableArray array];
+    NSArray<NSMutableArray *> *categoryRecords = [dic allValues];
+    for (NSMutableArray<MTHANRRecord *> *sametimeRecords in categoryRecords) {
+        if (sametimeRecords.count == 1) {
+            [resultRecords addObject:[sametimeRecords firstObject]];
+        } else {
+            MTHANRRecord *record = [[MTHANRRecord alloc] init];
+            NSMutableArray<MTHANRMainThreadStallingSnapshot *> *rawReocrds = [NSMutableArray array];
+            for (MTHANRRecord *sameRecord in sametimeRecords) {
+                [rawReocrds addObjectsFromArray:sameRecord.stallingSnapshots];
+                record.durationInSeconds += sameRecord.durationInSeconds;
+            }
+            [rawReocrds sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+                MTHANRMainThreadStallingSnapshot *record1 = obj1;
+                MTHANRMainThreadStallingSnapshot *record2 = obj2;
+                if (record1.time < record2.time) {
+                    return NSOrderedAscending;
+                } else if (record1.time > record2.time) {
+                    return NSOrderedDescending;
+                }
+                return NSOrderedSame;
+            }];
+            NSNumber *minStartFrom = [sametimeRecords valueForKeyPath:@"@min.startFrom"];
+            record.startFrom = minStartFrom.doubleValue;
+            record.isInBackground = [[sametimeRecords firstObject] isInBackground];
+            record.stallingSnapshots = rawReocrds;
+            [resultRecords addObject:record];
+        }
+    }
 
-    return anrRecords.copy;
+    return resultRecords.copy;
 }
 
 @end
