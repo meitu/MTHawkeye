@@ -202,7 +202,8 @@
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict.copy options:0 error:&error];
         if (!error) {
             NSString *value = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-            [[MTHawkeyeStorage shared] asyncStoreValue:value withKey:curTime inCollection:@"anr"];
+            NSString *anrRecordKey = [NSString stringWithFormat:@"%@_%ld", curTime, index];
+            [[MTHawkeyeStorage shared] asyncStoreValue:value withKey:anrRecordKey inCollection:@"anr"];
         } else {
             MTHLogWarn(@"[storage] store anr record failed: %@", error.localizedDescription);
         }
