@@ -202,7 +202,7 @@
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict.copy options:0 error:&error];
         if (!error) {
             NSString *value = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-            NSString *anrRecordKey = [NSString stringWithFormat:@"%@_%ld", curTime, index];
+            NSString *anrRecordKey = [NSString stringWithFormat:@"%@_%lu", curTime, (unsigned long)index];
             [[MTHawkeyeStorage shared] asyncStoreValue:value withKey:anrRecordKey inCollection:@"anr"];
         } else {
             MTHLogWarn(@"[storage] store anr record failed: %@", error.localizedDescription);
@@ -289,17 +289,17 @@
             [resultRecords addObject:[sametimeRecords firstObject]];
         } else {
             MTHANRRecord *record = [[MTHANRRecord alloc] init];
-            NSMutableArray<MTHANRMainThreadStallingSnapshot *> *rawReocrds = [NSMutableArray array];
-            for (MTHANRRecord *sameRecord in sametimeRecords) {
-                [rawReocrds addObjectsFromArray:sameRecord.stallingSnapshots];
-                record.durationInSeconds += sameRecord.durationInSeconds;
+            NSMutableArray<MTHANRMainThreadStallingSnapshot *> *rawRecords = [NSMutableArray array];
+            for (MTHANRRecord *sametimeRecord in sametimeRecords) {
+                [rawRecords addObjectsFromArray:sametimeRecord.stallingSnapshots];
+                record.durationInSeconds += sametimeRecord.durationInSeconds;
             }
-            [rawReocrds sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-                MTHANRMainThreadStallingSnapshot *record1 = obj1;
-                MTHANRMainThreadStallingSnapshot *record2 = obj2;
-                if (record1.time < record2.time) {
+            [rawRecords sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+                MTHANRMainThreadStallingSnapshot *rawRecord1 = obj1;
+                MTHANRMainThreadStallingSnapshot *rawRecord2 = obj2;
+                if (rawRecord1.time < rawRecord2.time) {
                     return NSOrderedAscending;
-                } else if (record1.time > record2.time) {
+                } else if (rawRecord1.time > rawRecord2.time) {
                     return NSOrderedDescending;
                 }
                 return NSOrderedSame;
@@ -307,7 +307,7 @@
             NSNumber *minStartFrom = [sametimeRecords valueForKeyPath:@"@min.startFrom"];
             record.startFrom = minStartFrom.doubleValue;
             record.isInBackground = [[sametimeRecords firstObject] isInBackground];
-            record.stallingSnapshots = rawReocrds;
+            record.stallingSnapshots = rawRecords;
             [resultRecords addObject:record];
         }
     }
