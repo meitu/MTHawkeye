@@ -49,7 +49,7 @@ ANR 的数据存储在 [Records 文件](./../hawkeye-storage-cn.md#0x02-内置�
     - `threadCount`: 当前线程数量
     - `time`: 这个卡顿堆栈首次记录时间戳（秒)
     - `titleframe`: 卡顿堆栈标题
-- `startFrom`: 卡顿开始的时间戳（毫秒）
+- `startFrom`: 卡顿开始的时间戳（秒）
 
 示例：
 

@@ -36,7 +36,7 @@ ANR records is store under [Records file](./../hawkeye-storage.md#0x02-built-in-
     - `threadCount`: current thread count
     - `time`: the time stalling event generated
     - `titleframe`: stall event stack title string
-- `startFrom`: stalling start time, in millisecond
+- `startFrom`: stalling start time, in seconds
 
 examples:
 

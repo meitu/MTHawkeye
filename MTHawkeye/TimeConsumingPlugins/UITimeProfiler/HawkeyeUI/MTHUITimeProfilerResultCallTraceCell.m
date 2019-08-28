@@ -14,7 +14,7 @@
 #import "MTHCallTraceTimeCostModel.h"
 
 #import <MTHawkeye/MTHUISkeletonUtility.h>
-
+#import "UIColor+MTHawkeye.h"
 
 static CGFloat kTimeCostLabelFont = 13.f;
 static CGFloat kTimeCostLabelHeight = 15.f;
@@ -208,7 +208,7 @@ static CGFloat kMarginHorz = 20.f;
     if (_callInfoLabel == nil) {
         _callInfoLabel = [[UILabel alloc] init];
         _callInfoLabel.font = [MTHUISkeletonUtility codeFontWithSize:kCallInfoLableFont];
-        _callInfoLabel.textColor = [UIColor colorWithWhite:.2f alpha:1.f];
+        _callInfoLabel.textColor = [UIColor mth_dynamicComplementaryColor:[UIColor colorWithWhite:.2f alpha:1.f]];
     }
     return _callInfoLabel;
 }
@@ -217,7 +217,7 @@ static CGFloat kMarginHorz = 20.f;
     if (_subCallInfoLabel == nil) {
         _subCallInfoLabel = [[UILabel alloc] init];
         _subCallInfoLabel.font = [MTHUISkeletonUtility codeFontWithSize:kSubCallInfoLabelFont];
-        _subCallInfoLabel.textColor = [UIColor colorWithWhite:.2f alpha:1.f];
+        _subCallInfoLabel.textColor = [UIColor mth_dynamicComplementaryColor:[UIColor colorWithWhite:.2f alpha:1.f]];
         _subCallInfoLabel.numberOfLines = 0;
     }
     return _subCallInfoLabel;

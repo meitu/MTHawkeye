@@ -507,6 +507,11 @@ const NSString *kMTHFloatingWidgetRaiseWarningParamsPanelIDKey = @"related-panel
     }
 }
 
+- (void)setCurrentExpandController:(UIViewController *)currentExpandController {
+    _currentExpandController = currentExpandController;
+    _currentExpandController.modalPresentationStyle = UIModalPresentationFullScreen;
+}
+
 // MARK: -
 
 static void *WindowKVOContext = &WindowKVOContext;
