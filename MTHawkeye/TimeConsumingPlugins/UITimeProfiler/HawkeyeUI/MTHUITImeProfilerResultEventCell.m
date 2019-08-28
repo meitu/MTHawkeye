@@ -13,7 +13,7 @@
 #import "MTHUITImeProfilerResultEventCell.h"
 #import <MTHawkeye/MTHawkeyeUtility.h>
 #import "MTHTimeRecord.h"
-
+#import "UIColor+MTHawkeye.h"
 
 #define kEventLabelFont 11
 #define kEventExtraLabelFont 11
@@ -133,7 +133,8 @@
     if (_eventLabel == nil) {
         _eventLabel = [[UILabel alloc] init];
         _eventLabel.font = [UIFont systemFontOfSize:kEventLabelFont];
-        _eventLabel.textColor = [UIColor colorWithWhite:.2f alpha:1.f];
+        _eventLabel.textColor = [UIColor mth_dynamicLightColor:[UIColor colorWithWhite:.2f alpha:1.f]
+                                                     darkColor:[UIColor colorWithWhite:.8f alpha:1.f]];
     }
     return _eventLabel;
 }
@@ -142,7 +143,8 @@
     if (_extraLabel == nil) {
         _extraLabel = [[UILabel alloc] init];
         _extraLabel.font = [UIFont systemFontOfSize:kEventExtraLabelFont];
-        _extraLabel.textColor = [UIColor colorWithWhite:.2f alpha:1.f];
+        _extraLabel.textColor = [UIColor mth_dynamicLightColor:[UIColor colorWithWhite:.2f alpha:1.f]
+                                                     darkColor:[UIColor colorWithWhite:.8f alpha:1.f]];
         _extraLabel.numberOfLines = 0;
     }
     return _extraLabel;

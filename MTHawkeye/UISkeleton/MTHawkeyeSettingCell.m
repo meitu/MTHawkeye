@@ -12,6 +12,7 @@
 
 #import "MTHawkeyeSettingCell.h"
 #import "MTHawkeyeSettingTableEntity.h"
+#import "UIColor+MTHawkeye.h"
 
 @interface MTHawkeyeSettingCell () <MTHawkeyeSettingCellEntityDelegate>
 
@@ -120,7 +121,8 @@
     if (_titleLabel == nil) {
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.font = [UIFont systemFontOfSize:17];
-        _titleLabel.textColor = [UIColor colorWithRed:0.0118 green:0.0118 blue:0.0118 alpha:1];
+        _titleLabel.textColor = [UIColor mth_dynamicComplementaryColor:[UIColor colorWithRed:0.0118 green:0.0118 blue:0.0118 alpha:1]];
+        
     }
     return _titleLabel;
 }

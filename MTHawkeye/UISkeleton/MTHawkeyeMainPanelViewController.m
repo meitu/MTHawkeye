@@ -16,6 +16,7 @@
 #import "MTHawkeyeSettingViewController.h"
 #import "MTHawkeyeUIClient.h"
 #import "MTHawkeyeUserDefaults+UISkeleton.h"
+#import "UIColor+MTHawkeye.h"
 
 
 @interface MTHawkeyeUIClient (private_declare)
@@ -37,11 +38,11 @@
     if ((self = [super init])) {
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.font = [UIFont systemFontOfSize:17];
-        _titleLabel.textColor = [UIColor colorWithRed:0.0118 green:0.0118 blue:0.0118 alpha:1];
+        _titleLabel.textColor = [UIColor mth_dynamicComplementaryColor:[UIColor colorWithRed:0.0118 green:0.0118 blue:0.0118 alpha:1]];
 
         _pointingView = [[UILabel alloc] init];
         _pointingView.font = [UIFont systemFontOfSize:17];
-        _pointingView.textColor = [UIColor colorWithRed:0.0118 green:0.0118 blue:0.0118 alpha:1];
+        _pointingView.textColor = [UIColor mth_dynamicComplementaryColor:[UIColor colorWithRed:0.0118 green:0.0118 blue:0.0118 alpha:1]];
         _pointingView.text = @"▾";
         [_pointingView sizeToFit];
 
