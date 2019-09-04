@@ -136,10 +136,10 @@
 
     // if total strings > 16kB should seperate it
     NSMutableArray<NSDictionary *> *safeLengthStacks = [NSMutableArray array];
-    NSMutableArray<NSMutableArray<NSDictionary *> *> *safeLengthStacksArrary =[NSMutableArray array];
+    NSMutableArray<NSMutableArray<NSDictionary *> *> *safeLengthStacksArrary = [NSMutableArray array];
     NSMutableArray<NSNumber *> *stacksDurationArrary = [NSMutableArray array];
     NSUInteger estimateLength = 0, currentDuration = 0;
-    
+
     for (NSUInteger index = 0; index < anrRecord.stallingSnapshots.count; index++) {
         MTHANRMainThreadStallingSnapshot *rawRecord = anrRecord.stallingSnapshots[index];
         NSMutableString *stackInStr = [[NSMutableString alloc] init];
@@ -158,7 +158,7 @@
             @"threadCount" : @(rawRecord.totalThreadCount),
         };
         estimateLength += 150 + stackInStr.length; // other string estimate length in 150 Bytes
-        
+
         if (kMTHawkeyeLogStoreMaxLength <= estimateLength) {
             NSTimeInterval startFrom = ((NSNumber *)[[safeLengthStacks firstObject] objectForKey:@"time"]).doubleValue;
             NSTimeInterval duration = 0;
@@ -174,15 +174,15 @@
             estimateLength = 0;
             safeLengthStacks = [NSMutableArray array];
         }
-        
+
         [safeLengthStacks addObject:dict];
     }
-    
+
     if ([safeLengthStacks count]) {
         [stacksDurationArrary addObject:@(anrRecord.durationInSeconds - currentDuration)];
         [safeLengthStacksArrary addObject:safeLengthStacks];
     }
-    
+
     NSTimeInterval durationInSeconds = anrRecord.durationInSeconds;
     NSTimeInterval startFromInSeconds = anrRecord.startFrom;
     for (NSUInteger index = 0; index < safeLengthStacksArrary.count; index++) {
@@ -191,7 +191,7 @@
             startFromInSeconds = ((NSNumber *)[[stacks firstObject] objectForKey:@"time"]).doubleValue;
             durationInSeconds = [stacksDurationArrary objectAtIndex:index].doubleValue;
         }
-        
+
         NSDictionary *dict = @{
             @"duration" : @(durationInSeconds * 1000),
             @"startFrom" : @(startFromInSeconds),
@@ -268,7 +268,7 @@
             MTHLogWarn(@"[storage] read anr record failed, %@", error);
         }
     }
-    
+
     NSArray<MTHANRRecord *> *records = anrRecords.copy;
     NSMutableDictionary<NSString *, NSMutableArray *> *dic = [NSMutableDictionary dictionary];
     for (NSUInteger index = 0; index < anrRecordKeys.count; index++) {
@@ -281,7 +281,7 @@
         }
         [sametimeRecords addObject:records[index]];
     }
-    
+
     NSMutableArray<MTHANRRecord *> *resultRecords = [NSMutableArray array];
     NSArray<NSMutableArray *> *categoryRecords = [dic allValues];
     for (NSMutableArray<MTHANRRecord *> *sametimeRecords in categoryRecords) {
@@ -294,7 +294,7 @@
                 [rawRecords addObjectsFromArray:sametimeRecord.stallingSnapshots];
                 record.durationInSeconds += sametimeRecord.durationInSeconds;
             }
-            [rawRecords sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+            [rawRecords sortUsingComparator:^NSComparisonResult(id _Nonnull obj1, id _Nonnull obj2) {
                 MTHANRMainThreadStallingSnapshot *rawRecord1 = obj1;
                 MTHANRMainThreadStallingSnapshot *rawRecord2 = obj2;
                 if (rawRecord1.time < rawRecord2.time) {

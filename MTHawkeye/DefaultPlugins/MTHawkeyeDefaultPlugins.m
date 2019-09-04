@@ -27,8 +27,8 @@
 #import <MTHawkeye/MTHObjcCallTraceHawkeyeAdaptor.h>
 #import <MTHawkeye/MTHUITimeProfilerHawkeyeAdaptor.h>
 #import <MTHawkeye/MTHUITimeProfilerHawkeyeUI.h>
-#import <MTHawkeye/MTHawkeyeUserDefaults+UITimeProfiler.h>
 #import <MTHawkeye/MTHUIViewControllerProfile.h>
+#import <MTHawkeye/MTHawkeyeUserDefaults+UITimeProfiler.h>
 
 #import <MTHawkeye/MTHCPUTraceHawkeyeAdaptor.h>
 #import <MTHawkeye/MTHCPUTraceHawkeyeUI.h>

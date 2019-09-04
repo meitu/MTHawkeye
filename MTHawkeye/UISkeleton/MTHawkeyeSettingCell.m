@@ -122,7 +122,6 @@
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.font = [UIFont systemFontOfSize:17];
         _titleLabel.textColor = [UIColor mth_dynamicComplementaryColor:[UIColor colorWithRed:0.0118 green:0.0118 blue:0.0118 alpha:1]];
-        
     }
     return _titleLabel;
 }

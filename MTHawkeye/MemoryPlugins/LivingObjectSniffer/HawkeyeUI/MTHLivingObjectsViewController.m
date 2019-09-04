@@ -21,9 +21,9 @@
 #import "MTHawkeyeUserDefaults+LivingObjectsSniffer.h"
 #import "MTHawkeyeUtility.h"
 #import "MTHawkeyeWebViewController.h"
+#import "UIColor+MTHawkeye.h"
 #import "UITableView+MTHEmptyTips.h"
 #import "UIViewController+MTHawkeyeLayoutSupport.h"
-#import "UIColor+MTHawkeye.h"
 
 @interface MTHLivingObjectsViewController () <MTHMonitorChartViewDelegate, MTHLivingObjectSnifferDelegate, UITableViewDataSource, UITableViewDelegate>
 
