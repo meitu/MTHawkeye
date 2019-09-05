@@ -127,10 +127,9 @@
 - (void)fpsValueDidChanged:(NSInteger)FPSValue {
 }
 
-- (void)gpuImageDisplayingChanged:(BOOL)isDisplaying {
+- (void)glesRenderer:(id)renderer displayStart:(BOOL)startDisplay {
 }
 
-- (void)gpuImageFPSValueDidChanged:(NSInteger)gpuImageFPSValue {
+- (void)glesRenderer:(id)renderer fpsValueChanged:(NSInteger)fpsValue {
 }
-
 @end

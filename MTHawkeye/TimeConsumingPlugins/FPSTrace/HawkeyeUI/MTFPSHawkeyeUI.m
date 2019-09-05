@@ -112,12 +112,12 @@
     [self updateFPSWith:fpsStr];
 }
 
-- (void)gpuImageDisplayingChanged:(BOOL)isDisplay {
+- (void)glesRenderer:(id)renderer displayStart:(BOOL)startDisplay {
     [self updateGPUImageFPSWith:nil];
 }
 
-- (void)gpuImageFPSValueDidChanged:(NSInteger)gpuImageFPSValue {
-    NSString *fpsStr = [NSString stringWithFormat:@"%@", @(gpuImageFPSValue)];
+- (void)glesRenderer:(id)renderer fpsValueChanged:(NSInteger)fpsValue {
+    NSString *fpsStr = [NSString stringWithFormat:@"%@", @(fpsValue)];
     [self updateGPUImageFPSWith:fpsStr];
 }
 

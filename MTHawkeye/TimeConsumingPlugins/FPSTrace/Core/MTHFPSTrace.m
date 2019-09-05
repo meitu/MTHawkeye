@@ -9,36 +9,40 @@
 // Created by: YWH
 //
 
-
 #import "MTHFPSTrace.h"
-
-#import <sys/time.h>
-
 #import <MTHawkeye/MTHawkeyeHooking.h>
 #import <MTHawkeye/MTHawkeyeSignPosts.h>
 #import <MTHawkeye/MTHawkeyeWeakProxy.h>
+#import <sys/time.h>
 
+@interface MTHFPSGLRenderCounter : NSObject
+@property (nonatomic, assign) BOOL isStartRender;
+@property (nonatomic, assign) NSUInteger renderCount;
+@property (nonatomic, assign) NSUInteger signpostId;
+@property (nonatomic, assign) NSUInteger fpsValue;
+@property (nonatomic, strong) NSValue *lastRenderTime;
+@end
+
+@implementation MTHFPSGLRenderCounter
+
+@end
 
 @interface MTHFPSTrace ()
-
 @property (nonatomic, assign) BOOL isRunning;
 @property (nonatomic, assign) NSInteger fpsValue;
-
 @property (nonatomic, strong) CADisplayLink *displayLink;
+@property (nonatomic, assign) NSUInteger fpsTickCount;
+@property (nonatomic, assign) NSTimeInterval fpsTickLastTime;
 
 @property (nonatomic, assign) BOOL gpuImageViewFPSEnable;
 @property (nonatomic, assign) BOOL gpuImageViewDisplaying;
 @property (nonatomic, assign) NSInteger gpuImageFPSValue;
-
 @property (nonatomic, strong) NSHashTable<id<MTHFPSTraceDelegate>> *delegates;
 
+@property (nonatomic, strong) NSArray<NSValue *> *renderInfos;
 @end
 
-
-@implementation MTHFPSTrace {
-    NSUInteger _count;        // 记录一定时间内总共刷新了多少帧
-    NSTimeInterval _lastTime; // 起始记录的时间戳
-}
+@implementation MTHFPSTrace
 
 - (void)dealloc {
     [_displayLink invalidate];
@@ -53,14 +57,23 @@
     return sharedInstance;
 }
 
-- (CADisplayLink *)displayLink {
-    if (!_displayLink) {
-        _displayLink = [CADisplayLink displayLinkWithTarget:[MTHawkeyeWeakProxy proxyWithTarget:self] selector:@selector(tick:)];
+#pragma mark -
++ (void)registerGLESRenderInfo:(MTHFPSGLRenderInfo)renderInfo {
+    if (!renderInfo.rendererClass || !renderInfo.startRenderSEL || !renderInfo.endRenderSEL || !renderInfo.renderProcessSEL) {
+        return;
     }
-    return _displayLink;
+
+    if (![renderInfo.rendererClass instancesRespondToSelector:renderInfo.startRenderSEL] || ![renderInfo.rendererClass instancesRespondToSelector:renderInfo.endRenderSEL] || ![renderInfo.rendererClass instancesRespondToSelector:renderInfo.renderProcessSEL]) {
+        return;
+    }
+
+    NSValue *value = [NSValue value:&renderInfo withObjCType:@encode(MTHFPSGLRenderInfo)];
+    if (![MTHFPSTrace shared].renderInfos) {
+        [MTHFPSTrace shared].renderInfos = [NSArray array];
+    }
+    [[[MTHFPSTrace shared] mutableArrayValueForKey:@"renderInfos"] addObject:value];
 }
 
-// MARK: - delegates
 - (void)addDelegate:(id<MTHFPSTraceDelegate>)delegate {
     if (!delegate) {
         return;
@@ -79,56 +92,65 @@
     }
 }
 
-// MARK: -
 - (void)start {
     [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     self.isRunning = YES;
-
     self.gpuImageViewDisplaying = NO;
 
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self trackGPUImagePresentUnderClass:NSClassFromString(@"GPUImageView")];
-        [self trackGPUImagePresentUnderClass:NSClassFromString(@"MTCameraGPUImageView")];
+        [MTHFPSTrace registerGLESRenderInfo:(MTHFPSGLRenderInfo){
+                                                NSClassFromString(@"GPUImageView"),
+                                                NSSelectorFromString(@"createDisplayFramebuffer"),
+                                                NSSelectorFromString(@"destroyDisplayFramebuffer"),
+                                                NSSelectorFromString(@"presentFramebuffer")}];
+
+        [MTHFPSTrace registerGLESRenderInfo:(MTHFPSGLRenderInfo){
+                                                NSClassFromString(@"MTCameraGPUImageView"),
+                                                NSSelectorFromString(@"createDisplayFramebuffer"),
+                                                NSSelectorFromString(@"destroyDisplayFramebuffer"),
+                                                NSSelectorFromString(@"presentFramebuffer")}];
+
+        for (NSValue *value in self.renderInfos) {
+            MTHFPSGLRenderInfo renderInfo;
+            [value getValue:&renderInfo];
+
+            if ([NSStringFromClass(renderInfo.rendererClass) isEqualToString:@"GPUImageView"] ||
+                [NSStringFromClass(renderInfo.rendererClass) isEqualToString:@"MTCameraGPUImageView"]) {
+                self.gpuImageViewFPSEnable = YES;
+            }
+
+            SEL swizzledSel = [MTHawkeyeHooking swizzledSelectorForSelector:renderInfo.startRenderSEL];
+            void (^swizzleStartBlock)(id) = ^void(id obj) {
+                ((void (*)(id, SEL))objc_msgSend)(obj, swizzledSel);
+                [self glesRenderer:obj start:YES];
+            };
+            [MTHawkeyeHooking replaceImplementationOfKnownSelector:renderInfo.startRenderSEL
+                                                           onClass:renderInfo.rendererClass
+                                                         withBlock:swizzleStartBlock
+                                                  swizzledSelector:swizzledSel];
+
+            SEL swizzledSel1 = [MTHawkeyeHooking swizzledSelectorForSelector:renderInfo.endRenderSEL];
+            void (^swizzleEndBlock)(id) = ^void(id obj) {
+                ((void (*)(id, SEL))objc_msgSend)(obj, swizzledSel1);
+                [self glesRenderer:obj start:NO];
+            };
+            [MTHawkeyeHooking replaceImplementationOfKnownSelector:renderInfo.endRenderSEL
+                                                           onClass:renderInfo.rendererClass
+                                                         withBlock:swizzleEndBlock
+                                                  swizzledSelector:swizzledSel1];
+
+            SEL swizzledSel2 = [MTHawkeyeHooking swizzledSelectorForSelector:renderInfo.renderProcessSEL];
+            void (^swizzleRenderBlock)(id) = ^void(id obj) {
+                ((void (*)(id, SEL))objc_msgSend)(obj, swizzledSel2);
+                [self glesRenderProcess:obj];
+            };
+            [MTHawkeyeHooking replaceImplementationOfKnownSelector:renderInfo.renderProcessSEL
+                                                           onClass:renderInfo.rendererClass
+                                                         withBlock:swizzleRenderBlock
+                                                  swizzledSelector:swizzledSel2];
+        }
     });
-}
-
-- (void)trackGPUImagePresentUnderClass:(Class)cls {
-    SEL sel1 = NSSelectorFromString(@"createDisplayFramebuffer");
-    if (cls && sel1) {
-        SEL swizzledSel = [MTHawkeyeHooking swizzledSelectorForSelector:sel1];
-        void (^swizzleBlock)(id) = ^void(id obj) {
-            ((void (*)(id, SEL))objc_msgSend)(obj, swizzledSel);
-            [self gpuImageViewStartDisplay];
-        };
-        [MTHawkeyeHooking replaceImplementationOfKnownSelector:sel1 onClass:cls withBlock:swizzleBlock swizzledSelector:swizzledSel];
-
-        self.gpuImageViewFPSEnable = YES;
-    }
-
-    SEL sel2 = NSSelectorFromString(@"destroyDisplayFramebuffer");
-    if (cls && sel2) {
-        SEL swizzledSel = [MTHawkeyeHooking swizzledSelectorForSelector:sel2];
-        void (^swizzleBlock)(id) = ^void(id obj) {
-            ((void (*)(id, SEL))objc_msgSend)(obj, swizzledSel);
-            [self gpuImageViewEndDisplay];
-        };
-        [MTHawkeyeHooking replaceImplementationOfKnownSelector:sel2 onClass:cls withBlock:swizzleBlock swizzledSelector:swizzledSel];
-
-        self.gpuImageViewFPSEnable = YES;
-    }
-
-    SEL sel3 = NSSelectorFromString(@"presentFramebuffer");
-    if (cls && sel3) {
-        SEL swizzledSel = [MTHawkeyeHooking swizzledSelectorForSelector:sel3];
-        void (^swizzleBlock)(id) = ^void(id obj) {
-            ((void (*)(id, SEL))objc_msgSend)(obj, swizzledSel);
-            [self tickGPUImagePresent];
-        };
-        [MTHawkeyeHooking replaceImplementationOfKnownSelector:sel3 onClass:cls withBlock:swizzleBlock swizzledSelector:swizzledSel];
-
-        self.gpuImageViewFPSEnable = YES;
-    }
 }
 
 - (void)stop {
@@ -137,11 +159,12 @@
     self.isRunning = NO;
 }
 
-// MARK: - tick
-- (void)tick:(CADisplayLink *)link {
+#pragma mark - Tick Process
+#pragma mark -FPS Tick
+- (void)tickFPS:(CADisplayLink *)link {
     static NSInteger signpostId = 0;
-    if (_lastTime < DBL_EPSILON) {
-        _lastTime = link.timestamp;
+    if (_fpsTickLastTime < DBL_EPSILON) {
+        _fpsTickLastTime = link.timestamp;
         MTHSignpostStartCustom(999, signpostId, 0);
         return;
     }
@@ -150,12 +173,12 @@
     signpostId++;
     MTHSignpostStartCustom(999, signpostId, 0);
 
-    _count++;
-    NSTimeInterval delta = link.timestamp - _lastTime; // 刷新间隔
-    if (delta < 1) return;                             // 计算一秒刷新多少帧，小于1s直接返回
-    _lastTime = link.timestamp;
-    float fps = _count / delta;
-    _count = 0;
+    _fpsTickCount++;
+    NSTimeInterval delta = link.timestamp - _fpsTickLastTime;
+    if (delta < 1) return;
+    _fpsTickLastTime = link.timestamp;
+    float fps = _fpsTickCount / delta;
+    _fpsTickCount = 0;
     int newFPS = (int)round(fps);
 
     if (_fpsValue != newFPS) {
@@ -168,69 +191,150 @@
     _fpsValue = newFPS;
 }
 
-- (void)tickGPUImagePresent {
-    static struct timeval t0;
-    static NSInteger count = 0;
-    static NSInteger signpostId = 0;
-    if (t0.tv_usec == 0) {
-        gettimeofday(&t0, NULL);
-        MTHSignpostStartCustom(998, signpostId, 0);
+#pragma mark -GLES FPS Tick
+- (void)glesRenderer:(id)reciver start:(BOOL)start {
+    __block NSValue *surpportRenderer = nil;
+    __block BOOL isGPUImageViewDisplaying = NO;
+    [self.renderInfos enumerateObjectsUsingBlock:^(NSValue *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+        MTHFPSGLRenderInfo renderInfo;
+        [obj getValue:&renderInfo];
+        if ([reciver isKindOfClass:renderInfo.rendererClass]) {
+            MTHFPSGLRenderCounter *counter = [self getDynamicAttachGLESCounter:reciver];
+            counter.isStartRender = start;
+            surpportRenderer = obj;
+        }
+
+        if ([NSStringFromClass(renderInfo.rendererClass) isEqualToString:@"GPUImageView"] ||
+            [NSStringFromClass(renderInfo.rendererClass) isEqualToString:@"MTCameraGPUImageView"]) {
+            MTHFPSGLRenderCounter *counter = [self getDynamicAttachGLESCounter:reciver];
+            if (counter.isStartRender) {
+                isGPUImageViewDisplaying = YES;
+            }
+        }
+    }];
+    self.gpuImageViewDisplaying = isGPUImageViewDisplaying;
+
+    if (!surpportRenderer) {
         return;
     }
 
-    MTHSignpostEndCustom(998, signpostId, 0, 3);
-    signpostId++;
-    MTHSignpostStartCustom(998, signpostId, 0);
-
-    count++;
-
-    struct timeval t1;
-    gettimeofday(&t1, NULL);
-    double ms = (double)(t1.tv_sec - t0.tv_sec) * 1e3 + (double)(t1.tv_usec - t0.tv_usec) * 1e-3;
-    if (ms < 1000.f) return;
-
-    if (ms > 0) {
-        NSInteger newGPUImageFPS = (NSInteger)round(count * 1000.f / ms);
-        if (newGPUImageFPS != self.gpuImageFPSValue) {
-            [self.delegates.allObjects enumerateObjectsUsingBlock:^(id<MTHFPSTraceDelegate> _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-                if ([obj respondsToSelector:@selector(gpuImageFPSValueDidChanged:)]) {
-                    [obj gpuImageFPSValueDidChanged:newGPUImageFPS];
-                }
-            }];
+    for (id<MTHFPSTraceDelegate> delegate in self.delegates) {
+        if (delegate && [delegate respondsToSelector:@selector(glesRenderer:fpsValueChanged:)]) {
+            __weak typeof(reciver) weakReciver = reciver;
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [delegate glesRenderer:weakReciver displayStart:start];
+                });
+            });
         }
+    }
+}
+
+- (void)glesRenderProcess:(id)reciver {
+    __block NSValue *surpportRenderer = nil;
+    [self.renderInfos enumerateObjectsUsingBlock:^(NSValue *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+        MTHFPSGLRenderInfo renderInfo;
+        [obj getValue:&renderInfo];
+        if ([reciver isKindOfClass:renderInfo.rendererClass]) {
+            surpportRenderer = obj;
+            *stop = YES;
+        }
+    }];
+
+    if (!surpportRenderer) {
+        return;
+    }
+
+    MTHFPSGLRenderCounter *counter = [self getDynamicAttachGLESCounter:reciver];
+    if (!counter.isStartRender) {
+        return;
+    }
+
+    struct timeval lastRenderTime;
+    if (!counter.lastRenderTime) {
+        gettimeofday(&lastRenderTime, NULL);
+        MTHSignpostStartCustom(998, counter.signpostId, 0);
+        counter.lastRenderTime = [NSValue value:&lastRenderTime withObjCType:@encode(struct timeval)];
+        return;
+    }
+    [counter.lastRenderTime getValue:&lastRenderTime];
+
+    MTHSignpostEndCustom(998, counter.signpostId, 0, 3);
+    counter.signpostId++;
+    MTHSignpostStartCustom(998, counter.signpostId, 0);
+
+    counter.renderCount++;
+    struct timeval currentRenderTime;
+    gettimeofday(&currentRenderTime, NULL);
+    double differMs = (double)(currentRenderTime.tv_sec - lastRenderTime.tv_sec) * 1e3 + (double)(currentRenderTime.tv_usec - lastRenderTime.tv_usec) * 1e-3;
+    if (differMs < 1000.f) {
+        return;
+    }
+
+    if (differMs > 0) {
+        NSInteger newGPUImageFPS = (NSInteger)round(counter.renderCount * 1000.f / differMs);
+        if (newGPUImageFPS != self.gpuImageFPSValue) {
+            for (id<MTHFPSTraceDelegate> delegate in self.delegates) {
+                __weak typeof(reciver) weakReciver = reciver;
+                if (delegate && [delegate respondsToSelector:@selector(glesRenderer:fpsValueChanged:)]) {
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [delegate glesRenderer:weakReciver fpsValueChanged:newGPUImageFPS];
+                        });
+                    });
+                }
+            }
+        }
+        counter.fpsValue = newGPUImageFPS;
         self.gpuImageFPSValue = newGPUImageFPS;
     }
 
-    t0 = t1;
-    count = 0;
+    counter.lastRenderTime = [NSValue value:&currentRenderTime withObjCType:@encode(struct timeval)];
+    counter.renderCount = 0;
 }
 
-- (void)gpuImageViewStartDisplay {
-    self.gpuImageViewDisplaying = YES;
-    self.gpuImageFPSValue = 0.f;
-
-    [self notifyGPUImagePresentStatusChanged];
+#pragma mark - Private
+static void *MTHFPSGLRenderCounterPropertyKey = &MTHFPSGLRenderCounterPropertyKey;
+id mthf_glesCounterGetter(id object, SEL _cmd1) {
+    return objc_getAssociatedObject(object, MTHFPSGLRenderCounterPropertyKey);
 }
 
-- (void)gpuImageViewEndDisplay {
-    self.gpuImageViewDisplaying = NO;
-    self.gpuImageFPSValue = 0.f;
-
-    [self notifyGPUImagePresentStatusChanged];
+void mthf_glesCounterSetter(id object, SEL _cmd1, id newValue) {
+    objc_setAssociatedObject(object, MTHFPSGLRenderCounterPropertyKey, newValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)notifyGPUImagePresentStatusChanged {
-    [self.delegates.allObjects enumerateObjectsUsingBlock:^(id<MTHFPSTraceDelegate> _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-        if ([obj respondsToSelector:@selector(gpuImageDisplayingChanged:)]) {
-            [obj gpuImageDisplayingChanged:self.gpuImageViewDisplaying];
+- (MTHFPSGLRenderCounter *)getDynamicAttachGLESCounter:(id)target {
+    NSString *propertyName = @"mthGLFPSCounter";
+    SEL counterSEL = NSSelectorFromString(propertyName);
+    MTHFPSGLRenderCounter *counter = nil;
+    if ([target respondsToSelector:counterSEL]) {
+        counter = [target valueForKey:propertyName];
+        if (!counter) {
+            counter = [[MTHFPSGLRenderCounter alloc] init];
         }
-        if ([obj respondsToSelector:@selector(gpuImageFPSValueDidChanged:)]) {
-            [obj gpuImageFPSValueDidChanged:self.gpuImageFPSValue];
-        }
-    }];
+        [target setValue:counter forKey:propertyName];
+        return counter;
+    }
+
+    objc_property_attribute_t type = {"T", [[NSString stringWithFormat:@"@\"%@\"", NSStringFromClass([MTHFPSGLRenderCounter class])] UTF8String]};
+    objc_property_attribute_t strong = {"&", ""};
+    objc_property_attribute_t nonatomic = {"N", ""};
+    objc_property_attribute_t ivarAttr = {"V", [[NSString stringWithFormat:@"_%@", propertyName] UTF8String]};
+    objc_property_attribute_t attrs[] = {type, strong, nonatomic, ivarAttr};
+    BOOL addCounterProperty = class_addProperty([target class], [propertyName UTF8String], attrs, 4);
+    if (!addCounterProperty) {
+        class_replaceProperty([target class], [propertyName UTF8String], attrs, 4);
+    } else {
+        class_addMethod([target class], counterSEL, (IMP)mthf_glesCounterGetter, "@@:");
+        class_addMethod([target class], NSSelectorFromString(@"setMthGLFPSCounter:"), (IMP)mthf_glesCounterSetter, "v@:@");
+    }
+
+    counter = [[MTHFPSGLRenderCounter alloc] init];
+    [target setValue:counter forKey:propertyName];
+    return counter;
 }
 
-// MARK: - getter
+#pragma mark - Getter
 - (NSHashTable<id<MTHFPSTraceDelegate>> *)delegates {
     if (_delegates == nil) {
         _delegates = [NSHashTable weakObjectsHashTable];
@@ -238,4 +342,10 @@
     return _delegates;
 }
 
+- (CADisplayLink *)displayLink {
+    if (!_displayLink) {
+        _displayLink = [CADisplayLink displayLinkWithTarget:[MTHawkeyeWeakProxy proxyWithTarget:self] selector:@selector(tickFPS:)];
+    }
+    return _displayLink;
+}
 @end
