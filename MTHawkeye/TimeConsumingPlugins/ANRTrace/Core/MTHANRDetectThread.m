@@ -47,7 +47,7 @@
 
 @property (nonatomic, assign) float stallingThresholdInSeconds;
 @property (nonatomic, assign) float detectIntervalInSeconds;
-
+@property (nonatomic, assign) UIApplicationState applicationState;
 @end
 
 
@@ -84,6 +84,7 @@
 
     self.stallingSnapshots = [NSMutableArray array];
     self.curStallingRunloops = [NSMutableArray array];
+    self.applicationState = [UIApplication sharedApplication].applicationState;
 
     [self start];
 }
@@ -122,7 +123,7 @@
 
         BOOL isStalling = ((now - curRunloopStartFrom) >= self.stallingThresholdInSeconds);
         if (isStalling) {
-            if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+            if (self.applicationState == UIApplicationStateBackground) {
                 [self processBackgroundStillRunningWithSnapshots:self.stallingSnapshots];
             }
 
@@ -281,7 +282,7 @@
     threadStack.cpuUsed = MTHawkeyeAppStat.cpuUsedByAllThreads * 100.0f;
     threadStack.time = [MTHawkeyeUtility currentTime];
     threadStack.capturedCount = 1;
-    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+    if (self.applicationState == UIApplicationStateBackground) {
         threadStack.isInBackground = YES;
     }
     mth_stack_backtrace *stackframes = mth_malloc_stack_backtrace();
@@ -360,6 +361,8 @@
                         object:nil
                          queue:nil
                     usingBlock:^(NSNotification *_Nonnull note) {
+                        self.applicationState = [UIApplication sharedApplication].applicationState;
+                        
                         // MTHLogInfo(@"%@", mthStringFromAppLifeActivity(activity));
                         [MTHANRTracingBufferRunner traceAppLifeActivity:activity];
 
