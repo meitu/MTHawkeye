@@ -47,7 +47,6 @@
 
 @property (nonatomic, assign) float stallingThresholdInSeconds;
 @property (nonatomic, assign) float detectIntervalInSeconds;
-
 @end
 
 
@@ -89,6 +88,16 @@
 }
 
 #pragma mark - Thread Work
+- (UIApplicationState)applicationState {
+    if ([NSThread isMainThread]) {
+        return [UIApplication sharedApplication].applicationState;
+    }
+
+    UIApplicationState state = ((NSNumber *)[[UIApplication sharedApplication] valueForKey:@"applicationState"]).integerValue;
+    //    NSLog(@"kvc value:%ld, propertyValue:%ld", state, [UIApplication sharedApplication].applicationState);
+    return state;
+}
+
 - (void)start {
     pthread_mutex_init(&_curStallingRunloopsMutex, NULL);
 
@@ -122,7 +131,7 @@
 
         BOOL isStalling = ((now - curRunloopStartFrom) >= self.stallingThresholdInSeconds);
         if (isStalling) {
-            if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+            if ([self applicationState] == UIApplicationStateBackground) {
                 [self processBackgroundStillRunningWithSnapshots:self.stallingSnapshots];
             }
 
@@ -281,7 +290,7 @@
     threadStack.cpuUsed = MTHawkeyeAppStat.cpuUsedByAllThreads * 100.0f;
     threadStack.time = [MTHawkeyeUtility currentTime];
     threadStack.capturedCount = 1;
-    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+    if ([self applicationState] == UIApplicationStateBackground) {
         threadStack.isInBackground = YES;
     }
     mth_stack_backtrace *stackframes = mth_malloc_stack_backtrace();
