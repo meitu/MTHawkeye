@@ -47,7 +47,6 @@
 
 @property (nonatomic, assign) float stallingThresholdInSeconds;
 @property (nonatomic, assign) float detectIntervalInSeconds;
-@property (nonatomic, assign) UIApplicationState applicationState;
 @end
 
 
@@ -84,12 +83,21 @@
 
     self.stallingSnapshots = [NSMutableArray array];
     self.curStallingRunloops = [NSMutableArray array];
-    self.applicationState = [UIApplication sharedApplication].applicationState;
 
     [self start];
 }
 
 #pragma mark - Thread Work
+- (UIApplicationState)applicationState {
+    if ([NSThread isMainThread]) {
+        return [UIApplication sharedApplication].applicationState;
+    }
+
+    UIApplicationState state = ((NSNumber *)[[UIApplication sharedApplication] valueForKey:@"applicationState"]).integerValue;
+//    NSLog(@"kvc value:%ld, propertyValue:%ld", state, [UIApplication sharedApplication].applicationState);
+    return state;
+}
+
 - (void)start {
     pthread_mutex_init(&_curStallingRunloopsMutex, NULL);
 
@@ -123,7 +131,7 @@
 
         BOOL isStalling = ((now - curRunloopStartFrom) >= self.stallingThresholdInSeconds);
         if (isStalling) {
-            if (self.applicationState == UIApplicationStateBackground) {
+            if ([self applicationState] == UIApplicationStateBackground) {
                 [self processBackgroundStillRunningWithSnapshots:self.stallingSnapshots];
             }
 
@@ -282,7 +290,7 @@
     threadStack.cpuUsed = MTHawkeyeAppStat.cpuUsedByAllThreads * 100.0f;
     threadStack.time = [MTHawkeyeUtility currentTime];
     threadStack.capturedCount = 1;
-    if (self.applicationState == UIApplicationStateBackground) {
+    if ([self applicationState] == UIApplicationStateBackground) {
         threadStack.isInBackground = YES;
     }
     mth_stack_backtrace *stackframes = mth_malloc_stack_backtrace();
@@ -361,8 +369,6 @@
                         object:nil
                          queue:nil
                     usingBlock:^(NSNotification *_Nonnull note) {
-                        self.applicationState = [UIApplication sharedApplication].applicationState;
-                        
                         // MTHLogInfo(@"%@", mthStringFromAppLifeActivity(activity));
                         [MTHANRTracingBufferRunner traceAppLifeActivity:activity];
 
