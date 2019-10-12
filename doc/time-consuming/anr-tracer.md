@@ -26,7 +26,7 @@ When the app run into hard stall, it may killed without any logs, you can use `M
 
 ## 0x03 Storage
 
-ANR records is store under [Records file](./../hawkeye-storage.md#0x02-built-in-plugin-data-storage-instructions). Use a `collection` name `anr`, `key` as the time stalling event generated, `value` is a JSON string with the following fields:
+ANR records is store under [Records file](./../hawkeye-storage.md#0x02-built-in-plugin-data-storage-instructions). Use a `collection` name `anr`, `key` as the time stalling event generated (The version after 0.12.1 optimizes it, it will split the >16kb or more of the Carton data and store it again. The `key` will become the `timestamp_serial number`, which needs to be merged when used externally. Please refer to the merge method in `readANRRecords`), `value` is a JSON string with the following fields:
 
 - `duration`: stalling duration, in millisecond
 - `inBackground`: whether it is running in the background

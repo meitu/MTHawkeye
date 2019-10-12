@@ -40,7 +40,7 @@
 
 ## 0x03 存储说明
 
-ANR 的数据存储在 [Records 文件](./../hawkeye-storage-cn.md#0x02-内置插件存储数据说明) 下。`collection` 为 `anr`，`key` 为卡顿时间结束的时间点，`value` 为 json 字符串，字段说明如下：
+ANR 的数据存储在 [Records 文件](./../hawkeye-storage-cn.md#0x02-内置插件存储数据说明) 下。`collection` 为 `anr`，`key` 为卡顿时间结束的时间点（0.12.1之后的版本对它进行了优化，会拆分>16kb以上的卡顿数据再存储，`key`会变成`卡顿时间戳_序号`，当外部使用的时候需要进行数据合并，请参考`readANRRecords`中的合并方式）`value` 为 json 字符串，字段说明如下：
 - `duration`: 卡顿总时长（毫秒）
 - `inBackground`: 是否运行在后台
 - `stacks`: 卡顿周期内记录到的主线程堆栈
