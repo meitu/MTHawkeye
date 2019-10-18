@@ -14,11 +14,9 @@
 //#endif
 
 #import <MTHawkeye/MTHBackgroundTaskTraceAdaptor.h>
-
+#import <MTHawkeye/MTHBackgroundTaskTraceHawkeyeUI.h>
 
 @interface AppDelegate ()
-
-@property (nonatomic, strong) MTHBackgroundTaskTraceAdaptor *bgtaskTrace;
 
 @end
 
@@ -32,9 +30,8 @@
     return YES;
 }
 
-//#ifdef DEBUG
 - (void)startHawkeye {
-#if 1
+#if 0
     [self startDefaultHawkeye];
 
     // symbolics stack frames in ANR/CPU/Allocations Reports will need a remote symbolics server while the dsym is removed from app.
@@ -52,22 +49,22 @@
 
 - (void)startCustomHawkeye {
     // Background is not include in `MTHawkeye` by default, you need to add it explicitly.
-
+    MTHBackgroundTaskTraceAdaptor *backgroundTrace = [MTHBackgroundTaskTraceAdaptor new];
+    MTHBackgroundTaskTraceHawkeyeUI *backgroundTraceUI = [MTHBackgroundTaskTraceHawkeyeUI new];
+    
     [[MTHawkeyeClient shared]
         setPluginsSetupHandler:^(NSMutableArray<id<MTHawkeyePlugin>> *_Nonnull plugins) {
             [MTHawkeyeDefaultPlugins addDefaultClientPluginsInto:plugins];
 
             // add your additional plugins here.
-            self.bgtaskTrace = [[MTHBackgroundTaskTraceAdaptor alloc] init];
-            [plugins addObject:self.bgtaskTrace];
+            [plugins addObject:backgroundTrace];
         }
         pluginsCleanHandler:^(NSMutableArray<id<MTHawkeyePlugin>> *_Nonnull plugins) {
             // if you don't want to free plugins memory, remove this line.
             [MTHawkeyeDefaultPlugins cleanDefaultClientPluginsFrom:plugins];
 
             // clean your additional plugins if need.
-            [plugins removeObject:self.bgtaskTrace];
-            self.bgtaskTrace = nil;
+            [plugins removeObject:backgroundTrace];
         }];
 
     [[MTHawkeyeClient shared] startServer];
@@ -78,8 +75,8 @@
                                           defaultFloatingWidgetsPluginsInto:floatingWidgetPlugins
                                                 defaultSettingUIPluginsInto:defaultSettingUIPluginsInto];
 
-
             // add your additional plugins here.
+            [defaultSettingUIPluginsInto addObject:backgroundTraceUI];
         }
         pluginsCleanHandler:^(NSMutableArray<id<MTHawkeyeMainPanelPlugin>> *_Nonnull mainPanelPlugins, NSMutableArray<id<MTHawkeyeFloatingWidgetPlugin>> *_Nonnull floatingWidgetPlugins, NSMutableArray<id<MTHawkeyeSettingUIPlugin>> *_Nonnull defaultSettingUIPluginsInto) {
             // if you don't want to free plugins memory, remove this line.
@@ -88,12 +85,12 @@
                                                   defaultSettingUIPluginsFrom:defaultSettingUIPluginsInto];
 
             // clean your additional plugins if need.
+            [defaultSettingUIPluginsInto addObject:backgroundTraceUI];
         }];
 
     dispatch_async(dispatch_get_main_queue(), ^(void) {
         [[MTHawkeyeUIClient shared] startServer];
     });
 }
-//#endif
 
 @end

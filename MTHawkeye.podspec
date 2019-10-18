@@ -392,18 +392,25 @@ Pod::Spec.new do |s|
   # ――― BacktroundTask Tracing ―――――――――――――――――――――――――――――――――――――――――――――――――0――――――――― #
   s.subspec 'BackgroundTaskTrace' do |bg|
     bg.subspec 'Core' do |core|
-      core.public_header_files = 'MTHawkeye/EnergyPlugins/BackgroundTaskTrace/Core/*.{h}'
-      core.source_files = 'MTHawkeye/EnergyPlugins/BackgroundTaskTrace/Core/*.{h,m}'
+      core.public_header_files = 'MTHawkeye/Utils/BackgroundTaskTrace/Core/*.{h}'
+      core.source_files = 'MTHawkeye/Utils/BackgroundTaskTrace/Core/*.{h,m}'
       core.dependency 'MTHawkeye/Utils'
     end
 
     bg.subspec 'HawkeyeCore' do |hc|
-      hc.public_header_files = 'MTHawkeye/EnergyPlugins/BackgroundTaskTrace/HawkeyeCore/*.{h}'
-      hc.source_files = 'MTHawkeye/EnergyPlugins/BackgroundTaskTrace/HawkeyeCore/*.{h,m}'
+      hc.public_header_files = 'MTHawkeye/Utils/BackgroundTaskTrace/HawkeyeCore/*.{h}'
+      hc.source_files = 'MTHawkeye/Utils/BackgroundTaskTrace/HawkeyeCore/*.{h,m}'
       hc.dependency 'MTHawkeye/Core'
       hc.dependency 'MTHawkeye/StackBacktrace'
       hc.dependency 'MTHawkeye/BackgroundTaskTrace/Core'
-
+    end
+    
+    bg.subspec 'HawkeyeUI' do |ui|
+      ui.public_header_files = 'MTHawkeye/Utils/BackgroundTaskTrace/HawkeyeUI/*.{h}'
+      ui.source_files = 'MTHawkeye/Utils/BackgroundTaskTrace/HawkeyeUI/*.{h,m,mm}'
+      ui.dependency 'MTHawkeye/Core'
+      ui.dependency 'MTHawkeye/UISkeleton'
+      ui.dependency 'MTHawkeye/EnergyPlugins/CPUTrace/HawkeyeCore'
     end
   end
 
