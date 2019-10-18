@@ -107,6 +107,10 @@ MTHawkeye 简单可分为上中下三层，除了最下面的`基础层`外，�
 
 MTHawkeye 插件扩展支持了沙盒文件的 AirDrop 功能。
 
+##### # [BackgroundTask Trace](./doc/utility/background-task-trace-cn.md)
+
+`BackgoundTask trace`插件将跟踪UIBackgroundTaskIdentifier的开始/结束，在尝试查找崩溃0xbada5e47的原因时将很有用。 （直接参见使用代码）
+
 ### 桌面扩展
 
 如果需要将插件扩展到桌面端，如在桌面上查看处理插件收集到的信息，可基于各插件提供的接口获取数据，然后桥接到第三方桌面端提供的协议。如
