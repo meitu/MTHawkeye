@@ -16,12 +16,12 @@
 @implementation MTHBackgroundTaskTraceHawkeyeUI
 
 + (nonnull NSString *)sectionNameSettingsUnder {
-    return @"Utils";
+    return kMTHawkeyeUIGroupEnergy;
 }
 
 + (nonnull MTHawkeyeSettingCellEntity *)settings {
     MTHawkeyeSettingSwitcherCellEntity *entity = [[MTHawkeyeSettingSwitcherCellEntity alloc] init];
-    entity.title = @"Trace BackgroundTask";
+    entity.title = @"BackgroundTask Trace";
     entity.setupValueHandler = ^BOOL {
         return [MTHawkeyeUserDefaults shared].backgroundTaskTraceOn;
     };

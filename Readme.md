@@ -78,6 +78,10 @@ After enabling the plug-in on the automated test or online phase, without other 
 
 `CPUTrace` is used to track the CPU's continuous high-load usage, and will recording which methods are mainly called during the high-load CPU usage.
 
+##### # [BackgroundTask Trace](./doc/energy/background-task-trace.md)
+
+`BackgoundTask trace` plugin will tracing the begin/end of UIBackgroundTaskIdentifier, it would be useful when try to find out the cause of crash 0xbada5e47. (see the code for usage directly)
+
 #### Network
 
 ##### # [NetworkMonitor](./doc/network/network-monitor.md)
@@ -112,10 +116,6 @@ After enabling the plug-in on the automated test or online phase, without other 
 ##### # [FLEX](https://github.com/Flipboard/FLEX)
 
 FLEX is commonly used in daily development, MTHawkeye adds it as a plugin and extends the use of AirDrop for sandboxed files.
-
-##### # [BackgroundTask Trace](./doc/utility/background-task-trace.md)
-
-`BackgoundTask trace` plugin will tracing the begin/end of UIBackgroundTaskIdentifier, it would be useful when try to find out the cause of crash 0xbada5e47. (see the code for usage directly)
 
 ### Desktop Extension
 

@@ -33,20 +33,6 @@ PODS:
     - MTGLDebug/MRC
   - MTGLDebug/MRC (3.1.2):
     - fishhook (~> 0.2)
-  - MTHawkeye/BackgroundTaskTrace (0.12.1):
-    - MTHawkeye/BackgroundTaskTrace/Core (= 0.12.1)
-    - MTHawkeye/BackgroundTaskTrace/HawkeyeCore (= 0.12.1)
-    - MTHawkeye/BackgroundTaskTrace/HawkeyeUI (= 0.12.1)
-  - MTHawkeye/BackgroundTaskTrace/Core (0.12.1):
-    - MTHawkeye/Utils
-  - MTHawkeye/BackgroundTaskTrace/HawkeyeCore (0.12.1):
-    - MTHawkeye/BackgroundTaskTrace/Core
-    - MTHawkeye/Core
-    - MTHawkeye/StackBacktrace
-  - MTHawkeye/BackgroundTaskTrace/HawkeyeUI (0.12.1):
-    - MTHawkeye/Core
-    - MTHawkeye/EnergyPlugins/CPUTrace/HawkeyeCore
-    - MTHawkeye/UISkeleton
   - MTHawkeye/Core (0.12.1):
     - MTHawkeye/Utils
   - MTHawkeye/DefaultPlugins (0.12.1):
@@ -65,7 +51,22 @@ PODS:
     - MTHawkeye/TimeConsumingPlugins
     - MTHawkeye/UISkeleton
   - MTHawkeye/EnergyPlugins (0.12.1):
+    - MTHawkeye/EnergyPlugins/BackgroundTaskTrace (= 0.12.1)
     - MTHawkeye/EnergyPlugins/CPUTrace (= 0.12.1)
+  - MTHawkeye/EnergyPlugins/BackgroundTaskTrace (0.12.1):
+    - MTHawkeye/EnergyPlugins/BackgroundTaskTrace/Core (= 0.12.1)
+    - MTHawkeye/EnergyPlugins/BackgroundTaskTrace/HawkeyeCore (= 0.12.1)
+    - MTHawkeye/EnergyPlugins/BackgroundTaskTrace/HawkeyeUI (= 0.12.1)
+  - MTHawkeye/EnergyPlugins/BackgroundTaskTrace/Core (0.12.1):
+    - MTHawkeye/Utils
+  - MTHawkeye/EnergyPlugins/BackgroundTaskTrace/HawkeyeCore (0.12.1):
+    - MTHawkeye/Core
+    - MTHawkeye/EnergyPlugins/BackgroundTaskTrace/Core
+    - MTHawkeye/StackBacktrace
+  - MTHawkeye/EnergyPlugins/BackgroundTaskTrace/HawkeyeUI (0.12.1):
+    - MTHawkeye/Core
+    - MTHawkeye/EnergyPlugins/BackgroundTaskTrace/HawkeyeCore
+    - MTHawkeye/UISkeleton
   - MTHawkeye/EnergyPlugins/CPUTrace (0.12.1):
     - MTHawkeye/EnergyPlugins/CPUTrace/Core (= 0.12.1)
     - MTHawkeye/EnergyPlugins/CPUTrace/HawkeyeCore (= 0.12.1)
@@ -240,11 +241,10 @@ DEPENDENCIES:
   - GYHttpMock
   - MTAppenderFile (~> 0.4.0)
   - MTGLDebug
-  - MTHawkeye/BackgroundTaskTrace (from `../`)
   - MTHawkeye/DefaultPlugins (from `../`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - AFNetworking
     - AGAsyncTestHelper
     - CocoaLumberjack
@@ -269,8 +269,8 @@ SPEC CHECKSUMS:
   GYHttpMock: ad08e55ce8bde4e7f7b4d0cbc79ff23c1311658b
   MTAppenderFile: c7db8f33a8140ee2275a6200305fd11e609fae33
   MTGLDebug: 4883ba4da36f45a88e2c2d805d2b5a5b54ba5ad1
-  MTHawkeye: 9380eca4b70e46875618f4742cb8895399fe9e0a
+  MTHawkeye: 24ba418f82648958e5ff150f99740120de9b25b5
 
-PODFILE CHECKSUM: d38354cf1ef618c2dd09b7228bb0c995f7d7c949
+PODFILE CHECKSUM: d772bcb03da95f4f4008f493d829ba2e9bda6f98
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.8.4
