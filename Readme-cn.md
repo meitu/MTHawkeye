@@ -72,6 +72,10 @@ MTHawkeye 简单可分为上中下三层，除了最下面的`基础层`外，�
 
 `CPUTrace` 用于跟踪 CPU 持续高使用率，同时记录高使用率期间主要调用了哪些方法。
 
+##### # [BackgroundTask Trace](./doc/energy/background-task-trace-cn.md)
+
+`BackgoundTask trace`插件将跟踪UIBackgroundTaskIdentifier的开始/结束，在尝试查找崩溃0xbada5e47的原因时将很有用。 （直接参见使用代码）
+
 #### Network
 
 ##### # [NetworkMonitor](./doc/network/network-monitor-cn.md)
@@ -106,10 +110,6 @@ MTHawkeye 简单可分为上中下三层，除了最下面的`基础层`外，�
 ##### # [FLEX](https://github.com/Flipboard/FLEX)
 
 MTHawkeye 插件扩展支持了沙盒文件的 AirDrop 功能。
-
-##### # [BackgroundTask Trace](./doc/utility/background-task-trace-cn.md)
-
-`BackgoundTask trace`插件将跟踪UIBackgroundTaskIdentifier的开始/结束，在尝试查找崩溃0xbada5e47的原因时将很有用。 （直接参见使用代码）
 
 ### 桌面扩展
 
