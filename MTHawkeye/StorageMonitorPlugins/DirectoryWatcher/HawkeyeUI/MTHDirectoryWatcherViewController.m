@@ -164,12 +164,12 @@
 
     if (indexPath.section == 0) {
         NSString *path = [self.homeContentPaths objectAtIndex:indexPath.row];
-        [self presentFelxFileBrowserWithPath:path];
+        [self presentFlexFileBrowserWithPath:path];
     }
 
     if (indexPath.section == 1) {
         MTHDirectoryTree *data = [self.dataSource objectAtIndex:indexPath.row];
-        [self presentFelxFileBrowserWithPath:data.absolutePath];
+        [self presentFlexFileBrowserWithPath:data.absolutePath];
     }
 
     if (indexPath.section == 2) {
@@ -184,7 +184,7 @@
     }
 }
 
-- (void)presentFelxFileBrowserWithPath:(NSString *)fullPath {
+- (void)presentFlexFileBrowserWithPath:(NSString *)fullPath {
     BOOL isDir = NO;
     BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDir];
     if (!fileExist) {
