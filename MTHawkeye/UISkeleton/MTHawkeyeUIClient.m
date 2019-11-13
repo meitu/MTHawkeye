@@ -31,6 +31,11 @@
 
 #import <pthread/pthread.h>
 
+#if defined(__IPHONE_13_0)
+#define MTH_AT_LEAST_IOS13_SDK (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_13_0)
+#else
+#define MTH_AT_LEAST_IOS13_SDK NO
+#endif
 
 NSString *const kMTHawkeyeUIGroupMemory = @"Memory";
 NSString *const kMTHawkeyeUIGroupTimeConsuming = @"TimeConsuming";
@@ -363,6 +368,23 @@ const NSString *kMTHFloatingWidgetRaiseWarningParamsPanelIDKey = @"related-panel
         return;
 
     self.monitorWindow.hidden = NO;
+#if MTH_AT_LEAST_IOS13_SDK
+    if (@available(iOS 13.0, *)) {
+        // Only look for a new scene if we don't have one, or the one we have
+        // isn't the active scene
+        if (!self.monitorWindow.windowScene ||
+            self.monitorWindow.windowScene.activationState != UISceneActivationStateForegroundActive) {
+            for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
+                // Look for an active UIWindowScene
+                if (scene.activationState == UISceneActivationStateForegroundActive &&
+                    [scene isKindOfClass:[UIWindowScene class]]) {
+                    self.monitorWindow.windowScene = (UIWindowScene *)scene;
+                    break;
+                }
+            }
+        }
+    }
+#endif
 
     if (!self.floatingWidgetsDataBuild) {
         [self.floatingWidgets rebuildDatasource];
