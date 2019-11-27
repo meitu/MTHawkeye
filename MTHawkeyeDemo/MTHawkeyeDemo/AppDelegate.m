@@ -51,7 +51,7 @@
     // Background is not include in `MTHawkeye` by default, you need to add it explicitly.
     MTHBackgroundTaskTraceAdaptor *backgroundTrace = [MTHBackgroundTaskTraceAdaptor new];
     MTHBackgroundTaskTraceHawkeyeUI *backgroundTraceUI = [MTHBackgroundTaskTraceHawkeyeUI new];
-    
+
     [[MTHawkeyeClient shared]
         setPluginsSetupHandler:^(NSMutableArray<id<MTHawkeyePlugin>> *_Nonnull plugins) {
             [MTHawkeyeDefaultPlugins addDefaultClientPluginsInto:plugins];

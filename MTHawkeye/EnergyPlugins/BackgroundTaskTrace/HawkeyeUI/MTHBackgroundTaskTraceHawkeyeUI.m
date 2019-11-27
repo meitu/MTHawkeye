@@ -10,8 +10,8 @@
 //
 
 #import "MTHBackgroundTaskTraceHawkeyeUI.h"
-#import "MTHawkeyeUserDefaults+BackgroundTaskTrace.h"
 #import <MTHawkeye/MTHawkeyeSettingTableEntity.h>
+#import "MTHawkeyeUserDefaults+BackgroundTaskTrace.h"
 
 @implementation MTHBackgroundTaskTraceHawkeyeUI
 

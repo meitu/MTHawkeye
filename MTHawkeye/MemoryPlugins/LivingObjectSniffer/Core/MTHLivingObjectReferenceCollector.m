@@ -71,11 +71,11 @@
             [objectIvarInfos addObject:ivarInfo];
         }
     }
-    
+
     if (ivars != NULL) {
         free(ivars);
     }
-    
+
     const uint8_t *layout = class_getIvarLayout(cls);
     if (!layout) {
         return @[];
