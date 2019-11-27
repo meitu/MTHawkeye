@@ -23,7 +23,7 @@
 
 @property (nonatomic, strong) MTHMonitorViewCell *cell;
 @property (nonatomic, assign) BOOL widgetHidden;
-
+@property (nonatomic, strong) MTHFPSGLRenderCounter *firstActiveRenderCounter;
 @end
 
 
@@ -112,13 +112,20 @@
     [self updateFPSWith:fpsStr];
 }
 
-- (void)glesRenderer:(id)renderer displayStart:(BOOL)startDisplay {
-    [self updateGPUImageFPSWith:nil];
-}
+- (void)glRenderCounterValueChange:(MTHFPSGLRenderCounter *)rendererCounter {
+    if (self.firstActiveRenderCounter == nil) {
+        self.firstActiveRenderCounter = rendererCounter;
+    }
 
-- (void)glesRenderer:(id)renderer fpsValueChanged:(NSInteger)fpsValue {
-    NSString *fpsStr = [NSString stringWithFormat:@"%@", @(fpsValue)];
-    [self updateGPUImageFPSWith:fpsStr];
+    if ([self.firstActiveRenderCounter.identifier isEqualToString:rendererCounter.identifier]) {
+        if (!rendererCounter.isActive) {
+            self.firstActiveRenderCounter = nil;
+            [self updateGPUImageFPSWith:nil];
+        } else {
+            NSString *fpsStr = [NSString stringWithFormat:@"%@", @(rendererCounter.fpsValue)];
+            [self updateGPUImageFPSWith:rendererCounter.fpsValue > 0 ? fpsStr : nil];
+        }
+    }
 }
 
 // MARK: - view update
@@ -127,12 +134,7 @@
 }
 
 - (void)updateGPUImageFPSWith:(NSString *)gpuImageFPS {
-    if ([MTHFPSTrace shared].gpuImageViewDisplaying && [MTHFPSTrace shared].gpuImageFPSValue > 0) {
-        [self updateFPSInfoWith:nil gpuImageFPS:gpuImageFPS];
-    } else {
-        // - 为特殊字符
-        [self updateFPSInfoWith:nil gpuImageFPS:@"-"];
-    }
+    !gpuImageFPS ? [self updateFPSInfoWith:nil gpuImageFPS:@"-"] : [self updateFPSInfoWith:nil gpuImageFPS:gpuImageFPS];
 }
 
 - (void)updateFPSInfoWith:(NSString *)fps gpuImageFPS:(NSString *)gpuImageFPS {

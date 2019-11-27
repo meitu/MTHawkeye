@@ -20,6 +20,17 @@ typedef struct {
 
 @protocol MTHFPSTraceDelegate;
 
+@interface MTHFPSGLRenderCounter : NSObject
+@property (nonatomic, copy) NSString *identifier;
+@property (nonatomic, assign) BOOL isGPUImageView;
+@property (nonatomic, assign) BOOL isActive;
+@property (nonatomic, assign) NSUInteger fpsValue;
+
+@property (nonatomic, assign) NSUInteger renderCount;
+@property (nonatomic, assign) NSUInteger signpostId;
+@property (nonatomic, strong) NSValue *lastRenderTime;
+@end
+
 @interface MTHFPSTrace : NSObject
 /**
  *  detect mainRunloop DisplayLink as fps value
@@ -28,11 +39,9 @@ typedef struct {
 @property (nonatomic, assign, readonly) NSInteger fpsValue;
 
 /**
- *  we use GPUImageView as GLES renderer in default, only detect one activing view
+ *  we use GPUImageView as GLES renderer in default
  */
 @property (nonatomic, assign, readonly) BOOL gpuImageViewFPSEnable;
-@property (nonatomic, assign, readonly) BOOL gpuImageViewDisplaying;
-@property (nonatomic, assign, readonly) NSInteger gpuImageFPSValue;
 
 + (instancetype)shared;
 
@@ -60,6 +69,5 @@ typedef struct {
 - (void)fpsValueDidChanged:(NSInteger)FPSValue;
 
 @optional
-- (void)glesRenderer:(id)renderer displayStart:(BOOL)startDisplay;
-- (void)glesRenderer:(id)renderer fpsValueChanged:(NSInteger)fpsValue;
+- (void)glRenderCounterValueChange:(MTHFPSGLRenderCounter *)renderCounter;
 @end
