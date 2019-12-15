@@ -18,11 +18,9 @@
 #import "MTHawkeyeUtility.h"
 
 @interface MTFPSHawkeyeAdaptor () <MTHFPSTraceDelegate>
-
 @property (nonatomic, assign) BOOL fpsMonitorOn;
-
+@property (nonatomic, strong) MTHFPSGLRenderCounter *firstActiveRenderCounter;
 @end
-
 
 @implementation MTFPSHawkeyeAdaptor
 
@@ -104,8 +102,8 @@
     // store GPUImage present fps.
     if ([MTHFPSTrace shared].gpuImageViewFPSEnable) {
         static NSInteger preGPUImageFPS = 0;
-        NSInteger curGPUImageFPSValue = [MTHFPSTrace shared].gpuImageFPSValue;
-        BOOL gpuImageDisplaying = [MTHFPSTrace shared].gpuImageViewDisplaying;
+        NSInteger curGPUImageFPSValue = self.firstActiveRenderCounter.fpsValue;
+        BOOL gpuImageDisplaying = self.firstActiveRenderCounter.isActive;
         BOOL gpuImageFPSChanged = (preGPUImageFPS != curGPUImageFPSValue);
         if (gpuImageFPSChanged || forceFlush) {
             // 平时记录时只记录了变化时的数据，这里补充记录退出前的最后一次数据
@@ -123,14 +121,16 @@
 }
 
 // MARK: - MTHFPSTraceDelegate
-
 - (void)fpsValueDidChanged:(NSInteger)FPSValue {
 }
 
-- (void)gpuImageDisplayingChanged:(BOOL)isDisplaying {
-}
+- (void)glRenderCounterValueChange:(MTHFPSGLRenderCounter *)rendererCounter {
+    if (self.firstActiveRenderCounter == nil) {
+        self.firstActiveRenderCounter = rendererCounter;
+    }
 
-- (void)gpuImageFPSValueDidChanged:(NSInteger)gpuImageFPSValue {
+    if ([self.firstActiveRenderCounter.identifier isEqualToString:rendererCounter.identifier] && !rendererCounter.isActive) {
+        self.firstActiveRenderCounter = nil;
+    }
 }
-
 @end

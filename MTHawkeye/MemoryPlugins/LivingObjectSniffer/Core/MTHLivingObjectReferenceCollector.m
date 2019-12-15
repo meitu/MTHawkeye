@@ -57,35 +57,39 @@
 - (NSArray *)collectStrongObjectIvarsForClass:(Class)cls {
     unsigned int count = 0;
     Ivar *ivars = class_copyIvarList(cls, &count);
-    NSMutableArray <MTHLivingObjectIvarInfo *> *objectIvarInfos = [NSMutableArray array];
-    
+    NSMutableArray<MTHLivingObjectIvarInfo *> *objectIvarInfos = [NSMutableArray array];
+
     NSInteger ivarLocation = 1;
     for (int i = 0; i < count; i++) {
         MTHLivingObjectIvarInfo *ivarInfo = [[MTHLivingObjectIvarInfo alloc] initWithIvar:ivars[i]];
-        
+
         if (!i) {
             ivarLocation = ivarInfo.index;
         }
-        
+
         if (ivarInfo.isObject) {
             [objectIvarInfos addObject:ivarInfo];
         }
     }
-    
+
+    if (ivars != NULL) {
+        free(ivars);
+    }
+
     const uint8_t *layout = class_getIvarLayout(cls);
     if (!layout) {
         return @[];
     }
-    
+
     NSIndexSet *strongIvarIndexes = [self strongIvarIndexesForLayout:layout ivarLocation:ivarLocation];
-    
+
     NSMutableArray *strongObjectIvarInfos = [NSMutableArray array];
     for (MTHLivingObjectIvarInfo *ivarInfo in objectIvarInfos) {
         if ([strongIvarIndexes containsIndex:ivarInfo.index]) {
             [strongObjectIvarInfos addObject:ivarInfo];
         }
     }
-    
+
     return strongObjectIvarInfos;
 }
 
@@ -96,32 +100,32 @@
     while (*layout != '\x00') {
         int otherIvarLength = (*layout & 0xf0) >> 4;
         int strongIvarLength = (*layout & 0xf);
-        
+
         strongIvarLocation += otherIvarLength;
-        
+
         [indexes addIndexesInRange:NSMakeRange(strongIvarLocation, strongIvarLength)];
         strongIvarLocation += strongIvarLength;
-        
+
         layout++;
     }
-    
+
     return indexes;
 }
 
-- (NSArray <MTHLivingObjectIvarInfo *> *)wrappedIvarList {
+- (NSArray<MTHLivingObjectIvarInfo *> *)wrappedIvarList {
     Class curLevelClass = [_object class];
     NSMutableArray *ivarInfos = [NSMutableArray array];
-    
+
     while (curLevelClass) {
         if (_stopForClsBlock && _stopForClsBlock(curLevelClass)) {
             break;
         }
-        
+
         NSArray *infos = [self collectStrongObjectIvarsForClass:curLevelClass];
         [ivarInfos addObjectsFromArray:infos];
         curLevelClass = curLevelClass.superclass;
     }
-    
+
     return ivarInfos;
 }
 
@@ -135,10 +139,10 @@
                 [objects addObject:reference];
             }
         }
-        
+
         _strongReferences = objects;
     }
-    
+
     return _strongReferences;
 }
 @end

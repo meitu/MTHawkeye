@@ -94,7 +94,7 @@
     }
 
     UIApplicationState state = ((NSNumber *)[[UIApplication sharedApplication] valueForKey:@"applicationState"]).integerValue;
-//    NSLog(@"kvc value:%ld, propertyValue:%ld", state, [UIApplication sharedApplication].applicationState);
+    //    NSLog(@"kvc value:%ld, propertyValue:%ld", state, [UIApplication sharedApplication].applicationState);
     return state;
 }
 

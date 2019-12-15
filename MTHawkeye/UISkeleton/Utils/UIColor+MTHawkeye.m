@@ -17,7 +17,7 @@
 + (UIColor *)mth_dynamicComplementaryColor:(UIColor *)defaultColor {
     CGFloat rgba[4];
     [defaultColor getRed:rgba green:rgba + 1 blue:rgba + 2 alpha:rgba + 3];
-    
+
     return [self mth_dynamicLightColor:defaultColor
                              darkColor:[UIColor colorWithRed:1.0 - rgba[0]
                                                        green:1.0 - rgba[1]
@@ -27,10 +27,10 @@
 
 + (UIColor *)mth_dynamicLightColor:(UIColor *)lightColor darkColor:(UIColor *)darkColor {
     UIColor *color = lightColor;
-    
+
 #ifdef __IPHONE_13_0
     if (@available(iOS 13.0, *)) {
-        color = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+        color = [UIColor colorWithDynamicProvider:^UIColor *_Nonnull(UITraitCollection *_Nonnull traitCollection) {
             if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
                 return darkColor;
             }
@@ -38,7 +38,7 @@
         }];
     }
 #endif
-    
+
     return color;
 }
 

@@ -9,42 +9,65 @@
 // Created by: YWH
 //
 
-
 #import <UIKit/UIKit.h>
 
+typedef struct {
+    Class rendererClass;
+    SEL startRenderSEL;
+    SEL endRenderSEL;
+    SEL renderProcessSEL;
+} MTHFPSGLRenderInfo;
 
 @protocol MTHFPSTraceDelegate;
 
-@interface MTHFPSTrace : NSObject
+@interface MTHFPSGLRenderCounter : NSObject
+@property (nonatomic, copy) NSString *identifier;
+@property (nonatomic, assign) BOOL isGPUImageView;
+@property (nonatomic, assign) BOOL isActive;
+@property (nonatomic, assign) NSUInteger fpsValue;
 
+@property (nonatomic, assign) NSUInteger renderCount;
+@property (nonatomic, assign) NSUInteger signpostId;
+@property (nonatomic, strong) NSValue *lastRenderTime;
+@end
+
+@interface MTHFPSTrace : NSObject
+/**
+ *  detect mainRunloop DisplayLink as fps value
+ */
 @property (nonatomic, assign, readonly) BOOL isRunning;
 @property (nonatomic, assign, readonly) NSInteger fpsValue;
 
 /**
- GPUImageView 渲染 FPS 值，在有 GPUImageView 的页面时有值
+ *  we use GPUImageView as GLES renderer in default
  */
 @property (nonatomic, assign, readonly) BOOL gpuImageViewFPSEnable;
-@property (nonatomic, assign, readonly) BOOL gpuImageViewDisplaying;
-@property (nonatomic, assign, readonly) NSInteger gpuImageFPSValue;
 
 + (instancetype)shared;
 
+/**
+ *  Registter GLES render process with render porcess info
+ *
+ *  @param  renderInfo   render view class and render process functions
+ *
+ *  @dicussion
+ *  You can register yourself GLES render view before start call,
+ *  assume render view start displaying when startRenderSEL call,
+ *  assume render view end displaying when endRenderSEL call,
+ *  caculate gl-fps count when renderProcessSEL call
+ */
++ (void)registerGLESRenderInfo:(MTHFPSGLRenderInfo)renderInfo;
+
 - (void)addDelegate:(id<MTHFPSTraceDelegate>)delegate;
 - (void)removeDelegate:(id<MTHFPSTraceDelegate>)delegate;
-
 - (void)start;
 - (void)stop;
-
 @end
 
-
 @protocol MTHFPSTraceDelegate <NSObject>
-
 @required
 - (void)fpsValueDidChanged:(NSInteger)FPSValue;
 
 @optional
-- (void)gpuImageDisplayingChanged:(BOOL)isDisplay;
-- (void)gpuImageFPSValueDidChanged:(NSInteger)gpuImageFPSValue;
-
+- (void)glRenderCounterValueChange:(MTHFPSGLRenderCounter *)renderCounter;
 @end

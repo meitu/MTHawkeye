@@ -13,10 +13,10 @@
 #import "MTHUITimeProfilerHawkeyeAdaptor.h"
 #import "MTHAppLaunchStepTracer.h"
 #import "MTHTimeIntervalRecorder.h"
+#import "MTHUIViewControllerProfile.h"
 #import "MTHawkeyeLogMacros.h"
 #import "MTHawkeyeStorage.h"
 #import "MTHawkeyeUserDefaults+UITimeProfiler.h"
-#import "MTHUIViewControllerProfile.h"
 
 #import <MTHawkeye/MTHawkeyeDyldImagesUtils.h>
 #import <MTHawkeye/MTHawkeyeHooking.h>

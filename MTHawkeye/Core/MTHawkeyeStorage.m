@@ -125,10 +125,10 @@ NSUInteger kMTHawkeyeLogStoreMaxLength = 16 * 1024;
 #endif
 
     [self.collectionKeyValueFile appendUTF8Text:line];
-    
+
     // 记录每一行字符的长度,'\n'占一个字节
     [self.recordByteLength addObject:@(lineLength)];
-    
+
     if (line != NULL) {
         free(line);
     }

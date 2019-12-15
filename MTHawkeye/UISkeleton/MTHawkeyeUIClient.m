@@ -372,8 +372,7 @@ const NSString *kMTHFloatingWidgetRaiseWarningParamsPanelIDKey = @"related-panel
     if (@available(iOS 13.0, *)) {
         // Only look for a new scene if we don't have one, or the one we have
         // isn't the active scene
-        if (!self.monitorWindow.windowScene ||
-            self.monitorWindow.windowScene.activationState != UISceneActivationStateForegroundActive) {
+        if (!self.monitorWindow.windowScene || self.monitorWindow.windowScene.activationState != UISceneActivationStateForegroundActive) {
             for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
                 // Look for an active UIWindowScene
                 if (scene.activationState == UISceneActivationStateForegroundActive &&
