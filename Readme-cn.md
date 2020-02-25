@@ -135,7 +135,8 @@ MTHawkeye 插件扩展支持了沙盒文件的 AirDrop 功能。
     pod 'FLEX', :configurations => ['Debug']
     pod 'FBRetainCycleDetector', :configurations => ['Debug']
     pod 'fishhook', :configurations => ['Debug']
-    pod 'CocoaLumberjack', :configurations => ['Debug'] # CocoaLumberjack is optional, change to `MTHawkeye/DefaultPluginsWithoutLog` if don't need.
+    pod 'CocoaLumberjack', 
+    '3.6.0', :configurations => ['Debug'] # CocoaLumberjack is optional, change to `MTHawkeye/DefaultPluginsWithoutLog` if don't need.
     # pod 'MTGLDebug', :configurations => ['Debug'] # MTGLDebug is exclude by default, change `MTHawkeye` to `MTHawkeye/DefaultPlugins` to include.
 
     pod 'MTAppenderFile', :configurations => ['Debug']
@@ -147,7 +148,7 @@ MTHawkeye 插件扩展支持了沙盒文件的 AirDrop 功能。
     # ...
   end
 ```
-
+注意：`CocoaLumberjack`这个依赖库需要使用<~3.6.0版本。
 然后，在应用启动时开启 MTHawkeye 服务。可以使用默认集成的所有插件，或者选择自己需要的插件启动。
 
 A: 快速集成默认的所有插件:

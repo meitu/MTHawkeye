@@ -234,7 +234,7 @@ PODS:
 DEPENDENCIES:
   - AFNetworking
   - AGAsyncTestHelper/Shorthand
-  - CocoaLumberjack
+  - CocoaLumberjack (= 3.6.0)
   - FBRetainCycleDetector
   - fishhook
   - FLEX
@@ -271,6 +271,6 @@ SPEC CHECKSUMS:
   MTGLDebug: 4883ba4da36f45a88e2c2d805d2b5a5b54ba5ad1
   MTHawkeye: 24ba418f82648958e5ff150f99740120de9b25b5
 
-PODFILE CHECKSUM: d772bcb03da95f4f4008f493d829ba2e9bda6f98
+PODFILE CHECKSUM: 725e255d14f69beedecf156fbe831f168a664119
 
 COCOAPODS: 1.8.4

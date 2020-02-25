@@ -17,7 +17,7 @@ def hawkeye
   pod 'FLEX'#, :configurations => ['Debug']
   pod 'FBRetainCycleDetector'#, :configurations => ['Debug']
   pod 'fishhook'#, :configurations => ['Debug']
-  pod 'CocoaLumberjack'#, :configurations => ['Debug'] # CocoaLumberjack is optional, change to `MTHawkeye/DefaultPluginsWithoutLog` if don't need.
+  pod 'CocoaLumberjack', '3.6.0' #, :configurations => ['Debug'] # CocoaLumberjack is optional, change to `MTHawkeye/DefaultPluginsWithoutLog` if don't need.
   pod 'MTGLDebug'#, :configurations => ['Debug'] # MTGLDebug is exclude by default, change `MTHawkeye` to `MTHawkeye/DefaultPlugins` to include.
 
   pod 'MTAppenderFile', '~> 0.4.0'#, :configurations => ['Debug'], :inhibit_warnings => false
