@@ -141,7 +141,8 @@ First, add an MTHawkeye reference to the project podfile:
     pod 'FLEX', :configurations => ['Debug']
     pod 'FBRetainCycleDetector', :configurations => ['Debug']
     pod 'fishhook', :configurations => ['Debug']
-    pod 'CocoaLumberjack', :configurations => ['Debug'] # CocoaLumberjack is optional, change to `MTHawkeye/DefaultPluginsWithoutLog` if don't need.
+    pod 'CocoaLumberjack',
+    '3.6.0', :configurations => ['Debug'] # CocoaLumberjack is optional, change to `MTHawkeye/DefaultPluginsWithoutLog` if don't need.
     # pod 'MTGLDebug', :configurations => ['Debug'] # MTGLDebug is exclude by default, change `MTHawkeye` to `MTHawkeye/DefaultPlugins` to include.
 
     pod 'MTAppenderFile', :configurations => ['Debug']
@@ -153,6 +154,7 @@ First, add an MTHawkeye reference to the project podfile:
     # ...
   end
 ```
+Attention：`CocoaLumberjack` must <~3.6.0
 
 Then, turn on the MTHawkeye service when the App starts, You can use all the plugins as default, or choose the plugins you need to start.
 
@@ -231,7 +233,6 @@ There may be special requirements during the test phase, or may not need to reta
 ```ruby
   pod 'YourOnlineHawkeye', :podspec => 'xxx/yourOwnHawkeyeOnline.podspec', :configurations => 'Release'
 ```
-
 Then in the initialization, load the plugin as your needs, configure whether the plugin should start. such as
 
 ```objc
