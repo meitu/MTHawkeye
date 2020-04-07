@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "MTHawkeye"
-  s.version      = "0.12.1"
+  s.version      = "0.12.2"
   s.summary      = "Profiling/Debugging assist tools for iOS."
 
   s.description  = <<-DESC
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   s.author       = { "Euan Chan" => "cqh@meitu.com" }
 
-  s.platform     = :ios, "8.0"
+  s.platform     = :ios, "9.0"
 
   s.source       = { :git => "https://github.com/meitu/MTHawkeye.git", :tag => "#{s.version}" }
 
@@ -409,7 +409,7 @@ Pod::Spec.new do |s|
   s.subspec 'FLEXExtension' do |flex|
       flex.public_header_files = 'MTHawkeye/FLEXExtension/**/*.{h}'
       flex.source_files = 'MTHawkeye/FLEXExtension/**/*.{h,m}'
-      flex.dependency 'FLEX', '3.0.0'
+      flex.dependency 'FLEX', '4.1.1'
       flex.dependency 'MTHawkeye/UISkeleton'
       flex.libraries = "sqlite3"
   end
