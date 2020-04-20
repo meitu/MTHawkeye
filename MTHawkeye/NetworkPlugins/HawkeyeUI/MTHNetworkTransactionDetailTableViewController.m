@@ -715,7 +715,7 @@ typedef UIViewController * (^MTHawkeyeNetworkDetailRowSelectionFuture)(void);
 #pragma clang diagnostic pop
             }
         }
-        detailViewController = [[FLEXImagePreviewViewController alloc] initWithImage:image];
+        detailViewController = [FLEXImagePreviewViewController forImage:image];
     } else if ([mimeType isEqual:@"application/x-plist"]) {
         id propertyList = [NSPropertyListSerialization propertyListWithData:data options:0 format:NULL error:NULL];
         detailViewController = [[MTHawkeyeWebViewController alloc] initWithText:[propertyList description]];

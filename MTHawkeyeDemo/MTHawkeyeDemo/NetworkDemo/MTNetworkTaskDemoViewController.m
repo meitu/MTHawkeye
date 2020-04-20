@@ -106,7 +106,7 @@
         manager.requestSerializer = [AFJSONRequestSerializer serializer];
         [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         [manager.requestSerializer setValue:@"test-value" forHTTPHeaderField:@"custom-http-field"];
-        [manager GET:mockRequest[index] parameters:@{@"custom-key" : @"custom-value"} progress:nil success:nil failure:nil];
+        [manager GET:mockRequest[index] parameters:@{@"custom-key" : @"custom-value"} headers:nil progress:nil success:nil failure:nil];
 
         [self.log appendFormat:@">> %@ \n", radomRequestURL];
         dispatch_async(dispatch_get_main_queue(), ^(void) {

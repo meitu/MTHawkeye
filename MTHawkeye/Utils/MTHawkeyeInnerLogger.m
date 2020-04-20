@@ -178,7 +178,7 @@ static MTHawkeyeInnerDDLogFileLogger *_fileLogger = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [self setup];
-        _ttyLogger = [[DDTTYLogger alloc] init];
+        _ttyLogger = [DDTTYLogger sharedInstance];
         _ttyLogger.logFormatter = [[MTHawkeyeInnerDDLogFormatter alloc] initWithType:MTHawkeyeInnerDDLogFormatterTypeConsole];
         [_mth_log addLogger:_ttyLogger withLevel:logLevel];
     });

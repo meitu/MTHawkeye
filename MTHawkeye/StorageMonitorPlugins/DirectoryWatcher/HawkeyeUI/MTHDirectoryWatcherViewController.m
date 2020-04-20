@@ -21,7 +21,7 @@
 #import "MTHawkeyeUserDefaults+DirectorWatcher.h"
 #import "UIViewController+MTHawkeyeLayoutSupport.h"
 
-#import "FLEXFileBrowserTableViewController.h"
+#import "FLEXFileBrowserController.h"
 #import "FLEXImagePreviewViewController.h"
 #import "FLEXTableListViewController.h"
 #import "FLEXUtility.h"
@@ -195,10 +195,10 @@
     NSString *pathExtension = [subpath pathExtension];
     UIViewController *vc = nil;
     if (isDir) {
-        vc = [[FLEXFileBrowserTableViewController alloc] initWithPath:fullPath];
-    } else if ([FLEXUtility isImagePathExtension:pathExtension]) {
+        vc = [[FLEXFileBrowserController alloc] initWithPath:fullPath];
+    } else if ([@[@"jpg", @"jpeg", @"png", @"gif", @"tiff", @"tif"] containsObject:pathExtension]) {
         UIImage *image = [UIImage imageWithContentsOfFile:fullPath];
-        vc = [[FLEXImagePreviewViewController alloc] initWithImage:image];
+        vc = [FLEXImagePreviewViewController forImage:image];
     } else {
         // Special case keyed archives, json, and plists to get more readable data.
         NSString *prettyString = nil;

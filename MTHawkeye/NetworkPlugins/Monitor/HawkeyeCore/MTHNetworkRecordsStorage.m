@@ -62,7 +62,7 @@
 
 - (void)storeNetworkTransaction:(MTHNetworkTransaction *)transaction {
     NSDictionary *dict = [transaction dictionaryFromAllProperty];
-    if ([dict count] == 0) {
+    if ([dict count] == 0 || ![NSJSONSerialization isValidJSONObject:dict]) {
         return;
     }
 
