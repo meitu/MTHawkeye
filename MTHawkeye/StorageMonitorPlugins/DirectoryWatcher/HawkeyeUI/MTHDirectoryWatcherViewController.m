@@ -21,11 +21,11 @@
 #import "MTHawkeyeUserDefaults+DirectorWatcher.h"
 #import "UIViewController+MTHawkeyeLayoutSupport.h"
 
-#import "FLEXFileBrowserController.h"
-#import "FLEXImagePreviewViewController.h"
-#import "FLEXTableListViewController.h"
-#import "FLEXUtility.h"
-#import "FLEXWebViewController.h"
+#import <FLEX/FLEXFileBrowserController.h>
+#import <FLEX/FLEXImagePreviewViewController.h>
+#import <FLEX/FLEXTableListViewController.h>
+#import <FLEX/FLEXUtility.h>
+#import <FLEX/FLEXWebViewController.h>
 
 @interface MTHDirectoryWatcherViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) UITableView *tableView;
