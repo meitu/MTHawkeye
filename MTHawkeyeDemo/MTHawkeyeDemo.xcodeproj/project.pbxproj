@@ -1126,7 +1126,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meitu.hawkeyedemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development *";
+				PROVISIONING_PROFILE_SPECIFIER = "match2 Development *";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1171,7 +1171,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meitu.hawkeyedemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development *";
+				PROVISIONING_PROFILE_SPECIFIER = "match2 Development *";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
