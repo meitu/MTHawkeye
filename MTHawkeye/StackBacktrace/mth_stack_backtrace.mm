@@ -29,6 +29,7 @@
 #define MT_FRAME_POINTER __fp
 #define MT_STACK_POINTER __sp
 #define MT_INSTRUCTION_ADDRESS __pc
+#define RECTIFY_ARM64E_ADDRESS(A) ((A) & 0x0fffffffff)
 
 #elif defined(__arm__)
 #define DETAG_INSTRUCTION_ADDRESS(A) ((A) & ~(1UL))
@@ -37,6 +38,7 @@
 #define MT_FRAME_POINTER __r[7]
 #define MT_STACK_POINTER __sp
 #define MT_INSTRUCTION_ADDRESS __pc
+#define RECTIFY_ARM64E_ADDRESS(A) ((A) & 0x0fffffffff)
 
 #elif defined(__x86_64__)
 #define DETAG_INSTRUCTION_ADDRESS(A) (A)
@@ -45,6 +47,7 @@
 #define MT_FRAME_POINTER __rbp
 #define MT_STACK_POINTER __rsp
 #define MT_INSTRUCTION_ADDRESS __rip
+#define RECTIFY_ARM64E_ADDRESS(A) (A)
 
 #elif defined(__i386__)
 #define DETAG_INSTRUCTION_ADDRESS(A) (A)
@@ -53,6 +56,7 @@
 #define MT_FRAME_POINTER __ebp
 #define MT_STACK_POINTER __esp
 #define MT_INSTRUCTION_ADDRESS __eip
+#define RECTIFY_ARM64E_ADDRESS(A) (A)
 
 #endif
 
@@ -112,7 +116,7 @@ bool mth_stack_backtrace_of_thread(thread_t thread, mth_stack_backtrace *out_sta
 
     const uintptr_t instruction_addr = machine_context.__ss.MT_INSTRUCTION_ADDRESS;
     if (instruction_addr) {
-        backtrace_frames[frames_size++] = instruction_addr;
+        backtrace_frames[frames_size++] = RECTIFY_ARM64E_ADDRESS(instruction_addr);
     } else {
         out_stack_backtrace->frames_size = frames_size;
         return false;
@@ -127,7 +131,7 @@ bool mth_stack_backtrace_of_thread(thread_t thread, mth_stack_backtrace *out_sta
 #endif //mt_mach_linkRegister(&machineContext);
 
     if (link_register) {
-        backtrace_frames[frames_size++] = CALL_INSTRUCTION_FROM_RETURN_ADDRESS(link_register);
+        backtrace_frames[frames_size++] = RECTIFY_ARM64E_ADDRESS(CALL_INSTRUCTION_FROM_RETURN_ADDRESS(link_register));
     }
 
     // get frame point
@@ -143,7 +147,7 @@ bool mth_stack_backtrace_of_thread(thread_t thread, mth_stack_backtrace *out_sta
 #endif
 
     for (; frames_size < backtrace_depth_max; frames_size++) {
-        backtrace_frames[frames_size] = CALL_INSTRUCTION_FROM_RETURN_ADDRESS(frame.return_address);
+        backtrace_frames[frames_size] = RECTIFY_ARM64E_ADDRESS(CALL_INSTRUCTION_FROM_RETURN_ADDRESS(frame.return_address));
         if (backtrace_frames[frames_size] == 0 || frame.previous == 0 || mth_mach_copy_mem(frame.previous, &frame, sizeof(frame)) != KERN_SUCCESS) {
             break;
         }
