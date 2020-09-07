@@ -29,6 +29,7 @@
 #define MT_FRAME_POINTER __fp
 #define MT_STACK_POINTER __sp
 #define MT_INSTRUCTION_ADDRESS __pc
+#define RECTIFY_ARM64E_ADDRESS(A) ((A) & 0x0fffffffff)
 
 #elif defined(__arm__)
 #define DETAG_INSTRUCTION_ADDRESS(A) ((A) & ~(1UL))
@@ -37,6 +38,7 @@
 #define MT_FRAME_POINTER __r[7]
 #define MT_STACK_POINTER __sp
 #define MT_INSTRUCTION_ADDRESS __pc
+#define RECTIFY_ARM64E_ADDRESS(A) ((A) & 0x0fffffffff)
 
 #elif defined(__x86_64__)
 #define DETAG_INSTRUCTION_ADDRESS(A) (A)
@@ -45,6 +47,7 @@
 #define MT_FRAME_POINTER __rbp
 #define MT_STACK_POINTER __rsp
 #define MT_INSTRUCTION_ADDRESS __rip
+#define RECTIFY_ARM64E_ADDRESS(A) (A)
 
 #elif defined(__i386__)
 #define DETAG_INSTRUCTION_ADDRESS(A) (A)
@@ -53,11 +56,11 @@
 #define MT_FRAME_POINTER __ebp
 #define MT_STACK_POINTER __esp
 #define MT_INSTRUCTION_ADDRESS __eip
+#define RECTIFY_ARM64E_ADDRESS(A) (A)
 
 #endif
 
 #define CALL_INSTRUCTION_FROM_RETURN_ADDRESS(A) (DETAG_INSTRUCTION_ADDRESS((A)) - 1)
-#define RECTIFY_ARM64E_ADDRESS(A) ((A) & 0x0fffffffff)
 
 typedef struct _mth_stackframe_entity {
     const struct _mth_stackframe_entity *const previous;
