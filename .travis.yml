@@ -15,9 +15,7 @@ env:
     - DEMO_SCHEME="MTHawkeyeDemo"
 matrix:
   include:
-    - osx_image: xcode9.3
-      env: RUN_TEST="YES" BUILD_DEMO="NO" POD_LINT="NO"
-    - osx_image: xcode10.2
+    - osx_image: xcode11.6
       env: RUN_TEST="YES" BUILD_DEMO="NO" POD_LINT="NO"
 
 before_install:
