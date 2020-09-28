@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "MTHawkeye"
-  s.version      = "0.12.2"
+  s.version      = "0.12.3"
   s.summary      = "Profiling/Debugging assist tools for iOS."
 
   s.description  = <<-DESC
@@ -373,7 +373,7 @@ Pod::Spec.new do |s|
       ui.dependency 'MTHawkeye/NetworkPlugins/Monitor'
       ui.dependency 'MTHawkeye/NetworkPlugins/Inspect'
       ui.dependency 'MTHawkeye/UISkeleton'
-      ui.dependency 'FLEX'
+      ui.dependency 'FLEX', '4.1.1'
       ui.libraries = "sqlite3"
       ui.framework = 'QuartzCore'
     end

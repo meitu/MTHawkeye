@@ -150,7 +150,11 @@
 
 - (void)stopTimerIfNeed {
     if (self.cpuTracingTimer) {
-        dispatch_source_cancel(self.cpuTracingTimer);
+        __block dispatch_source_t strongTimer = self.cpuTracingTimer;
+        dispatch_source_set_cancel_handler(self.cpuTracingTimer, ^{
+            strongTimer = nil; // dealloc the timer until it is cancelled
+        });
+        dispatch_source_cancel(self.cpuTracingTimer); // this is asyncronously
         self.cpuTracingTimer = nil;
     }
 }
