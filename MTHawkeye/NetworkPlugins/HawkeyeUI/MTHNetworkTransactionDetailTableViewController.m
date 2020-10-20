@@ -26,8 +26,6 @@
 #import <CoreText/CoreText.h>
 #import <MTHawkeye/MTHUISkeletonUtility.h>
 
-#import <FLEX/FLEXImagePreviewViewController.h>
-
 
 typedef NS_ENUM(NSInteger, MTHawkeyeNetworkDetailRowStyle) {
     MTHawkeyeNetworkDetailRowDefault = 0,
@@ -712,10 +710,10 @@ typedef UIViewController * (^MTHawkeyeNetworkDetailRowSelectionFuture)(void);
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 SEL yyImgSEL = NSSelectorFromString(@"imageWithData:");
                 image = [yyImageCls performSelector:yyImgSEL withObject:data];
-#pragma clang diagnostic pop
             }
         }
-        detailViewController = [FLEXImagePreviewViewController forImage:image];
+        detailViewController = [NSClassFromString(@"FLEXImagePreviewViewController") performSelector:NSSelectorFromString(@"forImage:") withObject:image];
+#pragma clang diagnostic pop
     } else if ([mimeType isEqual:@"application/x-plist"]) {
         id propertyList = [NSPropertyListSerialization propertyListWithData:data options:0 format:NULL error:NULL];
         detailViewController = [[MTHawkeyeWebViewController alloc] initWithText:[propertyList description]];

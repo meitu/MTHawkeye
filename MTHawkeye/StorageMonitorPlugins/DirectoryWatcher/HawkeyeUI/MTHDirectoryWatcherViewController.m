@@ -21,11 +21,11 @@
 #import "MTHawkeyeUserDefaults+DirectorWatcher.h"
 #import "UIViewController+MTHawkeyeLayoutSupport.h"
 
-#import <FLEX/FLEXFileBrowserController.h>
-#import <FLEX/FLEXImagePreviewViewController.h>
-#import <FLEX/FLEXTableListViewController.h>
-#import <FLEX/FLEXUtility.h>
-#import <FLEX/FLEXWebViewController.h>
+#define FLEXFileBrowserController NSClassFromString(@"FLEXFileBrowserController")
+#define FLEXImagePreviewViewController NSClassFromString(@"FLEXImagePreviewViewController")
+#define FLEXTableListViewController NSClassFromString(@"FLEXTableListViewController")
+#define FLEXUtility NSClassFromString(@"FLEXUtility")
+#define FLEXWebViewController NSClassFromString(@"FLEXWebViewController")
 
 @interface MTHDirectoryWatcherViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) UITableView *tableView;
@@ -194,28 +194,31 @@
     NSString *subpath = [fullPath lastPathComponent];
     NSString *pathExtension = [subpath pathExtension];
     UIViewController *vc = nil;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     if (isDir) {
-        vc = [[FLEXFileBrowserController alloc] initWithPath:fullPath];
+        vc = [FLEXFileBrowserController performSelector:NSSelectorFromString(@"path:") withObject:fullPath];
     } else if ([@[@"jpg", @"jpeg", @"png", @"gif", @"tiff", @"tif"] containsObject:pathExtension]) {
         UIImage *image = [UIImage imageWithContentsOfFile:fullPath];
-        vc = [FLEXImagePreviewViewController forImage:image];
+        vc = [FLEXImagePreviewViewController performSelector:NSSelectorFromString(@"forImage:") withObject:image];
     } else {
         // Special case keyed archives, json, and plists to get more readable data.
         NSString *prettyString = nil;
         if ([pathExtension isEqual:@"archive"] || [pathExtension isEqual:@"coded"]) {
             prettyString = [[NSKeyedUnarchiver unarchiveObjectWithFile:fullPath] description];
         } else if ([pathExtension isEqualToString:@"json"]) {
-            prettyString = [FLEXUtility prettyJSONStringFromData:[NSData dataWithContentsOfFile:fullPath]];
+            NSData *data = [NSData dataWithContentsOfFile:fullPath];
+            prettyString = [FLEXUtility performSelector:NSSelectorFromString(@"prettyJSONStringFromData:") withObject:data];
         } else if ([pathExtension isEqualToString:@"plist"]) {
             NSData *fileData = [NSData dataWithContentsOfFile:fullPath];
             prettyString = [[NSPropertyListSerialization propertyListWithData:fileData options:0 format:NULL error:NULL] description];
         }
 
         if ([prettyString length] > 0) {
-            vc = [[FLEXWebViewController alloc] initWithText:prettyString];
-        } else if ([FLEXWebViewController supportsPathExtension:pathExtension]) {
+            vc = [[FLEXWebViewController alloc] performSelector:NSSelectorFromString(@"initWithText:") withObject:prettyString];
+        } else if ([[FLEXWebViewController performSelector:NSSelectorFromString(@"supportsPathExtension:") withObject:pathExtension] boolValue]) {
             vc = [[FLEXWebViewController alloc] initWithURL:[NSURL fileURLWithPath:fullPath]];
-        } else if ([FLEXTableListViewController supportsExtension:subpath.pathExtension]) {
+        } else if ([[FLEXTableListViewController performSelector:NSSelectorFromString(@"supportsExtension:") withObject:subpath.pathExtension] boolValue]) {
             vc = [[FLEXTableListViewController alloc] initWithPath:fullPath];
         } else {
             NSString *fileString = [NSString stringWithContentsOfFile:fullPath encoding:NSUTF8StringEncoding error:NULL];
@@ -224,6 +227,7 @@
             }
         }
     }
+#pragma clang diagnostic pop
 
     if (vc) {
         vc.title = [subpath lastPathComponent];
