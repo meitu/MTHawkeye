@@ -57,11 +57,15 @@ typedef struct {
  *  caculate gl-fps count when renderProcessSEL call
  */
 + (void)registerGLESRenderInfo:(MTHFPSGLRenderInfo)renderInfo;
++ (void)registerGLESClass:(Class)rendererClass;
 
 - (void)addDelegate:(id<MTHFPSTraceDelegate>)delegate;
 - (void)removeDelegate:(id<MTHFPSTraceDelegate>)delegate;
 - (void)start;
 - (void)stop;
+
+- (void)glesRenderer:(id)renderer start:(BOOL)start;
+- (void)glesRenderProcess:(id)renderer;
 @end
 
 @protocol MTHFPSTraceDelegate <NSObject>
