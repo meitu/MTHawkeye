@@ -27,7 +27,7 @@
 @property (nonatomic, assign) NSTimeInterval fpsTickLastTime;
 @property (nonatomic, assign) BOOL gpuImageViewFPSEnable;
 @property (nonatomic, strong) NSHashTable<id<MTHFPSTraceDelegate>> *delegates;
-@property (nonatomic, strong) NSArray<NSValue *> *renderInfos;
+@property (nonatomic, strong) NSMutableArray<NSValue *> *renderInfos;
 @end
 
 @implementation MTHFPSTrace
@@ -46,6 +46,15 @@
 }
 
 #pragma mark -
+
++ (void)registerGLESClass:(Class)rendererClass {
+    [self registerGLESRenderInfo:(MTHFPSGLRenderInfo){
+        rendererClass,
+        NSSelectorFromString(@"createDisplayFramebuffer"),
+        NSSelectorFromString(@"destroyDisplayFramebuffer"),
+        NSSelectorFromString(@"presentFramebuffer")}];
+}
+
 + (void)registerGLESRenderInfo:(MTHFPSGLRenderInfo)renderInfo {
     if (!renderInfo.rendererClass || !renderInfo.startRenderSEL || !renderInfo.endRenderSEL || !renderInfo.renderProcessSEL) {
         return;
@@ -57,9 +66,9 @@
 
     NSValue *value = [NSValue value:&renderInfo withObjCType:@encode(MTHFPSGLRenderInfo)];
     if (![MTHFPSTrace shared].renderInfos) {
-        [MTHFPSTrace shared].renderInfos = [NSArray array];
+        [MTHFPSTrace shared].renderInfos = [NSMutableArray array];
     }
-    [[[MTHFPSTrace shared] mutableArrayValueForKey:@"renderInfos"] addObject:value];
+    [[MTHFPSTrace shared].renderInfos addObject:value];
 }
 
 - (void)addDelegate:(id<MTHFPSTraceDelegate>)delegate {
@@ -86,31 +95,18 @@
 
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [MTHFPSTrace registerGLESRenderInfo:(MTHFPSGLRenderInfo){
-                                                NSClassFromString(@"GPUImageView"),
-                                                NSSelectorFromString(@"createDisplayFramebuffer"),
-                                                NSSelectorFromString(@"destroyDisplayFramebuffer"),
-                                                NSSelectorFromString(@"presentFramebuffer")}];
-
-        [MTHFPSTrace registerGLESRenderInfo:(MTHFPSGLRenderInfo){
-                                                NSClassFromString(@"MTCameraGPUImageView"),
-                                                NSSelectorFromString(@"createDisplayFramebuffer"),
-                                                NSSelectorFromString(@"destroyDisplayFramebuffer"),
-                                                NSSelectorFromString(@"presentFramebuffer")}];
+        [MTHFPSTrace registerGLESClass:NSClassFromString(@"GPUImageView")];
+        [MTHFPSTrace registerGLESClass:NSClassFromString(@"MTCameraGPUImageView")];
 
         for (NSValue *value in self.renderInfos) {
             MTHFPSGLRenderInfo renderInfo;
             [value getValue:&renderInfo];
-
-            if ([NSStringFromClass(renderInfo.rendererClass) isEqualToString:@"GPUImageView"] ||
-                [NSStringFromClass(renderInfo.rendererClass) isEqualToString:@"MTCameraGPUImageView"]) {
-                self.gpuImageViewFPSEnable = YES;
-            }
+            self.gpuImageViewFPSEnable = YES;
 
             SEL swizzledSel = [MTHawkeyeHooking swizzledSelectorForSelector:renderInfo.startRenderSEL];
             void (^swizzleStartBlock)(id) = ^void(id obj) {
-                ((void (*)(id, SEL))objc_msgSend)(obj, swizzledSel);
                 [self glesRenderer:obj start:YES];
+                ((void (*)(id, SEL))objc_msgSend)(obj, swizzledSel);
             };
             [MTHawkeyeHooking replaceImplementationOfKnownSelector:renderInfo.startRenderSEL
                                                            onClass:renderInfo.rendererClass
@@ -119,8 +115,8 @@
 
             SEL swizzledSel1 = [MTHawkeyeHooking swizzledSelectorForSelector:renderInfo.endRenderSEL];
             void (^swizzleEndBlock)(id) = ^void(id obj) {
-                ((void (*)(id, SEL))objc_msgSend)(obj, swizzledSel1);
                 [self glesRenderer:obj start:NO];
+                ((void (*)(id, SEL))objc_msgSend)(obj, swizzledSel1);
             };
             [MTHawkeyeHooking replaceImplementationOfKnownSelector:renderInfo.endRenderSEL
                                                            onClass:renderInfo.rendererClass
@@ -184,28 +180,9 @@
         return;
     }
 
-    NSValue *surpportedRenderer = nil;
-    MTHFPSGLRenderCounter *counter = nil;
-    for (NSValue *obj in self.renderInfos) {
-        MTHFPSGLRenderInfo renderInfo;
-        [obj getValue:&renderInfo];
-        if ([renderer isKindOfClass:renderInfo.rendererClass]) {
-            counter = [self getDynamicAttachGLESCounter:renderer];
-            counter.isActive = start;
-            surpportedRenderer = obj;
-            if ([NSStringFromClass(renderInfo.rendererClass) isEqualToString:@"GPUImageView"] ||
-                [NSStringFromClass(renderInfo.rendererClass) isEqualToString:@"MTCameraGPUImageView"]) {
-                counter.isGPUImageView = YES;
-            } else {
-                counter.isGPUImageView = NO;
-            }
-            break;
-        }
-    }
-
-    if (!surpportedRenderer) {
-        return;
-    }
+    MTHFPSGLRenderCounter *counter = [self getDynamicAttachGLESCounter:renderer];
+    counter.isActive = start;
+    counter.isGPUImageView = YES;
 
     for (id<MTHFPSTraceDelegate> delegate in self.delegates) {
         if (delegate && [delegate respondsToSelector:@selector(glRenderCounterValueChange:)]) {
@@ -220,20 +197,6 @@
 
 - (void)glesRenderProcess:(id)renderer {
     if (renderer == nil) {
-        return;
-    }
-
-    NSValue *surpportedRenderer = nil;
-    for (NSValue *obj in self.renderInfos) {
-        MTHFPSGLRenderInfo renderInfo;
-        [obj getValue:&renderInfo];
-        if ([renderer isKindOfClass:renderInfo.rendererClass]) {
-            surpportedRenderer = obj;
-            break;
-        }
-    }
-
-    if (!surpportedRenderer) {
         return;
     }
 
