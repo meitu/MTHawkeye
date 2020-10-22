@@ -134,6 +134,9 @@
         self.plugins = [plugins copy];
         self.statusFlushPlugins = [statusFlushPlugins copy];
     }
+    
+    // create storage first
+    [MTHawkeyeStorage shared];
 
     // if a plugin need start earlier, it should load it earlier by itself.
     [self.plugins makeObjectsPerformSelector:@selector(hawkeyeClientDidStart)];
