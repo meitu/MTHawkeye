@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "MTHawkeye"
-  s.version      = "0.12.3"
+  s.version      = "0.12.4"
   s.summary      = "Profiling/Debugging assist tools for iOS."
 
   s.description  = <<-DESC
