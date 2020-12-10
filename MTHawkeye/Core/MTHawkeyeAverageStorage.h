@@ -5,8 +5,8 @@
 // This source code is licensed under the license found in the LICENSE file in
 // the root directory of this source tree.
 //
-// Created on: 2018/12/10
-// Created by: EuanC
+// Created on: 2020/11/13
+// Created by: whw
 //
 
 
@@ -14,11 +14,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MTHawkeyeAppStat : NSObject
+@interface MTHawkeyeAverageStorage : NSObject
 
-@property (nonatomic, readonly, class) int64_t memory;
-
-@property (nonatomic, readonly, class) double cpuUsedByAllThreads;
++ (void)recordMem:(CGFloat)memory;
++ (void)recordCPU:(double)cpu;
++ (void)recordFPS:(int)fps;
++ (void)recordglFPS:(int)fps;
 
 @end
 

@@ -15,7 +15,7 @@
 #import "MTHawkeyeLogMacros.h"
 #import "MTHawkeyeStorage.h"
 #import "MTHawkeyeUtility.h"
-
+#import "MTHawkeyeAverageStorage.h"
 
 @interface MTHawkeyeClient ()
 
@@ -203,18 +203,14 @@
 
     // record memory usage
     if ([MTHawkeyeUserDefaults shared].recordMemoryUsage) {
-        static CGFloat preResident = 0.f;
         static CGFloat preMemFootprint = 0.f;
-        CGFloat resident = MTHawkeyeAppStat.memoryAppUsed / 1024.f / 1024.f;
-        CGFloat memFootprint = MTHawkeyeAppStat.memoryFootprint / 1024.f / 1024.f;
-        if (forceFlush || (fabs(resident - preResident) > DBL_EPSILON) || (fabs(memFootprint - preMemFootprint) > DBL_EPSILON)) {
-            preResident = resident;
+        CGFloat memFootprint = MTHawkeyeAppStat.memory / 1024.f / 1024.f;
+        [MTHawkeyeAverageStorage recordMem:memFootprint];
+        if (forceFlush || (fabs(memFootprint - preMemFootprint) > DBL_EPSILON)) {
             preMemFootprint = memFootprint;
 
-            NSString *residentStr = [NSString stringWithFormat:@"%.2f", resident];
             NSString *memFootprintStr = [NSString stringWithFormat:@"%.2f", memFootprint];
 
-            [[MTHawkeyeStorage shared] asyncStoreValue:residentStr withKey:time inCollection:@"mem"];
             [[MTHawkeyeStorage shared] asyncStoreValue:memFootprintStr withKey:time inCollection:@"r-mem"];
         }
     }
@@ -223,6 +219,7 @@
     if ([MTHawkeyeUserDefaults shared].recordCPUUsage) {
         static double preCPUUsage = 0.f;
         double cpuUsage = MTHawkeyeAppStat.cpuUsedByAllThreads;
+        [MTHawkeyeAverageStorage recordCPU:cpuUsage];
         if (forceFlush || (fabs(cpuUsage - preCPUUsage) > DBL_EPSILON)) {
             preCPUUsage = cpuUsage;
 

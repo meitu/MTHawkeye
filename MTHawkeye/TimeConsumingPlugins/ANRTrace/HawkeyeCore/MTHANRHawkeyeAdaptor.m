@@ -97,9 +97,6 @@
     // enable anr trace buffer, needed for tracing hard stall(stall then killed by watchdog or user)
     if (![MTHANRTracingBufferRunner isTracingBufferRunning]) {
         NSString *storagePath = [MTHawkeyeUtility currentStorePath];
-        if (![[NSFileManager defaultManager] fileExistsAtPath:storagePath]) {
-            [MTHawkeyeStorage shared];
-        }
         NSString *path = [storagePath stringByAppendingPathComponent:@"anr_tracing_buffer"];
         [MTHANRTracingBufferRunner enableTracingBufferAtPath:path];
     }
