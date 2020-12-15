@@ -82,7 +82,7 @@ typedef NS_ENUM(NSInteger, MTHNetworkTransactionStatusCode) {
 @property (nonatomic, assign) NSInteger requestIndex; // 请求序列号，从1开始
 
 @property (nonatomic, copy) NSURLRequest *request;
-@property (nonatomic, strong) NSURLResponse *response;
+@property (nonatomic, strong) NSHTTPURLResponse *response;
 @property (nonatomic, assign) NSInteger requestLength;
 @property (nonatomic, assign) NSInteger responseLength;
 @property (nonatomic, copy) NSString *requestMechanism;
