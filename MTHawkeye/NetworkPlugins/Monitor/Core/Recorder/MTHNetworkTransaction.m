@@ -175,7 +175,7 @@ typedef CFHTTPMessageRef (*MTHURLResponseGetHTTPResponse)(CFURLRef response);
         }
         NSData *lineData = [lineStr dataUsingEncoding:NSUTF8StringEncoding];
 
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)self.response;
+        NSHTTPURLResponse *httpResponse = self.response;
         NSString *headerStr = @"";
         for (NSString *key in httpResponse.allHeaderFields.allKeys) {
             headerStr = [headerStr stringByAppendingString:key];
@@ -367,7 +367,7 @@ typedef CFHTTPMessageRef (*MTHURLResponseGetHTTPResponse)(CFURLRef response);
     dict[@"request_length"] = @(self.requestLength);
 
     NSMutableDictionary *response = @{}.mutableCopy;
-    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)self.response;
+    NSHTTPURLResponse *httpResponse = self.response;
     response[@"status_code"] = @(httpResponse.statusCode);
     response[@"recv_data_len"] = @(self.receivedDataLength);
     response[@"responseDataMD5"] = self.responseDataMD5 ?: @"";
