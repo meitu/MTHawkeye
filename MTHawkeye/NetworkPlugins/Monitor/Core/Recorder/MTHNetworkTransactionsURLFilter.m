@@ -117,9 +117,9 @@
     BOOL matched = YES;
 
     MTHNetworkTransactionStatusCode mthStatusCode = MTHNetworkTransactionStatusCodeNone;
-    if (!(NSHTTPURLResponse *)transaction.response) {
+    if (!transaction.response) {
         mthStatusCode = MTHNetworkTransactionStatusCodeNoResponse;
-    } else {
+    } else if ([transaction.response isKindOfClass:[NSHTTPURLResponse class]]) {
         NSInteger rspStatusCode = ((NSHTTPURLResponse *)transaction.response).statusCode;
         rspStatusCode = rspStatusCode / 100;
         mthStatusCode = 1 << (rspStatusCode - 1);
