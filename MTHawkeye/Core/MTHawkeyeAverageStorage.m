@@ -60,11 +60,11 @@ static int _glfpsCount = 0;
 + (void)record {
     [self setupIfNeeded];
     if (_fileChar) {
-        const char *record = [NSString stringWithFormat:@"\357\273\277CPU: %.1f%%\nMemory: %.1fM\nFPS: %d\nglFPS: %d\n",
+        const char *record = [NSString stringWithFormat:@"\357\273\277CPU: %.1f%%\nMemory: %.1fM\nFPS: %.1f\nglFPS: %.1f\n",
                               _cpuTotal / MAX(_cpuCount, 1),
                               _memTotal / MAX(_memCount, 1),
-                              _fpsTotal / MAX(_fpsCount, 1),
-                              _glfpsTotal / MAX(_glfpsCount, 1)
+                              (CGFloat)_fpsTotal / MAX(_fpsCount, 1),
+                              (CGFloat)_glfpsTotal / MAX(_glfpsCount, 1)
                               ].UTF8String;
         memcpy((void *)_fileChar, (void *)record, strlen(record));
     }
