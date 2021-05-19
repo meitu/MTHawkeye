@@ -120,7 +120,7 @@
 
 - (NSDictionary *)backgroundTasks {
     @synchronized(self) {
-        return [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:self.backgroundTasksM]];
+        return [self.backgroundTasksM copy];
     }
 }
 
