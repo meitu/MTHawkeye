@@ -14,6 +14,9 @@
 
 
 @interface MTHFakeKVOObserver : NSObject
+
+extern const char MTHawkeyeAssociatedRemoverKey;
+
 @end
 
 

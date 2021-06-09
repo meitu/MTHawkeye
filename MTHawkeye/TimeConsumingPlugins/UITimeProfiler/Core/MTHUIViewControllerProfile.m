@@ -21,7 +21,7 @@
 #import "MTHUIViewControllerProfile.h"
 
 
-static char const kAssociatedRemoverKey;
+char const MTHawkeyeAssociatedRemoverKey;
 
 static NSString *const kUniqueFakeKeyPath = @"mth_useless_key_path";
 
@@ -203,7 +203,7 @@ static void mth_viewDidAppear(UIViewController *kvo_self, SEL _sel, BOOL animate
     MTHFakeKVORemover *remover = [[MTHFakeKVORemover alloc] init];
     remover.target = vc;
     remover.keyPath = kUniqueFakeKeyPath;
-    objc_setAssociatedObject(vc, &kAssociatedRemoverKey, remover, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(vc, &MTHawkeyeAssociatedRemoverKey, remover, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
     // NSKVONotifying_ViewController
     Class kvoCls = object_getClass(vc);
