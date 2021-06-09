@@ -18,6 +18,14 @@
 
 @implementation MTHawkeyeAppStat
 
++ (int64_t)memory {
+    int64_t memory = self.memoryFootprint;
+    if (memory) {
+        return memory;
+    }
+    return self.memoryAppUsed;
+}
+
 + (int64_t)memoryAppUsed {
     struct task_basic_info info;
     mach_msg_type_number_t size = (sizeof(task_basic_info_data_t) / sizeof(natural_t));

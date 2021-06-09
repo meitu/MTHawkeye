@@ -77,9 +77,7 @@
 }
 
 - (void)receivedFlushStatusCommand {
-    NSInteger fp = (NSInteger)round(MTHawkeyeAppStat.memoryFootprint / 1024 / 1024.f);
-    if (fp == 0)
-        fp = MTHawkeyeAppStat.memoryAppUsed / 1024.f / 1024.f;
+    NSInteger fp = (NSInteger)round(MTHawkeyeAppStat.memory / 1024 / 1024.f);
     if (self.preMemFootPrint == fp)
         return;
 

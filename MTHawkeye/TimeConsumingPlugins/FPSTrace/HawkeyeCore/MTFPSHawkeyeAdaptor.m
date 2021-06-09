@@ -14,6 +14,7 @@
 #import "MTHFPSTrace.h"
 #import "MTHawkeyeClient.h"
 #import "MTHawkeyeStorage.h"
+#import "MTHawkeyeAverageStorage.h"
 #import "MTHawkeyeUserDefaults.h"
 #import "MTHawkeyeUtility.h"
 
@@ -91,6 +92,7 @@
     {
         static NSInteger preFPS = 0;
         NSInteger curFPSValue = [MTHFPSTrace shared].fpsValue;
+        [MTHawkeyeAverageStorage recordFPS:(int)curFPSValue];
         BOOL fpsChanged = (preFPS != curFPSValue);
         if (fpsChanged || forceFlush) {
             NSString *fpsValue = [NSString stringWithFormat:@"%@", @(curFPSValue)];
@@ -103,14 +105,14 @@
     if ([MTHFPSTrace shared].gpuImageViewFPSEnable) {
         static NSInteger preGPUImageFPS = 0;
         NSInteger curGPUImageFPSValue = self.firstActiveRenderCounter.fpsValue;
-        BOOL gpuImageDisplaying = self.firstActiveRenderCounter.isActive;
+        [MTHawkeyeAverageStorage recordglFPS:(int)curGPUImageFPSValue];
         BOOL gpuImageFPSChanged = (preGPUImageFPS != curGPUImageFPSValue);
         if (gpuImageFPSChanged || forceFlush) {
             // 平时记录时只记录了变化时的数据，这里补充记录退出前的最后一次数据
             if (preGPUImageFPS > 0 && curGPUImageFPSValue == 0) {
                 [[MTHawkeyeStorage shared] asyncStoreValue:[NSString stringWithFormat:@"%@", @(preGPUImageFPS)] withKey:time inCollection:@"gl-fps"];
             }
-
+            BOOL gpuImageDisplaying = self.firstActiveRenderCounter.isActive;
             if (gpuImageDisplaying && curGPUImageFPSValue > 0.f) {
                 NSString *glfps = [NSString stringWithFormat:@"%@", @(curGPUImageFPSValue)];
                 [[MTHawkeyeStorage shared] asyncStoreValue:glfps withKey:time inCollection:@"gl-fps"];
