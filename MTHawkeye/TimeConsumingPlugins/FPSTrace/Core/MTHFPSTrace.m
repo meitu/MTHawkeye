@@ -269,7 +269,13 @@ void mthf_glesCounterSetter(id object, SEL _cmd1, id newValue) {
             counter = [[MTHFPSGLRenderCounter alloc] init];
             counter.identifier = [NSString stringWithFormat:@"%p", target];
         }
-        [target setValue:counter forKey:propertyName];
+        if ([target isKindOfClass:[UIView class]] && ![NSThread isMainThread]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [target setValue:counter forKey:propertyName];
+            });
+        } else {
+            [target setValue:counter forKey:propertyName];
+        }
         return counter;
     }
 
@@ -288,7 +294,13 @@ void mthf_glesCounterSetter(id object, SEL _cmd1, id newValue) {
 
     counter = [[MTHFPSGLRenderCounter alloc] init];
     counter.identifier = [NSString stringWithFormat:@"%p", target];
-    [target setValue:counter forKey:propertyName];
+    if ([target isKindOfClass:[UIView class]] && ![NSThread isMainThread]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [target setValue:counter forKey:propertyName];
+        });
+    } else {
+        [target setValue:counter forKey:propertyName];
+    }
     return counter;
 }
 
