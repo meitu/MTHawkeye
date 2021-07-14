@@ -135,10 +135,8 @@
                 [self processBackgroundStillRunningWithSnapshots:self.stallingSnapshots];
             }
 
-            if (self.shouldCaptureBackTrace) {
-                threadCount = [self currentThreadCount];
-                stallingMainBacktrace = [self snapshotThreadBacktrace:main_thread];
-            }
+            threadCount = [self currentThreadCount];
+            stallingMainBacktrace = [self snapshotThreadBacktrace:main_thread];
 
             // annealing if needed, record stalling snapshot if need.
             {
@@ -296,15 +294,16 @@
     mth_stack_backtrace *stackframes = mth_malloc_stack_backtrace();
 
     if (stackframes) {
-        mth_stack_backtrace_of_thread(thread, stackframes, MTHANRTRACE_MAXSTACKCOUNT, 0);
-        threadStack->stackframesSize = stackframes->frames_size;
-        threadStack->stackframes = (uintptr_t *)malloc(sizeof(uintptr_t) * stackframes->frames_size);
-        if (stackframes->frames) {
-            memcpy(threadStack->stackframes, stackframes->frames, sizeof(uintptr_t) * stackframes->frames_size);
-            threadStack->titleFrame = [self titleFrameForStackframes:stackframes->frames size:stackframes->frames_size];
-
-            [MTHANRTracingBufferRunner traceStackBacktrace:stackframes];
+        if (self.shouldCaptureBackTrace) {
+            mth_stack_backtrace_of_thread(thread, stackframes, MTHANRTRACE_MAXSTACKCOUNT, 0);
+            threadStack->stackframesSize = stackframes->frames_size;
+            threadStack->stackframes = (uintptr_t *)malloc(sizeof(uintptr_t) * stackframes->frames_size);
+            if (stackframes->frames) {
+                memcpy(threadStack->stackframes, stackframes->frames, sizeof(uintptr_t) * stackframes->frames_size);
+                threadStack->titleFrame = [self titleFrameForStackframes:stackframes->frames size:stackframes->frames_size];
+            }
         }
+        [MTHANRTracingBufferRunner traceStackBacktrace:stackframes];
         mth_free_stack_backtrace(stackframes);
     }
 
