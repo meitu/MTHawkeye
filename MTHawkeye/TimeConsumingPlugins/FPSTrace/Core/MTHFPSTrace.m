@@ -97,6 +97,12 @@
     dispatch_once(&onceToken, ^{
         [MTHFPSTrace registerGLESClass:NSClassFromString(@"GPUImageView")];
         [MTHFPSTrace registerGLESClass:NSClassFromString(@"MTCameraGPUImageView")];
+        [MTHFPSTrace registerGLESClass:NSClassFromString(@"MTMBCameraGPUImageView")];
+        [MTHFPSTrace registerGLESRenderInfo:(MTHFPSGLRenderInfo){
+            NSClassFromString(@"MTMBCameraMetalView"),
+            NSSelectorFromString(@"commonInit"),
+            NSSelectorFromString(@"commonUninit"),
+            NSSelectorFromString(@"renderTexture:")}];
 
         for (NSValue *value in self.renderInfos) {
             MTHFPSGLRenderInfo renderInfo;
