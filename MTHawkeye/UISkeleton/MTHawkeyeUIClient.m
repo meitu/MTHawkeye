@@ -370,9 +370,12 @@ const NSString *kMTHFloatingWidgetRaiseWarningParamsPanelIDKey = @"related-panel
     self.monitorWindow.hidden = NO;
 #if MTH_AT_LEAST_IOS13_SDK
     if (@available(iOS 13.0, *)) {
-        // Only look for a new scene if we don't have one, or the one we have
-        // isn't the active scene
-        if (!self.monitorWindow.windowScene || self.monitorWindow.windowScene.activationState != UISceneActivationStateForegroundActive) {
+        // Fix: Swift project missing scene
+        if (!self.monitorWindow.windowScene) {
+            self.monitorWindow.windowScene = (UIWindowScene *)UIApplication.sharedApplication.connectedScenes.anyObject;
+        }
+        // Try to find the active scene
+        if (self.monitorWindow.windowScene.activationState != UISceneActivationStateForegroundActive) {
             for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
                 // Look for an active UIWindowScene
                 if (scene.activationState == UISceneActivationStateForegroundActive &&
