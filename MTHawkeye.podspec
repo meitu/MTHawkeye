@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
     LICENSE
   }
 
-  s.author       = { "Euan Chan" => "cqh@meitu.com" }
+  s.author       = { "Meitu Hawkeye Team" }
 
   s.platform     = :ios, "9.0"
 
@@ -412,6 +412,7 @@ Pod::Spec.new do |s|
       flex.dependency 'FLEX', '4.1.1'
       flex.dependency 'MTHawkeye/UISkeleton'
       flex.libraries = "sqlite3"
+      flex.framework = 'SceneKit'
   end
 
   s.requires_arc = true
