@@ -15,6 +15,7 @@
 #import "MTHawkeyeUtility.h"
 
 #import <MTAppenderFile/MTAppenderFile.h>
+#import <os/log.h>
 
 
 
@@ -50,6 +51,7 @@ NSUInteger kMTHawkeyeLogStoreMaxLength = 16 * 1024;
 @property (nonatomic, copy) NSString *storeDirectory;
 @property (nonatomic, strong) MTAppenderFile *collectionKeyValueFile;
 @property (nonatomic, strong) NSMutableArray<NSNumber *> *recordByteLength;
+@property (nonatomic, strong) os_log_t os_log;
 
 @end
 
@@ -73,6 +75,7 @@ NSUInteger kMTHawkeyeLogStoreMaxLength = 16 * 1024;
 - (instancetype)init {
     if ((self = [super init])) {
         _storeDirectory = [MTHawkeyeUtility currentStorePath];
+        _os_log = os_log_create("hawkeye", "");
         [self rebuildHawkeyeStorageDirectoryIfNeed];
 
         _pageSize = 100;
@@ -125,6 +128,8 @@ NSUInteger kMTHawkeyeLogStoreMaxLength = 16 * 1024;
 #endif
 
     [self.collectionKeyValueFile appendUTF8Text:line];
+    
+    os_log(self.os_log, "%s", line);
 
     // 记录每一行字符的长度,'\n'占一个字节
     [self.recordByteLength addObject:@(lineLength)];
