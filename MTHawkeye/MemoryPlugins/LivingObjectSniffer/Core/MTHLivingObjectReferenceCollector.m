@@ -34,7 +34,9 @@
         _offset = ivar_getOffset(ivar);
         _index = _offset / sizeof(void *);
         const char *encoding = ivar_getTypeEncoding(ivar);
-        _isObject = encoding[0] == '@';
+        if (encoding) {
+            _isObject = encoding[0] == '@';
+        }
     }
     return self;
 }
