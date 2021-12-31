@@ -143,13 +143,14 @@
     NSString *beginDate = [NSString stringWithFormat:@"%@", @([MTHawkeyeUtility appLaunchedTime])];
     NSString *endDate = [NSString stringWithFormat:@"%@", @([[NSDate date] timeIntervalSince1970])];
 
-    NSMutableDictionary *valueDict = @{}.mutableCopy;
-    valueDict[@"begin_date"] = beginDate;
-    valueDict[@"end_date"] = endDate;
-    valueDict[@"backgroundTasks"] = backgroundTasks;
+    NSDictionary *valueDict = @{
+        @"begin_date": beginDate,
+        @"end_date": endDate,
+        @"backgroundTasks": backgroundTasks
+    };
 
     NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:valueDict.copy options:0 error:&error];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:valueDict options:0 error:&error];
     if (!jsonData) {
         MTHLogWarn(@"store vc will dealloc failed: %@", error.localizedDescription);
     } else {
