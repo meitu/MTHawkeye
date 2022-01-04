@@ -53,6 +53,8 @@ typedef NS_ENUM(NSUInteger, MTHawkeyeStorageOrderType) {
 @property (nonatomic, assign) NSUInteger pageSize;
 @property (nonatomic, assign, readonly) NSRange availablePages;
 
+@property (nonatomic, assign) BOOL enableOsLog;
+
 + (instancetype)shared;
 
 /**
