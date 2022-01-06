@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic, readonly) NSUInteger recordedStartTaskCount;
 @property (assign, nonatomic, readonly) NSUInteger recordedEndTasksCount;
 
-@property (strong, nonatomic, readonly) NSDictionary *backgroundTasks;
+@property (strong, nonatomic, readonly) NSString *tasksDescription;
 
 - (void)syncAddBackgroundTask:(MTHBackgroundTaskInfo *)task;
 - (void)syncEndBackgroundTaskWithIdentifierID:(NSUInteger)identifier;

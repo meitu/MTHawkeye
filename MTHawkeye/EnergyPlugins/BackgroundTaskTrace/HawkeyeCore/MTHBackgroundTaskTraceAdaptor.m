@@ -129,8 +129,8 @@
 }
 
 - (void)writeBackgroundTaskRecordsToFile {
-    NSDictionary *backgroundTasks = [self.tracingData backgroundTasks];
-    if (backgroundTasks.count == 0) {
+    NSString *backgroundTasks = self.tracingData.tasksDescription;
+    if (!backgroundTasks) {
         return;
     }
 

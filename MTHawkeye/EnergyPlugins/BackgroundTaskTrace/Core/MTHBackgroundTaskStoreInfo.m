@@ -118,9 +118,18 @@
     }
 }
 
-- (NSDictionary *)backgroundTasks {
+- (NSString *)tasksDescription {
     @synchronized(self) {
-        return [self.backgroundTasksM copy];
+        NSDictionary *backgroundTasks = self.backgroundTasksM;
+        if (backgroundTasks.count == 0) {
+            return nil;
+        }
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:backgroundTasks options:0 error:nil];
+        if (!jsonData) {
+            return nil;
+        }
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        return jsonString;
     }
 }
 
