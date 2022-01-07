@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
     LICENSE
   }
 
-  s.author       = { "Meitu Hawkeye Team" }
+  s.author       = "Meitu Hawkeye Team" 
 
   s.platform     = :ios, "9.0"
 
