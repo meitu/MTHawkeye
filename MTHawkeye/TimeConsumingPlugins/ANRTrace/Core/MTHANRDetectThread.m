@@ -36,6 +36,7 @@
 @property (nonatomic, assign) CFRunLoopObserverRef lowPriorityInitObserverRef;
 
 @property (atomic, assign) BOOL runloopWorking;
+@property (atomic, assign) BOOL isBackground;
 
 @property (atomic, assign) NSTimeInterval curRunloopStartFrom;
 @property (atomic, assign) NSTimeInterval curRunloopEndAt;
@@ -53,6 +54,7 @@
 @implementation MTHANRDetectThread
 
 - (void)dealloc {
+    [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
 - (instancetype)init {
@@ -64,6 +66,13 @@
         self.annealingStepInMS = 200;
         self.annealingStepCount = 1;
         self.name = @"com.meitu.hawkeye.anr.observer";
+        __weak typeof(self) weak_self = self;
+        [NSNotificationCenter.defaultCenter addObserverForName:UIApplicationWillResignActiveNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+            weak_self.isBackground = YES;
+        }];
+        [NSNotificationCenter.defaultCenter addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+            weak_self.isBackground = NO;
+        }];
     }
     return self;
 }
@@ -88,15 +97,6 @@
 }
 
 #pragma mark - Thread Work
-- (UIApplicationState)applicationState {
-    if ([NSThread isMainThread]) {
-        return [UIApplication sharedApplication].applicationState;
-    }
-
-    UIApplicationState state = ((NSNumber *)[[UIApplication sharedApplication] valueForKey:@"applicationState"]).integerValue;
-    //    NSLog(@"kvc value:%ld, propertyValue:%ld", state, [UIApplication sharedApplication].applicationState);
-    return state;
-}
 
 - (void)start {
     pthread_mutex_init(&_curStallingRunloopsMutex, NULL);
@@ -131,7 +131,7 @@
 
         BOOL isStalling = ((now - curRunloopStartFrom) >= self.stallingThresholdInSeconds);
         if (isStalling) {
-            if ([self applicationState] == UIApplicationStateBackground) {
+            if (self.isBackground) {
                 [self processBackgroundStillRunningWithSnapshots:self.stallingSnapshots];
             }
 
@@ -280,7 +280,7 @@
 
 - (MTHANRMainThreadStallingSnapshot *)snapshotThreadBacktrace:(thread_t)thread {
 #if _MTHawkeyeANRTracingDebugEnabled
-    MTHLogInfo(@"main thread backtrace fired, appState: %@", @([UIApplication sharedApplication].applicationState));
+    MTHLogInfo(@"main thread backtrace fired, isBackground: %@", @(self.isBackground));
 #endif
 
     MTHANRMainThreadStallingSnapshot *threadStack = nil;
@@ -288,7 +288,7 @@
     threadStack.cpuUsed = MTHawkeyeAppStat.cpuUsedByAllThreads * 100.0f;
     threadStack.time = [MTHawkeyeUtility currentTime];
     threadStack.capturedCount = 1;
-    if ([self applicationState] == UIApplicationStateBackground) {
+    if (self.isBackground) {
         threadStack.isInBackground = YES;
     }
     mth_stack_backtrace *stackframes = mth_malloc_stack_backtrace();
@@ -421,7 +421,7 @@ static BOOL skipHeaderActivitiesBeforeEnterForegroundIfNeeded(MTHANRDetectThread
     if (preActivityTimeBeforeEnterForeground == 0) {
         preActivityTimeBeforeEnterForeground = object.curRunloopStartFrom;
 #if _MTHawkeyeANRTracingDebugEnabled
-        MTHLogInfo(@"ANR suspended runloop fix, start %@, appState: %@", @(preActivityTimeBeforeEnterForeground), @([UIApplication sharedApplication].applicationState));
+        MTHLogInfo(@"ANR suspended runloop fix, start %@, isBackground: %@", @(preActivityTimeBeforeEnterForeground), @(self.isBackground));
 #endif
     }
 
@@ -429,7 +429,7 @@ static BOOL skipHeaderActivitiesBeforeEnterForegroundIfNeeded(MTHANRDetectThread
     NSTimeInterval diff = curTime - preActivityTimeBeforeEnterForeground;
 
 #if _MTHawkeyeANRTracingDebugEnabled
-    MTHLogInfo(@"ANR suspended runloop fix, diff: %.3fms, curTime: %.3f, appState: %@", diff * 1000, curTime, @([UIApplication sharedApplication].applicationState));
+    MTHLogInfo(@"ANR suspended runloop fix, diff: %.3fms, curTime: %.3f, isBackground: %@", diff * 1000, curTime, @(self.isBackground));
 #endif
 
     if (intervalBetweenLastTwoActivitiesBeforeEnterForeground <= DBL_EPSILON) {
