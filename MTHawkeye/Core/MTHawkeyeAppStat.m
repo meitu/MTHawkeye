@@ -14,7 +14,7 @@
 #import <mach/mach.h>
 #import <mach/mach_types.h>
 #import <pthread.h>
-
+#import <os/proc.h>
 
 @implementation MTHawkeyeAppStat
 
@@ -46,6 +46,13 @@
         return 0;
 
     return vmInfo.phys_footprint;
+}
+
++ (CGFloat)availableSizeOfMemory {
+    if (@available(iOS 13.0, *)) {
+        return os_proc_available_memory() / 1024.0 / 1024.0;
+    }
+    return 0.0f;
 }
 
 + (double)cpuUsedByAllThreads {

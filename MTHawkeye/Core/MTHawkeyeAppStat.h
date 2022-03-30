@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly, class) int64_t memory;
 
+@property (nonatomic, readonly, class) CGFloat availableSizeOfMemory;
+
 @property (nonatomic, readonly, class) double cpuUsedByAllThreads;
 
 @end

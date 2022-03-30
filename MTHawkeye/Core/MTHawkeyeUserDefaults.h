@@ -24,6 +24,7 @@ typedef void (^MTHawkeyeUserDefaultChangedHandler)(_Nullable id oldValue, _Nulla
 @property (nonatomic, assign) BOOL statusFlushKeepRedundantRecords; // only record when status changed.
 
 @property (nonatomic, assign) BOOL recordMemoryUsage;
+@property (nonatomic, assign) BOOL recordAvlMemory; // iOS 13+
 @property (nonatomic, assign) BOOL recordCPUUsage;
 
 + (instancetype)shared;

@@ -214,6 +214,21 @@
             [[MTHawkeyeStorage shared] asyncStoreValue:memFootprintStr withKey:time inCollection:@"r-mem"];
         }
     }
+    
+    // record available memory
+    if (@available(iOS 13.0, *)) {
+        if ([MTHawkeyeUserDefaults shared].recordAvlMemory) {
+            static CGFloat preAvailableMemory = 0.f;
+            CGFloat availableMemory = MTHawkeyeAppStat.availableSizeOfMemory;
+            if (forceFlush || (fabs(availableMemory - preAvailableMemory) > DBL_EPSILON)) {
+                preAvailableMemory = availableMemory;
+
+                NSString *availableMemoryStr = [NSString stringWithFormat:@"%.2f", availableMemory];
+
+                [[MTHawkeyeStorage shared] asyncStoreValue:availableMemoryStr withKey:time inCollection:@"avl-mem"];
+            }
+        }
+    }
 
     // record cpu usage
     if ([MTHawkeyeUserDefaults shared].recordCPUUsage) {

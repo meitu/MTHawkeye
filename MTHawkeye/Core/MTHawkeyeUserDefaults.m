@@ -49,6 +49,7 @@
         _defaults = defaults ? defaults.mutableCopy : @{}.mutableCopy;
         _observerHandlers = [NSMapTable strongToStrongObjectsMapTable];
         _recordMemoryUsage = YES;
+        _recordAvlMemory = YES;
         _recordCPUUsage = YES;
     }
     return self;
