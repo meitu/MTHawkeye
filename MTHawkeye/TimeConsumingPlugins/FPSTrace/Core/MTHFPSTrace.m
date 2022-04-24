@@ -92,6 +92,7 @@
 - (void)start {
     [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     self.isRunning = YES;
+    self.gpuImageViewFPSEnable = YES;
 
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -107,7 +108,6 @@
         for (NSValue *value in self.renderInfos) {
             MTHFPSGLRenderInfo renderInfo;
             [value getValue:&renderInfo];
-            self.gpuImageViewFPSEnable = YES;
 
             SEL swizzledSel = [MTHawkeyeHooking swizzledSelectorForSelector:renderInfo.startRenderSEL];
             void (^swizzleStartBlock)(id) = ^void(id obj) {
@@ -187,6 +187,9 @@
     }
 
     MTHFPSGLRenderCounter *counter = [self getDynamicAttachGLESCounter:renderer];
+    if (counter.isActive == start) {
+        return;
+    }
     counter.isActive = start;
     counter.isGPUImageView = YES;
 
@@ -239,6 +242,33 @@
     }
 
     NSInteger newGPUImageFPS = (NSInteger)round(curRenderCount * 1000.f / differMs);
+    if (newGPUImageFPS == counter.fpsValue) {
+        return;
+    }
+    counter.fpsValue = newGPUImageFPS;
+
+    for (id<MTHFPSTraceDelegate> delegate in self.delegates) {
+        if (delegate && [delegate respondsToSelector:@selector(glRenderCounterValueChange:)]) {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [delegate glRenderCounterValueChange:counter];
+                });
+            });
+        }
+    }
+}
+
+- (void)glesRenderProcess:(id)renderer fps:(CGFloat)fps {
+    if (renderer == nil) {
+        return;
+    }
+
+    MTHFPSGLRenderCounter *counter = [self getDynamicAttachGLESCounter:renderer];
+    if (!counter.isActive) {
+        return;
+    }
+
+    NSInteger newGPUImageFPS = fps;
     if (newGPUImageFPS == counter.fpsValue) {
         return;
     }

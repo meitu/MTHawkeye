@@ -66,6 +66,7 @@ typedef struct {
 
 - (void)glesRenderer:(id)renderer start:(BOOL)start;
 - (void)glesRenderProcess:(id)renderer;
+- (void)glesRenderProcess:(id)renderer fps:(CGFloat)fps;
 @end
 
 @protocol MTHFPSTraceDelegate <NSObject>
