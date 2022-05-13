@@ -160,17 +160,13 @@ const NSString *kMTHFloatingWidgetRaiseWarningParamsPanelIDKey = @"related-panel
 }
 
 - (void)startServer {
-    if ([MTHawkeyeUtility underUnitTest])
+    if ([MTHawkeyeUtility underUnitTest] || ![MTHawkeyeUserDefaults shared].hawkeyeOn || ![MTHawkeyeUserDefaults shared].displayFloatingWindow)
         return;
 
     [[MTHawkeyeClient shared] addPlugin:self];
 
     [self setupUIPlugins];
-
-    if ([MTHawkeyeUserDefaults shared].hawkeyeOn && [MTHawkeyeUserDefaults shared].displayFloatingWindow) {
-        [self showWindow];
-    }
-
+    [self showWindow];
     [self observeTheWindow];
 
     MTHLogInfo(@"HawkeyeUIClient start");
