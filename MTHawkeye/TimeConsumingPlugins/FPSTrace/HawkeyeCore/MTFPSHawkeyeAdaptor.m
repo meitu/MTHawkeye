@@ -127,12 +127,10 @@
 }
 
 - (void)glRenderCounterValueChange:(MTHFPSGLRenderCounter *)rendererCounter {
-    if (self.firstActiveRenderCounter == nil) {
-        self.firstActiveRenderCounter = rendererCounter;
-    }
-
-    if ([self.firstActiveRenderCounter.identifier isEqualToString:rendererCounter.identifier] && !rendererCounter.isActive) {
+    if (!rendererCounter.isActive) {
         self.firstActiveRenderCounter = nil;
+    } else {
+        self.firstActiveRenderCounter = rendererCounter;
     }
 }
 @end
