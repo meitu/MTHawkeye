@@ -298,8 +298,9 @@ void mthf_glesCounterSetter(id object, SEL _cmd1, id newValue) {
 - (MTHFPSGLRenderCounter *)getDynamicAttachGLESCounter:(id)target {
     NSString *propertyName = @"mthGLFPSCounter";
     SEL counterSEL = NSSelectorFromString(propertyName);
+    SEL setCounterSEL = NSSelectorFromString(@"setMthGLFPSCounter:");
     MTHFPSGLRenderCounter *counter = nil;
-    if ([target respondsToSelector:counterSEL]) {
+    if ([target respondsToSelector:counterSEL] && [target respondsToSelector:setCounterSEL]) {
         counter = [target valueForKey:propertyName];
         if (!counter) {
             counter = [[MTHFPSGLRenderCounter alloc] init];
@@ -325,7 +326,7 @@ void mthf_glesCounterSetter(id object, SEL _cmd1, id newValue) {
         class_replaceProperty([target class], [propertyName UTF8String], attrs, 4);
     } else {
         class_addMethod([target class], counterSEL, (IMP)mthf_glesCounterGetter, "@@:");
-        class_addMethod([target class], NSSelectorFromString(@"setMthGLFPSCounter:"), (IMP)mthf_glesCounterSetter, "v@:@");
+        class_addMethod([target class], setCounterSEL, (IMP)mthf_glesCounterSetter, "v@:@");
     }
 
     counter = [[MTHFPSGLRenderCounter alloc] init];
