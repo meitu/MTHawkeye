@@ -5,21 +5,18 @@ platform :ios, "9.0"
 use_frameworks!
 use_modular_headers!
 
-workspace 'MTHawkeye'
-
 def hawkeye
   #< Only used during Debug
   #< Since the podfile dependency doesn't support environment configuration, 
   #< the dependent pods also need to be explicitly configured as Debug.
   
-  pod 'MTHawkeye/DefaultPlugins', :path => '../'#, :configurations => 'Debug'
+  pod 'MTHawkeye', :path => '../', :configurations => 'Debug'
 
-  pod 'FLEX' #, :configurations => ['Debug']
-  pod 'FBRetainCycleDetector'#, :configurations => ['Debug']
-  pod 'fishhook'#, :configurations => ['Debug']
-  pod 'CocoaLumberjack', '3.6.0' #, :configurations => ['Debug'] # CocoaLumberjack is optional, change to `MTHawkeye/DefaultPluginsWithoutLog` if don't need.
-  pod 'MTGLDebug'#, :configurations => ['Debug'] # MTGLDebug is exclude by default, change `MTHawkeye` to `MTHawkeye/DefaultPlugins` to include.
-  pod 'MTAppenderFile', '~> 0.4.0'#, :configurations => ['Debug'], :inhibit_warnings => false
+  pod 'FLEX', :configurations => ['Debug']
+  pod 'FBRetainCycleDetector', :configurations => ['Debug']
+  pod 'fishhook', :configurations => ['Debug']
+  pod 'CocoaLumberjack', :configurations => ['Debug']
+  pod 'MTAppenderFile', :configurations => ['Debug']
 end
 
 target 'MTHawkeyeDemo' do

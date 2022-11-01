@@ -373,7 +373,6 @@ Pod::Spec.new do |s|
       ui.dependency 'MTHawkeye/NetworkPlugins/Monitor'
       ui.dependency 'MTHawkeye/NetworkPlugins/Inspect'
       ui.dependency 'MTHawkeye/UISkeleton'
-      ui.dependency 'FLEX', '4.1.1'
       ui.libraries = "sqlite3"
       ui.framework = 'QuartzCore'
     end
@@ -409,7 +408,7 @@ Pod::Spec.new do |s|
   s.subspec 'FLEXExtension' do |flex|
       flex.public_header_files = 'MTHawkeye/FLEXExtension/**/*.{h}'
       flex.source_files = 'MTHawkeye/FLEXExtension/**/*.{h,m}'
-      flex.dependency 'FLEX', '4.1.1'
+      flex.dependency 'FLEX', '5.22.10'
       flex.dependency 'MTHawkeye/UISkeleton'
       flex.libraries = "sqlite3"
       flex.framework = 'SceneKit'
