@@ -182,7 +182,15 @@ typedef UIViewController * (^MTHawkeyeNetworkDetailRowSelectionFuture)(void);
     [alertController addAction:copyAllAction];
     [alertController addAction:airDropAction];
     [alertController addAction:cancelAction];
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+        alertController.modalPresentationStyle = UIModalPresentationPopover;
+    }
     [self presentViewController:alertController animated:YES completion:nil];
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+        UIPopoverPresentationController *popoverController = alertController.popoverPresentationController;
+        popoverController.barButtonItem = sender;
+        popoverController.permittedArrowDirections = UIPopoverArrowDirectionUp| UIPopoverArrowDirectionDown;
+    }
 }
 
 #pragma mark - Table view data source
