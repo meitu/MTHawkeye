@@ -197,7 +197,7 @@
         }
         return triggerInfo.copy;
     } else if (self.unexpectLivingInstancesGroup.count) {
-        return @"Unexcepted living instances";
+        return @"Unexpected living instances";
     }
     return nil;
 }

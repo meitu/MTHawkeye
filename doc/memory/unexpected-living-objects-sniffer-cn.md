@@ -48,7 +48,7 @@
 
 ### 异常存活对象池
 
-进入 Hawkeye 主面板 `Meory Records`中`Unexcepted living instances`，可查看当前侦测到的所有异常存活对象。（在内存浮窗红白闪烁提示时，点击浮窗可快捷进入）
+进入 Hawkeye 主面板 `Meory Records`中`Unexpected living instances`，可查看当前侦测到的所有异常存活对象。（在内存浮窗红白闪烁提示时，点击浮窗可快捷进入）
 
 ![living objects pool](./unexpected-living-objects-pool.png)
 

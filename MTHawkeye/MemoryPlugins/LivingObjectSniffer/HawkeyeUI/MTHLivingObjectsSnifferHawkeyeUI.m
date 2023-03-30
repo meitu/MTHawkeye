@@ -136,7 +136,7 @@ CGFloat gHawkeyeWarningUnexpectedLivingObjectFlashDuration = 5.f;
     MTHawkeyeSettingSectionEntity *primarySection = [[MTHawkeyeSettingSectionEntity alloc] init];
     primarySection.tag = @"living-objc-objects";
     primarySection.headerText = @"Living Objects Sniffer";
-    primarySection.footerText = @"The unexcepted living Objective-C object tracing related to ViewController's life, see the document for detail.";
+    primarySection.footerText = @"The unexpected living Objective-C object tracing related to ViewController's life, see the document for detail.";
     primarySection.cells = @[
         [self primarySwitcherCell],
         [self enableSnifferContainerSwitcherCell]

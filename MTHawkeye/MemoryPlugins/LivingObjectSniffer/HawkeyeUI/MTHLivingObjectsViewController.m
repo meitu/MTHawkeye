@@ -236,14 +236,14 @@
 // MARK: UITableViewDelegate
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == 0) {
-        return @"Unexcepted living instances";
+        return @"Unexpected living instances";
     }
     return @"";
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
     if (section == 0) {
-        ((UITableViewHeaderFooterView *)view).textLabel.text = @"Unexcepted living instances";
+        ((UITableViewHeaderFooterView *)view).textLabel.text = @"Unexpected living instances";
     }
 }
 
