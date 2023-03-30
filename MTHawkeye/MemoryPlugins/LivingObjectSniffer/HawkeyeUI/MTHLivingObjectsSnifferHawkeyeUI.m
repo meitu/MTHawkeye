@@ -15,6 +15,8 @@
 #import "MTHLivingObjectsSnifferHawkeyeAdaptor.h"
 #import "MTHLivingObjectsViewController.h"
 #import "MTHawkeyeUserDefaults+LivingObjectsSniffer.h"
+#import "MTHawkeyeStorage.h"
+#import "MTHawkeyeUtility.h"
 
 #import <MTHawkeye/MTHToast.h>
 #import <MTHawkeye/MTHawkeyeSettingTableEntity.h>
@@ -49,22 +51,20 @@ CGFloat gHawkeyeWarningUnexpectedLivingObjectFlashDuration = 5.f;
 
 - (void)livingObjectSniffer:(MTHLivingObjectSniffer *)sniffer
           didSniffOutResult:(MTHLivingObjectShadowPackageInspectResult *)result {
-    if (![MTHawkeyeUserDefaults shared].displayFloatingWindow)
-        return;
-
     for (MTHLivingObjectShadowPackageInspectResultItem *item in result.items) {
         MTHLivingObjectGroupInClass *group = item.theGroupInClass;
-
-        // 1. ignore first time (may be shared instances)
-        if ([group aliveInstanceCount] == item.livingObjectsNew.count)
-            return;
-
         for (MTHLivingObjectInfo *objInfo in item.livingObjectsNew) {
             if (objInfo.theHodlerIsNotOwner || objInfo.isSingleton)
                 return;
         }
-
+        
         MTHLivingObjectInfo *objInfo = item.livingObjectsNew.firstObject;
+        NSString *time = [NSString stringWithFormat:@"%@", @([MTHawkeyeUtility currentTime])];
+        [[MTHawkeyeStorage shared] asyncStoreValue:NSStringFromClass([objInfo.instance class]) withKey:time inCollection:@"leak"];
+        
+        if (![MTHawkeyeUserDefaults shared].displayFloatingWindow)
+            return;
+
         if ([objInfo.instance isKindOfClass:UIViewController.class] && [self.class shouldRaiseToastWarningForVC]) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[MTHToast shared] showToastWithStyle:MTHToastStyleSimple
