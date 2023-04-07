@@ -23,6 +23,8 @@
 #import <MTHawkeye/MTHawkeyeUIClient.h>
 #import <MTHawkeye/MTHawkeyeUserDefaults+UISkeleton.h>
 
+#import "FLEXHeapEnumerator.h"
+#import "FLEXObjectRef.h"
 
 @interface MTHLivingObjectsSnifferHawkeyeUI () <MTHLivingObjectSnifferDelegate>
 
@@ -58,9 +60,19 @@ CGFloat gHawkeyeWarningUnexpectedLivingObjectFlashDuration = 5.f;
                 return;
         }
         
+        NSMutableString *detail = [NSMutableString string];
         MTHLivingObjectInfo *objInfo = item.livingObjectsNew.firstObject;
+        id instance = objInfo.instance;
+        [detail appendString:NSStringFromClass([instance class])];
+        [detail appendString:@",Reference By:["];
+        NSArray<FLEXObjectRef *> *references = [FLEXHeapEnumerator objectsWithReferencesToObject:instance retained:NO];
+        for (FLEXObjectRef *reference in references) {
+            [detail appendString:reference.summary];
+            [detail appendString:@","];
+        }
+        [detail appendString:@"]"];
         NSString *time = [NSString stringWithFormat:@"%@", @([MTHawkeyeUtility currentTime])];
-        [[MTHawkeyeStorage shared] asyncStoreValue:NSStringFromClass([objInfo.instance class]) withKey:time inCollection:@"leak"];
+        [[MTHawkeyeStorage shared] asyncStoreValue:detail withKey:time inCollection:@"leak"];
         
         if (![MTHawkeyeUserDefaults shared].displayFloatingWindow)
             return;
@@ -69,7 +81,7 @@ CGFloat gHawkeyeWarningUnexpectedLivingObjectFlashDuration = 5.f;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[MTHToast shared] showToastWithStyle:MTHToastStyleSimple
                                                 title:nil
-                                              content:[NSString stringWithFormat:@"%@ Still Alive", NSStringFromClass([objInfo.instance class])]
+                                              content:[NSString stringWithFormat:@"%@ Still Alive", NSStringFromClass([instance class])]
                                         detailContent:nil
                                              duration:3.f
                                               handler:^{
@@ -78,8 +90,8 @@ CGFloat gHawkeyeWarningUnexpectedLivingObjectFlashDuration = 5.f;
                                        buttonHandlers:nil
                                  autoHiddenBeOccluded:YES];
             });
-        } else if ([objInfo.instance isKindOfClass:UIView.class]) {
-            if ([objInfo.instance isKindOfClass:UITableViewCell.class] || [objInfo.instance isKindOfClass:UICollectionViewCell.class]) {
+        } else if ([instance isKindOfClass:UIView.class]) {
+            if ([instance isKindOfClass:UITableViewCell.class] || [instance isKindOfClass:UICollectionViewCell.class]) {
                 if ([group aliveInstanceCount] <= gHawkeyeWarningUnexpectedLivingCellViewCount)
                     return;
             } else {
