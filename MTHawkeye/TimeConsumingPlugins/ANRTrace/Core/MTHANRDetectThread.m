@@ -285,7 +285,7 @@
 
     MTHANRMainThreadStallingSnapshot *threadStack = nil;
     threadStack = [[MTHANRMainThreadStallingSnapshot alloc] init];
-    threadStack.cpuUsed = MTHawkeyeAppStat.cpuUsedByAllThreads * 100.0f;
+    threadStack.cpuUsed = MTHawkeyeThreadInfo.current.cpuUsedByAllThreads * 100.0f;
     threadStack.time = [MTHawkeyeUtility currentTime];
     threadStack.capturedCount = 1;
     if (self.isBackground) {

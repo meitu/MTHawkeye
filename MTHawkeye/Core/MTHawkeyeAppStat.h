@@ -20,7 +20,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly, class) CGFloat availableSizeOfMemory;
 
-@property (nonatomic, readonly, class) double cpuUsedByAllThreads;
+@end
+
+@interface MTHawkeyeThreadInfo : NSObject
+
+@property (nonatomic, readonly) double cpuUsedByAllThreads;
+@property (nonatomic, readonly) mach_msg_type_number_t threadCount;
+
++ (MTHawkeyeThreadInfo *)current;
 
 @end
 

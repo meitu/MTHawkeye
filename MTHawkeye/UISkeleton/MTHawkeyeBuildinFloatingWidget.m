@@ -171,7 +171,7 @@
 
 - (void)receivedFlushStatusCommand {
     static NSInteger preCpuUsage = 0;
-    NSInteger cpuUsage = MTHawkeyeAppStat.cpuUsedByAllThreads * 100.f;
+    NSInteger cpuUsage = MTHawkeyeThreadInfo.current.cpuUsedByAllThreads * 100.f;
     if (preCpuUsage == cpuUsage)
         return;
 

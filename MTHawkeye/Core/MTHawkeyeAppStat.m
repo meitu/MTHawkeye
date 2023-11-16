@@ -55,7 +55,19 @@
     return 0.0f;
 }
 
-+ (double)cpuUsedByAllThreads {
+@end
+
+@interface MTHawkeyeThreadInfo ()
+
+@property (nonatomic, readwrite) double cpuUsedByAllThreads;
+@property (nonatomic, readwrite) mach_msg_type_number_t threadCount;
+
+@end
+
+@implementation MTHawkeyeThreadInfo
+
++ (MTHawkeyeThreadInfo *)current {
+    MTHawkeyeThreadInfo *info = [MTHawkeyeThreadInfo new];
     double totalUsageRatio = 0;
     double maxRatio = 0;
 
@@ -82,7 +94,9 @@
 
         assert(vm_deallocate(mach_task_self(), (vm_address_t)threads, count * sizeof(thread_t)) == KERN_SUCCESS);
     }
-    return totalUsageRatio;
+    info.cpuUsedByAllThreads = totalUsageRatio;
+    info.threadCount = count;
+    return info;
 }
 
 @end

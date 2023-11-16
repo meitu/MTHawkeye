@@ -232,14 +232,32 @@
 
     // record cpu usage
     if ([MTHawkeyeUserDefaults shared].recordCPUUsage) {
+        MTHawkeyeThreadInfo *threadInfo = MTHawkeyeThreadInfo.current;
+        
         static double preCPUUsage = 0.f;
-        double cpuUsage = MTHawkeyeAppStat.cpuUsedByAllThreads;
+        double cpuUsage = threadInfo.cpuUsedByAllThreads;
         [MTHawkeyeAverageStorage recordCPU:cpuUsage];
         if (forceFlush || (fabs(cpuUsage - preCPUUsage) > DBL_EPSILON)) {
             preCPUUsage = cpuUsage;
 
             NSString *cpuUsageStr = [NSString stringWithFormat:@"%.1f", cpuUsage * 100.f];
             [[MTHawkeyeStorage shared] asyncStoreValue:cpuUsageStr withKey:time inCollection:@"cpu"];
+        }
+        
+        static mach_msg_type_number_t preThreadCount = 0;
+        if (forceFlush || threadInfo.threadCount != preThreadCount) {
+            preThreadCount = threadInfo.threadCount;
+            
+            NSString *threadCountStr =  [NSString stringWithFormat:@"%d", threadInfo.threadCount];
+            [[MTHawkeyeStorage shared] asyncStoreValue:threadCountStr withKey:time inCollection:@"threads-count"];
+        }
+        
+        static NSProcessInfoThermalState preThermalState = -1;
+        NSProcessInfoThermalState thermalState = NSProcessInfo.processInfo.thermalState;
+        if (forceFlush || thermalState != preThermalState) {
+            preThermalState = thermalState;
+            NSString *thermalStateStr =  [NSString stringWithFormat:@"%ld", (long)thermalState];
+            [[MTHawkeyeStorage shared] asyncStoreValue:thermalStateStr withKey:time inCollection:@"thermal-state"];
         }
     }
 }
