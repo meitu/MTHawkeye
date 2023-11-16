@@ -11,6 +11,7 @@
 //#ifdef DEBUG
 #import <MTHawkeye/MTHStackFrameSymbolicsRemote.h>
 #import <MTHawkeye/MTRunHawkeyeInOneLine.h>
+#import <MTHawkeye/MTHawkeyeStorage.h>
 //#endif
 
 #import <MTHawkeye/MTHBackgroundTaskTraceAdaptor.h>
@@ -26,6 +27,7 @@
     //#ifdef DEBUG
     [self startHawkeye];
     //#endif
+    MTHawkeyeStorage.shared.enableOsLog = YES;
 
     return YES;
 }
