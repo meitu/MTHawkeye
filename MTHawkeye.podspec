@@ -127,6 +127,7 @@ Pod::Spec.new do |s|
         ui.dependency 'MTHawkeye/UISkeleton'
         ui.dependency 'MTHawkeye/MemoryPlugins/LivingObjectSniffer/HawkeyeCore'
         ui.dependency 'FBRetainCycleDetector'
+        ui.dependency 'MTHawkeye/FLEXExtension'
       end
     end
 
